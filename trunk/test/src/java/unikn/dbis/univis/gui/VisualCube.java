@@ -20,9 +20,11 @@ import java.awt.*;
 public class VisualCube implements Icon {
 
      private Color cubeColor;
+     private boolean threeD;
 
-    public VisualCube(Color cubeColor) {
+    public VisualCube(Color cubeColor, boolean threeD) {
         this.cubeColor = cubeColor;
+        this.threeD = threeD;
     }
 
     public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -31,7 +33,7 @@ public class VisualCube implements Icon {
         g.drawRect(0, 0, 14, 14);
 
         g.setColor(cubeColor);
-        g.fill3DRect(1, 1, 13, 13, true);
+        g.fill3DRect(1, 1, 13, 13, threeD);
     }
 
     public int getIconWidth() {

@@ -26,7 +26,10 @@ public class MainFrame extends JFrame {
     private JPanel rightPanel = new JPanel();
     private JPanel leftPanel = new JPanel(new GridBagLayout());
     private JLabel visual = new JLabel(new Visual());
-    private JLabel measures = new JLabel("Measures");
+    private JLabel facts = new JLabel("FACTS");
+    private JLabel measures = new JLabel("MEASURES");
+    private int x = 0;
+    private int y = 0;
 
     private GridBagConstraints leftConstraints = new GridBagConstraints();
 
@@ -39,19 +42,32 @@ public class MainFrame extends JFrame {
 
     public void init() {
 
-        leftConstraints.gridx = 0;
-        leftConstraints.gridy = 0;
+        leftConstraints.gridx = x;
+        leftConstraints.gridy = y;
+        leftConstraints.anchor = GridBagConstraints.NORTHWEST;
 
-        leftPanel.add(new CubeLabel(Color.RED, "Orders"), leftConstraints);
+        leftPanel.add(facts, leftConstraints);
 
-        leftConstraints.gridy = 1;
-        leftPanel.add(new CubeLabel(Color.BLUE, "Students"), leftConstraints);
+        leftConstraints.gridy = x++;
+        leftPanel.add(new CubeLabel(Color.RED, "Orders", true), leftConstraints);
 
-        leftConstraints.gridy = 2;
+        leftConstraints.gridy = x++;
+        leftPanel.add(new CubeLabel(Color.BLUE, "Students", true), leftConstraints);
+
+        leftConstraints.gridy = x++;
         leftPanel.add(new JTreeTest(), leftConstraints);
 
-        leftConstraints.gridy = 3;
+        leftConstraints.gridy = x++;
         leftPanel.add(measures, leftConstraints);
+
+        leftConstraints.gridy = x++;
+        leftPanel.add(new CubeLabel(Color.RED, "Order amount, Euro", false), leftConstraints);
+
+        leftConstraints.gridy = x++;
+        leftPanel.add(new CubeLabel(Color.BLUE, "Student number (cases)", false), leftConstraints);
+
+        leftConstraints.gridy = x++;
+        leftPanel.add(new CubeLabel(Color.BLUE, "Student number (heads)", false), leftConstraints);
         treeScroll.setViewportView(leftPanel);
 
         overviewSplit.setLeftComponent(treeScroll);
