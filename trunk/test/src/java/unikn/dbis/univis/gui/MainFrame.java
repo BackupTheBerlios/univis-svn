@@ -26,7 +26,6 @@ public class MainFrame extends JFrame {
     private JPanel rightPanel = new JPanel();
     private JPanel leftPanel = new JPanel(new GridBagLayout());
     private JLabel visual = new JLabel(new Visual());
-    private JLabel facts = new JLabel("Facts");
     private JLabel measures = new JLabel("Measures");
 
     private GridBagConstraints leftConstraints = new GridBagConstraints();
@@ -43,12 +42,15 @@ public class MainFrame extends JFrame {
         leftConstraints.gridx = 0;
         leftConstraints.gridy = 0;
 
-        leftPanel.add(facts, leftConstraints);
+        leftPanel.add(new CubeLabel(Color.RED, "Orders"), leftConstraints);
 
         leftConstraints.gridy = 1;
-        leftPanel.add(new JTreeTest(), leftConstraints);
+        leftPanel.add(new CubeLabel(Color.BLUE, "Students"), leftConstraints);
 
         leftConstraints.gridy = 2;
+        leftPanel.add(new JTreeTest(), leftConstraints);
+
+        leftConstraints.gridy = 3;
         leftPanel.add(measures, leftConstraints);
         treeScroll.setViewportView(leftPanel);
 
