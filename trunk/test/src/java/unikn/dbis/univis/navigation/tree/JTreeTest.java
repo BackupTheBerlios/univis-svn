@@ -1,9 +1,17 @@
 package unikn.dbis.univis.navigation.tree;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
+
+import unikn.dbis.univis.hibernate.util.HibernateUtil;
+import unikn.dbis.univis.meta.impl.CubeImpl;
 
 /**
  * TODO: document me!!!
@@ -27,10 +35,17 @@ public class JTreeTest extends JTree {
 
         cellRenderer.setClosedIcon(new ReferentialFlag(Color.RED));
 
-        this.setCellRenderer(cellRenderer);
+        //setCellRenderer(cellRenderer);
 
         BasicTreeUI treeUI = (BasicTreeUI) this.getUI();
 
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        CubeImpl cube = (CubeImpl) session.createQuery("from " + CubeImpl.class.getName() + " where tableName = 'STUDENTS'").uniqueResult();
+        TreeModel model = new DefaultTreeModel(cube, true);
+        setModel(model);
+        
         /*
         this.setCellRenderer(new TreeCellRenderer() {
 
