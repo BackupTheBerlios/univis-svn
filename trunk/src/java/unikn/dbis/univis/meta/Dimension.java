@@ -1,11 +1,13 @@
 package unikn.dbis.univis.meta;
 
-import java.util.Set;
+import javax.swing.tree.TreeNode;
+import java.util.List;
 
 /**
  * TODO: document me!!!
  * <p/>
  * <code>Dimension</code>.
+ * <p/>
  * User: raedler, weiler
  * Date: 07.04.2006
  * Time: 15:28:03
@@ -15,7 +17,7 @@ import java.util.Set;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public interface Dimension {
+public interface Dimension extends TreeNode {
 
     public boolean isAbstract();
 
@@ -23,5 +25,5 @@ public interface Dimension {
 
     public Dimension getSuperDimension();
 
-    public Set<Dimension> getSubDimensions();
+    public List<Dimension> getSubDimensions();
 }
