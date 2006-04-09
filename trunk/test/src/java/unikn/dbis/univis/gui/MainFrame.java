@@ -46,8 +46,6 @@ public class MainFrame extends JFrame {
         leftConstraints.gridy = y;
         leftConstraints.anchor = GridBagConstraints.NORTHWEST;
 
-        JGraph graph = new JGraph();
-
         leftPanel.add(facts, leftConstraints);
 
         leftConstraints.gridy = ++y;
