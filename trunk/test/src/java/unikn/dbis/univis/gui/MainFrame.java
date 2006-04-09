@@ -53,7 +53,7 @@ public class MainFrame extends JFrame {
         leftPanel.add(new CubeLabel(Color.BLUE, "Students", true), leftConstraints);
 
         leftConstraints.gridy = ++y;
-        leftPanel.add(new JTreeTest(), leftConstraints);
+        leftPanel.add(new JTree(), leftConstraints);
 
         leftConstraints.gridy = ++y;
         leftPanel.add(measures, leftConstraints);
