@@ -138,11 +138,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jgraph-latest-lgpl/jgraph-latest-lgpl.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jgraph/jgraph.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$MODULE_DIR$/lib/jgraph-latest-lgpl/src" />
+          <root url="file://$MODULE_DIR$/lib/jgraph/src" />
         </SOURCES>
       </library>
     </orderEntry>
