@@ -17,7 +17,7 @@ import java.awt.*;
  * @version $Revision$
  * @since UniVis Explorer 0.1
  */
-public class ReferentialFlag implements Icon {
+public class ReferentialFlag extends JComponent {
 
     private Color flagColor;
 
@@ -25,7 +25,7 @@ public class ReferentialFlag implements Icon {
         this.flagColor = flagColor;
     }
 
-    public void paintIcon(Component c, Graphics g, int x, int y) {
+    public void paintComponent(Graphics g) {
 
         g.setColor(Color.BLACK);
         g.drawRect(1, 1, 3, 11);
@@ -34,12 +34,46 @@ public class ReferentialFlag implements Icon {
         g.fillRect(2, 2, 2, 10);
     }
 
-    public int getIconWidth() {
+    public int getWidth() {
         return 5;
     }
 
-    public int getIconHeight() {
+    public int getHeight() {
         return 12;
+    }
+
+    /**
+     * If the <code>preferredSize</code> has been set to a
+     * non-<code>null</code> value just returns it.
+     * If the UI delegate's <code>getPreferredSize</code>
+     * method returns a non <code>null</code> value then return that;
+     * otherwise defer to the component's layout manager.
+     *
+     * @return the value of the <code>preferredSize</code> property
+     * @see #setPreferredSize
+     * @see javax.swing.plaf.ComponentUI
+     */
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(getWidth(), getHeight());
+    }
+
+    /**
+     * Returns the size of this component in the form of a
+     * <code>Dimension</code> object. The <code>height</code>
+     * field of the <code>Dimension</code> object contains
+     * this component's height, and the <code>width</code>
+     * field of the <code>Dimension</code> object contains
+     * this component's width.
+     *
+     * @return a <code>Dimension</code> object that indicates the
+     *         size of this component
+     * @see #setSize
+     * @since JDK1.1
+     */
+    @Override
+    public Dimension getSize() {
+        return new Dimension(getWidth(), getHeight());
     }
 
     /*

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <joined-subclass name="unikn.dbis.univis.meta.impl.CubeImpl" table="META_CUBE" extends="unikn.dbis.univis.meta.TreeFresh">
+
+        <key column="TREE_FRESH_ID"/>
+
+        <property name="colorRGB" type="integer">
+            <column name="COLOR_RGB" not-null="true"/>
+        </property>
+
+    </joined-subclass>
+
+</hibernate-mapping>

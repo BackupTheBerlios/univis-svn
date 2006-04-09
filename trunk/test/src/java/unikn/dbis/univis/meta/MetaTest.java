@@ -2,13 +2,7 @@ package unikn.dbis.univis.meta;
 
 import junit.framework.TestCase;
 import org.hibernate.SessionFactory;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.PostgreSQLDialect;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
-import unikn.dbis.univis.meta.impl.CubeImpl;
-import unikn.dbis.univis.meta.impl.DimensionImpl;
 
 /**
  * TODO: document me!!!
@@ -65,7 +59,7 @@ public class MetaTest extends TestCase {
         CubeImpl cube = (CubeImpl) session.load(CubeImpl.class, cubeId);
 
         DimensionImpl dimension = new DimensionImpl();
-        dimension.setAbstract(true);
+        dimension.setSummable(true);
         dimension.setTableName("BLUEP_ZEIT");
 
         cube.addDimension(dimension);
@@ -92,7 +86,7 @@ public class MetaTest extends TestCase {
         DimensionImpl dimension = (DimensionImpl) session.load(DimensionImpl.class, dimensionId);
 
         DimensionImpl subDimension = new DimensionImpl();
-        subDimension.setAbstract(false);
+        subDimension.setSummable(false);
         subDimension.setTableName("DIM_HALBJAHRE");
 
         dimension.addSubDimension(subDimension);

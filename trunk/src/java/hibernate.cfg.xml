@@ -9,10 +9,10 @@
 
         <!-- Database connection settings -->
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <!--
         <property name="connection.url">jdbc:postgresql://localhost:5432/univis</property>
-        -->
+        <!--
         <property name="connection.url">jdbc:postgresql://phobos22.inf.uni-konstanz.de:5432/univis_explorer</property>
+        -->
         <property name="connection.username">univis</property>
         <property name="connection.password">UniVis</property>
 
@@ -20,7 +20,7 @@
         <property name="connection.pool_size">1</property>
 
         <!-- SQL dialect -->
-        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.dialect">unikn.dbis.univis.hibernate.dialect.UniVisPostgreSQLDialect</property>
 
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
@@ -29,16 +29,17 @@
         <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
 
         <!-- Echo all executed SQL to stdout -->
-        <property name="show_sql">true</property>
+        <property name="show_sql">false</property>
         <property name="hibernate.format_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->
-        <!--
-        <property name="hbm2ddl.auto">create</property>
-        -->
+        <property name="hbm2ddl.auto">update</property>
 
-        <mapping class="unikn.dbis.univis.meta.impl.CubeImpl"/>
-        <mapping class="unikn.dbis.univis.meta.impl.DimensionImpl"/>
+        <!-- The hibernate mapping resources -->
+        <mapping resource="unikn/dbis/univis/meta/TreeFresh.hbm.xml"/>
+        <mapping resource="unikn/dbis/univis/meta/DiceBox.hbm.xml"/>
+        <mapping resource="unikn/dbis/univis/meta/Cube.hbm.xml"/>
+        <mapping resource="unikn/dbis/univis/meta/Dimension.hbm.xml"/>
 
     </session-factory>
 

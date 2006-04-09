@@ -1,12 +1,9 @@
 package unikn.dbis.univis.meta;
 
-import javax.swing.tree.TreeNode;
-import java.util.List;
+import java.awt.*;
 
 /**
- * TODO: document me!!!
- * <p/>
- * <code>Cube</code>.
+ * The <code>Cube</code> contains information about the OLAP cube.
  * <p/>
  * User: raedler, weiler
  * Date: 07.04.2006
@@ -17,23 +14,19 @@ import java.util.List;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public interface Cube extends TreeNode {
+public interface Cube {
 
     /**
-     * Returns the name of the table that contains the cube
-     * data.
+     * Returns the color of the cube.
      *
-     * @return The name of the table that contains the cube
-     *         data.
+     * @return The color of the cube.
      */
-    public String getTableName();
+    public Color getColor();
 
     /**
-     * Returns the top dimensions of the cube. A dimension
-     * equals a side of the cube. See OLAP Cube for more
-     * details.
+     * Sets the color of the cube.
      *
-     * @return The top dimensions of the cube.
+     * @param color The color of the cube.
      */
-    public List<Dimension> getDimensions();
+    public void setColor(Color color);
 }

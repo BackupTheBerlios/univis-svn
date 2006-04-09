@@ -1,19 +1,14 @@
 package unikn.dbis.univis.meta.impl;
 
 import unikn.dbis.univis.meta.Dimension;
+import unikn.dbis.univis.meta.Cube;
+import unikn.dbis.univis.meta.TreeFresh;
 
-import javax.persistence.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import java.util.*;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.apache.commons.collections.CollectionUtils;
-
 /**
- * TODO: document me!!!
- * <p/>
- * <code>DimensionImpl</code>.
+ * The <code>DimensionImpl</code> represents a Dimension of an
+ * OLAP cube.
  * <p/>
  * User: raedler, weiler
  * Date: 07.04.2006
@@ -24,179 +19,125 @@ import org.apache.commons.collections.CollectionUtils;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-@Entity
-@Table(name = "UNIVIS_DIMENSION")
-public class DimensionImpl implements Dimension {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    private boolean isAbstract;
-
-    private String tableName;
-
-    @ManyToOne(targetEntity = DimensionImpl.class, cascade = CascadeType.ALL)
-    private Dimension superDimension;
-
-    @OneToMany(targetEntity = DimensionImpl.class, cascade = CascadeType.ALL)
-    private List<Dimension> subDimensions;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public boolean isAbstract() {
-        return isAbstract;
-    }
-
-    public void setAbstract(boolean isAbstract) {
-        this.isAbstract = isAbstract;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public Dimension getSuperDimension() {
-        return superDimension;
-    }
-
-    public void setSuperDimension(Dimension superDimension) {
-        this.superDimension = superDimension;
-    }
-
-    public List<Dimension> getSubDimensions() {
-        return subDimensions;
-    }
-
-    public void setSubDimensions(List<Dimension> subDimensions) {
-        this.subDimensions = subDimensions;
-    }
-
-    public void addSubDimension(Dimension subDimension) {
-        if (subDimensions == null) {
-            subDimensions = new ArrayList<Dimension>();
-        }
-        subDimensions.add(subDimension);
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        final DimensionImpl dimension = (DimensionImpl) o;
-
-        if (isAbstract != dimension.isAbstract) return false;
-        if (id != null ? !id.equals(dimension.id) : dimension.id != null) return false;
-        if (subDimensions != null ? !subDimensions.equals(dimension.subDimensions) : dimension.subDimensions != null)
-            return false;
-        if (superDimension != null ? !superDimension.equals(dimension.superDimension) : dimension.superDimension != null)
-            return false;
-        if (tableName != null ? !tableName.equals(dimension.tableName) : dimension.tableName != null) return false;
-
-        return true;
-    }
-
-    public int hashCode() {
-        int result;
-        result = (id != null ? id.hashCode() : 0);
-        result = 29 * result + (isAbstract ? 1 : 0);
-        result = 29 * result + (tableName != null ? tableName.hashCode() : 0);
-        result = 29 * result + (superDimension != null ? superDimension.hashCode() : 0);
-        result = 29 * result + (subDimensions != null ? subDimensions.hashCode() : 0);
-        return result;
-    }
+public class DimensionImpl extends TreeFresh<DimensionImpl> implements Dimension {
 
     // ##############################################################################
-    // TEST
+    // Interface implementations.
     // ##############################################################################
 
-    /**
-     * Returns the child <code>TreeNode</code> at index
-     * <code>childIndex</code>.
-     */
-    public TreeNode getChildAt(int childIndex) {
-        return subDimensions.get(childIndex);
-    }
+    // Whether the dimension is summable or not.
+    private boolean summable;
+
+    // The cubes that supports this dimension.
+    private Set<Cube> supportedCubes;
+
+    // The level of the dimension shown in the tree.
+    private Integer level;
+
+    // The category of the dimension shown in the tree.
+    private String category;
 
     /**
-     * Returns the number of children <code>TreeNode</code>s the receiver
-     * contains.
-     */
-    public int getChildCount() {
-        return subDimensions.size();
-    }
-
-    /**
-     * Returns the parent <code>TreeNode</code> of the receiver.
-     */
-    public TreeNode getParent() {
-        return superDimension;
-    }
-
-    /**
-     * Returns the index of <code>node</code> in the receivers children.
-     * If the receiver does not contain <code>node</code>, -1 will be
-     * returned.
-     */
-    public int getIndex(TreeNode node) {
-        //noinspection SuspiciousMethodCalls
-        return subDimensions.indexOf(node);
-    }
-
-    /**
-     * Returns true if the receiver allows children.
-     */
-    public boolean getAllowsChildren() {
-        return subDimensions.size() > 0;
-    }
-
-    /**
-     * Returns true if the receiver is a leaf.
-     */
-    public boolean isLeaf() {
-        return subDimensions.size() <= 0;
-    }
-
-    /**
-     * Returns the children of the receiver as an <code>Enumeration</code>.
-     */
-    public Enumeration children() {
-        return Collections.enumeration(subDimensions);
-    }
-
-    /**
-     * Returns a string representation of the object. In general, the
-     * <code>toString</code> method returns a string that
-     * "textually represents" this object. The result should
-     * be a concise but informative representation that is easy for a
-     * person to read.
-     * It is recommended that all subclasses override this method.
-     * <p/>
-     * The <code>toString</code> method for class <code>Object</code>
-     * returns a string consisting of the name of the class of which the
-     * object is an instance, the at-sign character `<code>@</code>', and
-     * the unsigned hexadecimal representation of the hash code of the
-     * object. In other words, this method returns a string equal to the
-     * value of:
-     * <blockquote>
-     * <pre>
-     * getClass().getName() + '@' + Integer.toHexString(hashCode())
-     * </pre></blockquote>
+     * Whether the dimension is a summable dimension which
+     * couldn't be used for dragging into the visualization
+     * or not.
      *
-     * @return a string representation of the object.
+     * @return Whether the dimension is a summable dimension
+     *         or not.
      */
-    @Override
-    public String toString() {
-        return tableName;
+    public boolean isSummable() {
+        return summable;
+    }
+
+    /**
+     * Sets whether the dimension is a summable dimension
+     * which couldn't be used for dragging into the visualization
+     * or not.
+     *
+     * @param summable Whether the dimension is a summable
+     *                 dimension or not.
+     */
+    public void setSummable(boolean summable) {
+        this.summable = summable;
+    }
+
+    /**
+     * Returns the cubes that supports this dimension.
+     *
+     * @return The cubes that supports this dimension.
+     */
+    public Set<Cube> getSupportedCubes() {
+        return supportedCubes;
+    }
+
+    /**
+     * Sets the cubes that supports this dimension.
+     *
+     * @param supportedCubes The cubes that supports this
+     *                       dimension.
+     */
+    public void setSupportedCubes(Set<Cube> supportedCubes) {
+        this.supportedCubes = supportedCubes;
+    }
+
+    /**
+     * Returns the level of the dimension shown in the tree.
+     *
+     * @return The level of the dimension shown in the tree.
+     */
+    public Integer getLevel() {
+        return level;
+    }
+
+    /**
+     * Sets the level of the dimension shown in the tree.
+     *
+     * @param level The level of the dimension shown in the
+     *              tree.
+     */
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    /**
+     * Returns the category of the dimension shown in the
+     * tree.
+     *
+     * @return The category of the dimension shown in the
+     *         tree.
+     */
+    public String getCategory() {
+        return category;
+    }
+
+    /**
+     * Sets the category of the dimension shown in the
+     * tree.
+     *
+     * @param category The category of the dimension shown in
+     *                 the tree.
+     */
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    // ##############################################################################
+    // Abstract method implementations.
+    // ##############################################################################
+
+    /**
+     * Clones the tree fresh item to handle unique occurence
+     * in the tree to perform tree path actions.
+     *
+     * @param clone The clone with the settings of the super class.
+     * @return The cloned tree fresh item.
+     * @throws CloneNotSupportedException This exception occures if the clone
+     *                                    couldn't be produced.
+     */
+    public DimensionImpl cloneSpecific(DimensionImpl clone) throws CloneNotSupportedException {
+        clone.setSummable(summable);
+        clone.setSupportedCubes(supportedCubes);
+
+        return clone;
     }
 }
