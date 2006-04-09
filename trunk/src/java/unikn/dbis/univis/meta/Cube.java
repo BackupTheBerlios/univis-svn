@@ -29,4 +29,18 @@ public interface Cube {
      * @param color The color of the cube.
      */
     public void setColor(Color color);
+
+    /**
+     * TODO: document me!!!
+     *
+     * @return
+     */
+    public TreeFresh getHierarchy();
+
+    /**
+     * TODO: document me!!!
+     *
+     * @param hierarchy
+     */
+    public void setHierarchy(TreeFresh hierarchy);
 }

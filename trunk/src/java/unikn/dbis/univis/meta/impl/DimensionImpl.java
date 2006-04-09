@@ -2,7 +2,7 @@ package unikn.dbis.univis.meta.impl;
 
 import unikn.dbis.univis.meta.Dimension;
 import unikn.dbis.univis.meta.Cube;
-import unikn.dbis.univis.meta.TreeFresh;
+import unikn.dbis.univis.meta.DataReference;
 
 import java.util.*;
 
@@ -19,23 +19,42 @@ import java.util.*;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class DimensionImpl extends TreeFresh<DimensionImpl> implements Dimension {
+public class DimensionImpl extends DataReferenceImpl implements Dimension, DataReference {
 
     // ##############################################################################
     // Interface implementations.
     // ##############################################################################
+
+    // The i18nKey of the label that should be shown in the
+    // tree.
+    private String i18nKey;
 
     // Whether the dimension is summable or not.
     private boolean summable;
 
     // The cubes that supports this dimension.
     private Set<Cube> supportedCubes;
+    /**
+     * Returns the i18nKey of the label that should be shown in the
+     * tree.
+     *
+     * @return The i18nKey of the label that should be shown in the
+     *         tree.
+     */
+    public String getI18nKey() {
+        return i18nKey;
+    }
 
-    // The level of the dimension shown in the tree.
-    private Integer level;
-
-    // The category of the dimension shown in the tree.
-    private String category;
+    /**
+     * Sets the i18nKey of the label that should be shown in the
+     * // tree.
+     *
+     * @param i18nKey The i18nKey of the label that should be shown in
+     *                the tree.
+     */
+    public void setI18nKey(String i18nKey) {
+        this.i18nKey = i18nKey;
+    }
 
     /**
      * Whether the dimension is a summable dimension which
@@ -78,66 +97,5 @@ public class DimensionImpl extends TreeFresh<DimensionImpl> implements Dimension
      */
     public void setSupportedCubes(Set<Cube> supportedCubes) {
         this.supportedCubes = supportedCubes;
-    }
-
-    /**
-     * Returns the level of the dimension shown in the tree.
-     *
-     * @return The level of the dimension shown in the tree.
-     */
-    public Integer getLevel() {
-        return level;
-    }
-
-    /**
-     * Sets the level of the dimension shown in the tree.
-     *
-     * @param level The level of the dimension shown in the
-     *              tree.
-     */
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    /**
-     * Returns the category of the dimension shown in the
-     * tree.
-     *
-     * @return The category of the dimension shown in the
-     *         tree.
-     */
-    public String getCategory() {
-        return category;
-    }
-
-    /**
-     * Sets the category of the dimension shown in the
-     * tree.
-     *
-     * @param category The category of the dimension shown in
-     *                 the tree.
-     */
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    // ##############################################################################
-    // Abstract method implementations.
-    // ##############################################################################
-
-    /**
-     * Clones the tree fresh item to handle unique occurence
-     * in the tree to perform tree path actions.
-     *
-     * @param clone The clone with the settings of the super class.
-     * @return The cloned tree fresh item.
-     * @throws CloneNotSupportedException This exception occures if the clone
-     *                                    couldn't be produced.
-     */
-    public DimensionImpl cloneSpecific(DimensionImpl clone) throws CloneNotSupportedException {
-        clone.setSummable(summable);
-        clone.setSupportedCubes(supportedCubes);
-
-        return clone;
     }
 }

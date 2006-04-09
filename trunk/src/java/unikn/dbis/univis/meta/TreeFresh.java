@@ -20,17 +20,13 @@ import java.util.Collections;
  * @see Cloneable
  * @since UniVis Explorer 0.1
  */
-public abstract class TreeFresh<T extends TreeFresh> implements TreeNode, Cloneable {
+public class TreeFresh<T extends TreeFresh> implements TreeNode, Cloneable {
 
     // The (unique) identifier of the tree fresh item.
     private Long id;
 
-    // The i18nKey of the label that should be shown in the
-    // tree.
-    private String i18nKey;
-
-    // The name of the table that contains the data.
-    private String tableName;
+    // TODO: document me!!!
+    private DataReference dataReference;
 
     // The children of the tree fresh item.
     private List<TreeFresh> children;
@@ -57,44 +53,21 @@ public abstract class TreeFresh<T extends TreeFresh> implements TreeNode, Clonea
     }
 
     /**
-     * Returns the i18nKey of the label that should be shown in the
-     * tree.
+     * TODO: document me!!!
      *
-     * @return The i18nKey of the label that should be shown in the
-     *         tree.
+     * @return
      */
-    public String getI18nKey() {
-        return i18nKey;
+    public DataReference getDataReference() {
+        return dataReference;
     }
 
     /**
-     * Sets the i18nKey of the label that should be shown in the
-     * // tree.
+     * TODO: document me!!!
      *
-     * @param i18nKey The i18nKey of the label that should be shown in
-     *            the tree.
+     * @param dataReference
      */
-    public void setI18nKey(String i18nKey) {
-        this.i18nKey = i18nKey;
-    }
-
-    /**
-     * Returns the name of the table that contains the data.
-     *
-     * @return The name of the table that contains the data.
-     */
-    public String getTableName() {
-        return tableName;
-    }
-
-    /**
-     * Sets the name of the table that contains the data.
-     *
-     * @param tableName The name of the table that contains
-     *                  the data.
-     */
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setDataReference(DataReference dataReference) {
+        this.dataReference = dataReference;
     }
 
     /**
@@ -129,7 +102,7 @@ public abstract class TreeFresh<T extends TreeFresh> implements TreeNode, Clonea
      * @throws CloneNotSupportedException This exception occures if the clone
      *                                    couldn't be produced.
      */
-    public abstract T cloneSpecific(T clone) throws CloneNotSupportedException;
+    //public abstract T cloneSpecific(T clone) throws CloneNotSupportedException;
 
     // ##############################################################################
     // Interface implementations.
@@ -231,12 +204,11 @@ public abstract class TreeFresh<T extends TreeFresh> implements TreeNode, Clonea
         }
 
         treeFresh.setId(id);
-        treeFresh.setI18nKey(i18nKey);
-        treeFresh.setTableName(tableName);
         treeFresh.setChildren(children);
+        treeFresh.setDataReference(dataReference);
 
         //noinspection unchecked
-        return cloneSpecific((T) treeFresh);
+        return treeFresh;//cloneSpecific((T) treeFresh);
     }
 
     /**
@@ -262,6 +234,11 @@ public abstract class TreeFresh<T extends TreeFresh> implements TreeNode, Clonea
      */
     @Override
     public String toString() {
-        return i18nKey;
+
+        if (getDataReference() != null) {
+            return getDataReference().getTableName();
+        }
+
+        return super.toString();
     }
 }

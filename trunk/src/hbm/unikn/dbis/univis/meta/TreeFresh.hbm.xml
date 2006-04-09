@@ -5,20 +5,14 @@
 
 <hibernate-mapping>
 
-    <class name="unikn.dbis.univis.meta.TreeFresh" table="META_TREE_FRESH" abstract="true">
+    <class name="unikn.dbis.univis.meta.TreeFresh" table="META_TREE_FRESH">
 
         <id name="id" type="long" unsaved-value="-1">
             <column name="ID" not-null="true"/>
             <generator class="native"/>
         </id>
 
-        <property name="i18nKey" type="string">
-            <column name="I18N_KEY" not-null="true"/>
-        </property>
-
-        <property name="tableName" type="string">
-            <column name="TABLE_NAME" not-null="true"/>
-        </property>
+        <many-to-one name="dataReference" column="DATA_REFERENCE_ID" class="unikn.dbis.univis.meta.impl.DataReferenceImpl"/>
 
         <list name="children" table="META_TREE_FRESH_RELATION">
             <key column="PARENT_ID" not-null="true"/>

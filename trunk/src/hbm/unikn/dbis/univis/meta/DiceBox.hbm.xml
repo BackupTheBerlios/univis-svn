@@ -9,6 +9,10 @@
 
         <key column="TREE_FRESH_ID"/>
 
+        <property name="name" type="string">
+            <column name="DICE_BOX_NAME" not-null="true"/>
+        </property>
+
     </joined-subclass>
 
 </hibernate-mapping>

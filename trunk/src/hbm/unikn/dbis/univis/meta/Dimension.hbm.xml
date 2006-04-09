@@ -5,9 +5,9 @@
 
 <hibernate-mapping>
 
-    <joined-subclass name="unikn.dbis.univis.meta.impl.DimensionImpl" table="META_DIMENSION" extends="unikn.dbis.univis.meta.TreeFresh">
+    <joined-subclass name="unikn.dbis.univis.meta.impl.DimensionImpl" table="META_DIMENSION" extends="unikn.dbis.univis.meta.impl.DataReferenceImpl">
 
-        <key column="TREE_FRESH_ID"/>
+        <key column="DATA_REFERENCE_ID"/>
 
         <property name="summable" type="boolean">
             <column name="IS_ABSTRACT" not-null="true"/>
@@ -17,14 +17,6 @@
             <key column="DIMENSION_ID" not-null="true"/>
             <many-to-many column="CUBE_ID" class="unikn.dbis.univis.meta.impl.CubeImpl"/>
         </set>
-
-        <property name="level" type="integer">
-            <column name="LEVEL" not-null="false"/>
-        </property>
-
-        <property name="category" type="string">
-            <column name="CATEGORY" not-null="false"/>
-        </property>
 
     </joined-subclass>
 

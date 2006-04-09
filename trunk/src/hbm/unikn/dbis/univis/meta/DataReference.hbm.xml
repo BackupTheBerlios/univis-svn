@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="unikn.dbis.univis.meta.impl.DataReferenceImpl" table="META_DATA_REFERENCE" abstract="true">
+
+        <id name="id" type="long" unsaved-value="-1">
+            <column name="ID" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property name="tableName" type="string">
+            <column name="TABLE_NAME" not-null="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

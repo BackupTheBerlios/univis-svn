@@ -37,6 +37,7 @@
 
         <!-- The hibernate mapping resources -->
         <mapping resource="unikn/dbis/univis/meta/TreeFresh.hbm.xml"/>
+        <mapping resource="unikn/dbis/univis/meta/DataReference.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/DiceBox.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/Cube.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/Dimension.hbm.xml"/>

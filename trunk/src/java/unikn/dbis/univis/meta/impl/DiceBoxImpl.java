@@ -19,6 +19,16 @@ import unikn.dbis.univis.meta.DiceBox;
  */
 public class DiceBoxImpl extends TreeFresh implements DiceBox {
 
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * Clones the tree fresh item to handle unique occurence
      * in the tree to perform tree path actions.

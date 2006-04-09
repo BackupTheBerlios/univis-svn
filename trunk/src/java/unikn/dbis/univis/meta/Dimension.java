@@ -51,37 +51,4 @@ public interface Dimension {
      *                       dimension.
      */
     public void setSupportedCubes(Set<Cube> supportedCubes);
-
-    /**
-     * Returns the level of the dimension shown in the tree.
-     *
-     * @return The level of the dimension shown in the tree.
-     */
-    public Integer getLevel();
-
-    /**
-     * Sets the level of the dimension shown in the tree.
-     *
-     * @param level The level of the dimension shown in the
-     *              tree.
-     */
-    public void setLevel(Integer level);
-
-    /**
-     * Returns the category of the dimension shown in the
-     * tree.
-     *
-     * @return The category of the dimension shown in the
-     *         tree.
-     */
-    public String getCategory();
-
-    /**
-     * Sets the category of the dimension shown in the
-     * tree.
-     *
-     * @param category The category of the dimension shown in
-     *                 the tree.
-     */
-    public void setCategory(String category);
 }

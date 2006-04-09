@@ -19,7 +19,7 @@ import java.awt.*;
  * @see Cube
  * @since UniVis Explorer 0.1
  */
-public class CubeImpl extends TreeFresh<CubeImpl> implements Cube {
+public class CubeImpl extends DataReferenceImpl implements Cube {
 
     // ##############################################################################
     // Interface implementations.
@@ -27,6 +27,9 @@ public class CubeImpl extends TreeFresh<CubeImpl> implements Cube {
 
     // The color of the cube.
     private Color color;
+
+    // TODO: document me!!!
+    private TreeFresh hierarchy;
 
     /**
      * Returns the color of the cube.
@@ -62,6 +65,24 @@ public class CubeImpl extends TreeFresh<CubeImpl> implements Cube {
      */
     public void setColorRGB(int rgb) {
         color = new Color(rgb);
+    }
+
+    /**
+     * TODO: document me!!!
+     *
+     * @return
+     */
+    public TreeFresh getHierarchy() {
+        return hierarchy;
+    }
+
+    /**
+     * TODO: document me!!!
+     *
+     * @param hierarchy
+     */
+    public void setHierarchy(TreeFresh hierarchy) {
+        this.hierarchy = hierarchy;
     }
 
     // ##############################################################################
