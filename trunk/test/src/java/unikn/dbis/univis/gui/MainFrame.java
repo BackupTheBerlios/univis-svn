@@ -26,6 +26,7 @@ public class MainFrame extends JFrame {
 
     private JSplitPane overviewSplit = new JSplitPane();
     private JScrollPane treeScroll = new JScrollPane();
+    private JScrollPane graphScroll = new JScrollPane();
     private JPanel rightPanel = new JPanel();
     private JPanel leftPanel = new JPanel(new GridBagLayout());
     private JLabel facts = new JLabel("FACTS");
@@ -55,8 +56,14 @@ public class MainFrame extends JFrame {
         leftPanel.add(new CubeLabel(Color.BLUE, "Students", true), leftConstraints);
 
         leftConstraints.gridy = ++y;
+        leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
+
+        leftConstraints.gridy = ++y;
         leftPanel.add(new JTree(), leftConstraints);
 
+        leftConstraints.gridy = ++y;
+        leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
+        
         leftConstraints.gridy = ++y;
         leftPanel.add(measures, leftConstraints);
 
@@ -74,7 +81,8 @@ public class MainFrame extends JFrame {
 
 
         rightPanel.add(new JGraph());
-        overviewSplit.setRightComponent(rightPanel);
+        graphScroll.setViewportView(rightPanel);
+        overviewSplit.setRightComponent(graphScroll);
 
         this.getContentPane().add(overviewSplit);
     }
