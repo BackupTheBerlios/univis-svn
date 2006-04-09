@@ -19,6 +19,7 @@ import unikn.dbis.univis.meta.impl.DiceBoxImpl;
 import unikn.dbis.univis.meta.TreeFresh;
 import unikn.dbis.univis.meta.Dimension;
 import unikn.dbis.univis.meta.Cube;
+import unikn.dbis.univis.meta.DiceBox;
 
 import java.awt.*;
 import java.awt.event.MouseListener;
@@ -62,8 +63,10 @@ public class JTreeTest extends JTree {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-        TreeFresh cube = (TreeFresh) session.createQuery("from " + DiceBoxImpl.class.getName() + " where i18nKey = 'UniVis Explorer'").uniqueResult();
-        DefaultTreeModel model = new DefaultTreeModel(cube);
+        //Cube cube = (CubeImpl) session.load(CubeImpl.class, 1000L);
+
+        DiceBoxImpl diceBox = (DiceBoxImpl) session.createQuery("from " + DiceBoxImpl.class.getName() + " where name = 'UniVis Explorer'").uniqueResult();
+        DefaultTreeModel model = new DefaultTreeModel(diceBox);
         setModel(model);
         setDragEnabled(true);
         setEditable(true);
@@ -116,21 +119,30 @@ public class JTreeTest extends JTree {
 
                 if (SwingUtilities.isRightMouseButton(e)) {
 
-                    TreeFresh treeFresh = (TreeFresh) JTreeTest.this.getLastSelectedPathComponent();
+                    Object o = JTreeTest.this.getLastSelectedPathComponent();
 
-                    try {
-                        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/univis", "univis", "UniVis");
+                    if (o instanceof TreeFresh) {
 
-                        Statement stmt = connection.createStatement();
+                        TreeFresh treeFresh = (TreeFresh) o;
 
-                        ResultSet result = stmt.executeQuery("SELECT * FROM " + treeFresh.getTableName());
+                        System.out.println("TABLE_NAME: " + treeFresh.getDataReference().getTableName());
 
-                        while (result.next()) {
-                            System.out.println("TEST: " + result.getString(1));
+                        /*
+                        try {
+                            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/univis", "univis", "UniVis");
+
+                            Statement stmt = connection.createStatement();
+
+                            ResultSet result = stmt.executeQuery("SELECT * FROM " + treeFresh.getDataReference().getTableName());
+
+                            while (result.next()) {
+                                System.out.println("TEST: " + result.getString(1));
+                            }
                         }
-                    }
-                    catch (SQLException e1) {
-                        e1.printStackTrace();
+                        catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                        */
                     }
                 }
             }
