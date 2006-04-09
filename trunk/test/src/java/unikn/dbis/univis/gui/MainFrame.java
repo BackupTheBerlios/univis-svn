@@ -1,11 +1,9 @@
 package unikn.dbis.univis.gui;
 
-import unikn.dbis.univis.navigation.tree.JTreeTest;
+import org.jgraph.JGraph;
 
 import javax.swing.*;
 import java.awt.*;
-
-import org.jgraph.JGraph;
 
 
 /**
@@ -63,7 +61,7 @@ public class MainFrame extends JFrame {
 
         leftConstraints.gridy = ++y;
         leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
-        
+
         leftConstraints.gridy = ++y;
         leftPanel.add(measures, leftConstraints);
 
@@ -79,8 +77,7 @@ public class MainFrame extends JFrame {
 
         overviewSplit.setLeftComponent(treeScroll);
 
-
-        rightPanel.add(new JGraph());
+        rightPanel.add(new GuiGraph());
         graphScroll.setViewportView(rightPanel);
         overviewSplit.setRightComponent(graphScroll);
 

@@ -43,4 +43,5 @@ public class VisualCube implements Icon {
     public int getIconHeight() {
         return 15;
     }
+    
 }
