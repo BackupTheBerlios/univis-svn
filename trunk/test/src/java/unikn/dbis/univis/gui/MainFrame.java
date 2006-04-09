@@ -5,6 +5,9 @@ import unikn.dbis.univis.navigation.tree.JTreeTest;
 import javax.swing.*;
 import java.awt.*;
 
+import org.jgraph.JGraph;
+
+
 /**
  * TODO: document me!!!
  * <p/>
@@ -25,7 +28,6 @@ public class MainFrame extends JFrame {
     private JScrollPane treeScroll = new JScrollPane();
     private JPanel rightPanel = new JPanel();
     private JPanel leftPanel = new JPanel(new GridBagLayout());
-    private JLabel visual = new JLabel(new Visual());
     private JLabel facts = new JLabel("FACTS");
     private JLabel measures = new JLabel("MEASURES");
 
@@ -43,6 +45,8 @@ public class MainFrame extends JFrame {
         leftConstraints.gridx = 0;
         leftConstraints.gridy = y;
         leftConstraints.anchor = GridBagConstraints.NORTHWEST;
+
+        JGraph graph = new JGraph();
 
         leftPanel.add(facts, leftConstraints);
 
@@ -70,7 +74,8 @@ public class MainFrame extends JFrame {
 
         overviewSplit.setLeftComponent(treeScroll);
 
-        rightPanel.add(visual);
+
+        rightPanel.add(new JGraph());
         overviewSplit.setRightComponent(rightPanel);
 
         this.getContentPane().add(overviewSplit);
