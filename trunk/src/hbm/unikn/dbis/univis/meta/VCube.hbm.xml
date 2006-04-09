@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!--
+   @author Roman R&auml;dle
+   @author Andreas Weiler
+   @version $Revision$
+   @since UniVis Explorer 0.1
+-->
+
+<hibernate-mapping>
+
+    <joined-subclass name="unikn.dbis.univis.meta.impl.VCubeImpl" table="META_CUBE" extends="unikn.dbis.univis.meta.impl.VDataReferenceImpl">
+
+        <key column="DATA_REFERENCE_ID"/>
+
+        <property name="colorRGB" type="integer">
+            <column name="COLOR_RGB" not-null="true"/>
+        </property>
+
+        <many-to-one name="hierarchy" column="HIERARCHY_ID" class="unikn.dbis.univis.meta.impl.VHierarchyImpl"/>
+
+    </joined-subclass>
+
+</hibernate-mapping>
