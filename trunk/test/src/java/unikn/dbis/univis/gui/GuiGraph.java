@@ -35,7 +35,6 @@ public class GuiGraph extends JGraph implements DropTargetListener {
 
     // Control-drag should clone selection
     //this.setCloneable(true);
-
     // Enable edit without final RETURN keystroke
     this.setInvokesStopCellEditing(true);
 
@@ -73,16 +72,13 @@ public class GuiGraph extends JGraph implements DropTargetListener {
     edge2.setTarget(cells[2].getChildAt(0));
     cells[4] = edge2;
 
-       DefaultGraphCell peter = new DefaultGraphCell();
-       // peter.
-
 
     // Set Arrow Style for edge
-    int arrow2 = GraphConstants.ARROW_CLASSIC;
-    GraphConstants.setLineEnd(edge2.getAttributes(), arrow2);
+    GraphConstants.setLineEnd(edge2.getAttributes(), arrow1);
     GraphConstants.setEndFill(edge2.getAttributes(), true);
 
     // Insert the cells via the cache, so they get selected
+
     this.getGraphLayoutCache().insert(cells);
 }
 

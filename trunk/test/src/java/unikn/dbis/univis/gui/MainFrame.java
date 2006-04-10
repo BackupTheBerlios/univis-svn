@@ -81,6 +81,13 @@ public class MainFrame extends JFrame {
 
         leftConstraints.gridy = ++y;
         leftPanel.add(new CubeLabel(Color.BLUE, "Student number (heads)", false, 11, 11, 2), leftConstraints);
+
+        leftConstraints.gridy = ++y;
+        Font measureFont = new Font("Serif", Font.ITALIC, 11);
+        JLabel measure = new JLabel("Define new measure", new NewMeasureIcon(), 0);
+        measure.setFont(measureFont);
+        leftPanel.add(measure, leftConstraints);
+
         treeScroll.setViewportView(leftPanel);
 
         overviewSplit.setLeftComponent(treeScroll);
@@ -119,6 +126,7 @@ public class MainFrame extends JFrame {
        java.awt.EventQueue.invokeLater(new Runnable() {
            public void run() {
                try {
+                   UIManager.setLookAndFeel(new com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
                    new MainFrame().setVisible(true);
                } catch (Exception e) {
                    e.printStackTrace();
