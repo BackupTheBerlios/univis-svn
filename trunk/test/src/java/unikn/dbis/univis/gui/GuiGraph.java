@@ -34,7 +34,7 @@ public class GuiGraph extends JGraph implements DropTargetListener {
     this.setModel(model);
 
     // Control-drag should clone selection
-    this.setCloneable(true);
+    //this.setCloneable(true);
 
     // Enable edit without final RETURN keystroke
     this.setInvokesStopCellEditing(true);

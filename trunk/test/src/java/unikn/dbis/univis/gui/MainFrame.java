@@ -56,10 +56,10 @@ public class MainFrame extends JFrame {
         leftPanel.add(facts, leftConstraints);
 
         leftConstraints.gridy = ++y;
-        leftPanel.add(new CubeLabel(Color.RED, "Orders", true), leftConstraints);
+        leftPanel.add(new CubeLabel(Color.RED, "Orders", true, 21, 22, 10), leftConstraints);
 
         leftConstraints.gridy = ++y;
-        leftPanel.add(new CubeLabel(Color.BLUE, "Students", true), leftConstraints);
+        leftPanel.add(new CubeLabel(Color.BLUE, "Students", true, 21, 22, 10), leftConstraints);
 
         leftConstraints.gridy = ++y;
         leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
@@ -74,13 +74,13 @@ public class MainFrame extends JFrame {
         leftPanel.add(measures, leftConstraints);
 
         leftConstraints.gridy = ++y;
-        leftPanel.add(new CubeLabel(Color.RED, "Order amount, Euro", false), leftConstraints);
+        leftPanel.add(new CubeLabel(Color.RED, "Order amount, Euro", false, 11, 11, 2), leftConstraints);
 
         leftConstraints.gridy = ++y;
-        leftPanel.add(new CubeLabel(Color.BLUE, "Student number (cases)", false), leftConstraints);
+        leftPanel.add(new CubeLabel(Color.BLUE, "Student number (cases)", false, 11, 11, 2), leftConstraints);
 
         leftConstraints.gridy = ++y;
-        leftPanel.add(new CubeLabel(Color.BLUE, "Student number (heads)", false), leftConstraints);
+        leftPanel.add(new CubeLabel(Color.BLUE, "Student number (heads)", false, 11, 11, 2), leftConstraints);
         treeScroll.setViewportView(leftPanel);
 
         overviewSplit.setLeftComponent(treeScroll);

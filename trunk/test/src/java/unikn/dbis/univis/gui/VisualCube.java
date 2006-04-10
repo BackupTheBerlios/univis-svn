@@ -19,29 +19,58 @@ import java.awt.*;
  */
 public class VisualCube implements Icon {
 
-     private Color cubeColor;
-     private boolean threeD;
+    private Color cubeColor;
+    private boolean threeD;
+    private int width;
+    private int height;
+    private int start;
 
-    public VisualCube(Color cubeColor, boolean threeD) {
+    public VisualCube(Color cubeColor, boolean threeD, int width, int height, int start) {
         this.cubeColor = cubeColor;
         this.threeD = threeD;
+        this.width = width;
+        this.height = height;
+        this.start = start;
     }
 
     public void paintIcon(Component c, Graphics g, int x, int y) {
 
+        g.setColor(cubeColor);
+        g.fillRect(0, start, 10, 10);
         g.setColor(Color.BLACK);
-        g.drawRect(0, 0, 14, 14);
+        g.drawRect(0, start, 10 ,10);
+
+        if (threeD == true) {
+        g.setColor(cubeColor);
+        Polygon poly1 = new Polygon();
+        poly1.addPoint(0,10);
+        poly1.addPoint(5,5);
+        poly1.addPoint(15,5);
+        poly1.addPoint(10,10);
+        g.fillPolygon(poly1);
+        g.setColor(Color.BLACK);
+        g.drawPolygon(poly1);
 
         g.setColor(cubeColor);
-        g.fill3DRect(1, 1, 13, 13, threeD);
+        Polygon poly2 = new Polygon();
+        poly2.addPoint(10,20);
+        poly2.addPoint(15,15);
+        poly2.addPoint(15,5);
+        poly2.addPoint(10,10);
+        g.fillPolygon(poly2);
+        g.setColor(Color.BLACK);
+        g.drawPolygon(poly2);
+
+
+        }
     }
 
     public int getIconWidth() {
-        return 15;
+        return width;
     }
 
     public int getIconHeight() {
-        return 15;
+        return height;
     }
     
 }

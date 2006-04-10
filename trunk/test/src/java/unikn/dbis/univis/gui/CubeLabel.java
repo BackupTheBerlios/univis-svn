@@ -12,8 +12,9 @@ import java.awt.*;
  */
 public class CubeLabel extends JLabel {
 
-    public CubeLabel(Color color, String desc, boolean threeD) {
-        this.setIcon(new VisualCube(color, threeD));
+    public CubeLabel(Color color, String desc, boolean threeD, int width, int height, int start) {
+        this.setIcon(new VisualCube(color, threeD, width, height, start));
         this.setText(desc);
+        this.setIconTextGap(3);
     }
 }
