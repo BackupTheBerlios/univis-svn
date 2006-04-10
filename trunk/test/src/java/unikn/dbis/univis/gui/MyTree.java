@@ -9,6 +9,7 @@ import javax.swing.event.TreeSelectionEvent;
 import java.awt.dnd.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.datatransfer.Transferable;
 import java.util.*;
 
 // @todo document me!
@@ -75,8 +76,6 @@ public class MyTree extends JPanel implements DragGestureListener, DragSourceLis
 
         fakTree = new JTree(rootDim);
 
-        fakTree.setDragEnabled(true);
-
         this.add(fakTree);
     }
 
@@ -84,8 +83,8 @@ public class MyTree extends JPanel implements DragGestureListener, DragSourceLis
     public void dragGestureRecognized(DragGestureEvent e) {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) fakTree.getLastSelectedPathComponent();
-
         System.out.println("Object is choosen");
+        e.startDrag(DragSource.DefaultCopyDrop, new ObjectTransferable(), this);
 
     }
 
