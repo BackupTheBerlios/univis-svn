@@ -47,7 +47,6 @@ public class MainFrame extends JFrame {
         leftConstraints.gridx = 0;
         leftConstraints.gridy = y;
         leftConstraints.anchor = GridBagConstraints.NORTHWEST;
-        leftPanel.setBackground(Color.WHITE);
         facts.setFont(tahoma);
         leftPanel.add(facts, leftConstraints);
 
