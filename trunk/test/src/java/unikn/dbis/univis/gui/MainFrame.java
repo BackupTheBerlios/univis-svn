@@ -1,14 +1,8 @@
 package unikn.dbis.univis.gui;
 
-import org.jgraph.JGraph;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.*;
-import java.io.IOException;
 
 
 /**
@@ -34,6 +28,7 @@ public class MainFrame extends JFrame {
     private JPanel leftPanel = new JPanel(new GridBagLayout());
     private JLabel facts = new JLabel("FACTS");
     private JLabel measures = new JLabel("MEASURES");
+    private Font tahoma = new Font("Tahoma", Font.BOLD, 11);
     private GuiGraph guiGraph = new GuiGraph();
 
     public Transferable tr;
@@ -53,6 +48,7 @@ public class MainFrame extends JFrame {
         leftConstraints.gridy = y;
         leftConstraints.anchor = GridBagConstraints.NORTHWEST;
 
+        facts.setFont(tahoma);
         leftPanel.add(facts, leftConstraints);
 
         leftConstraints.gridy = ++y;
@@ -70,6 +66,7 @@ public class MainFrame extends JFrame {
         leftConstraints.gridy = ++y;
         leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
 
+        measures.setFont(tahoma);
         leftConstraints.gridy = ++y;
         leftPanel.add(measures, leftConstraints);
 
