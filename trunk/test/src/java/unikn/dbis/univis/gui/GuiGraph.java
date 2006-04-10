@@ -36,6 +36,7 @@ public class GuiGraph extends JGraph implements DropTargetListener {
     new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
 
     this.setModel(model);
+    this.setPreferredSize(new Dimension(600,600));
 
     // Control-drag should clone selection
     //this.setCloneable(true);
@@ -100,6 +101,7 @@ public static DefaultGraphCell createVertex(String name, double x,
         GraphConstants.setGradientColor(cell.getAttributes(), bg);
         GraphConstants.setOpaque(cell.getAttributes(), true);
     }
+
 
     // Set raised border
     if (raised)
