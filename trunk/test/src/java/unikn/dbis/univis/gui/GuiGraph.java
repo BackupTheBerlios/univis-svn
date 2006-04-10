@@ -5,6 +5,7 @@ import org.jgraph.graph.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.*;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -21,12 +22,14 @@ import java.awt.geom.Rectangle2D;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class GuiGraph extends JGraph{
+public class GuiGraph extends JGraph implements DropTargetListener {
 
 // Construct Model and Graph
     GraphModel model = new DefaultGraphModel();
 
     public GuiGraph() {
+
+    new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
 
     this.setModel(model);
 
@@ -47,7 +50,6 @@ public class GuiGraph extends JGraph{
 
     // Create Deutschland Vertex
     cells[1] = createVertex("Deutschland", 120, 20, 100, 100, Color.ORANGE, true);
-
 
        // Create Ausland Vertex
     cells[2] = createVertex("Ausland", 120, 420, 100, 100, Color.ORANGE, true);
@@ -70,6 +72,10 @@ public class GuiGraph extends JGraph{
     edge2.setSource(cells[0].getChildAt(0));
     edge2.setTarget(cells[2].getChildAt(0));
     cells[4] = edge2;
+
+       DefaultGraphCell peter = new DefaultGraphCell();
+       // peter.
+
 
     // Set Arrow Style for edge
     int arrow2 = GraphConstants.ARROW_CLASSIC;
@@ -109,4 +115,24 @@ public static DefaultGraphCell createVertex(String name, double x,
 
     return cell;
 }
+
+    public void dragEnter(DropTargetDragEvent dtde) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void dragOver(DropTargetDragEvent dtde) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void dragExit(DropTargetEvent dte) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void drop(DropTargetDropEvent dtde) {
+        System.out.println("Object is Entered");//To change body of implemented methods use File | Settings | File Templates.
+    }
 }

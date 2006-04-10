@@ -4,6 +4,11 @@ import org.jgraph.JGraph;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.*;
+import java.io.IOException;
 
 
 /**
@@ -29,6 +34,9 @@ public class MainFrame extends JFrame {
     private JPanel leftPanel = new JPanel(new GridBagLayout());
     private JLabel facts = new JLabel("FACTS");
     private JLabel measures = new JLabel("MEASURES");
+    private GuiGraph guiGraph = new GuiGraph();
+
+    public Transferable tr;
 
     private GridBagConstraints leftConstraints = new GridBagConstraints();
 
@@ -57,7 +65,7 @@ public class MainFrame extends JFrame {
         leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
 
         leftConstraints.gridy = ++y;
-        leftPanel.add(new JTree(), leftConstraints);
+        leftPanel.add(new MyTree(), leftConstraints);
 
         leftConstraints.gridy = ++y;
         leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
@@ -77,7 +85,7 @@ public class MainFrame extends JFrame {
 
         overviewSplit.setLeftComponent(treeScroll);
 
-        rightPanel.add(new GuiGraph());
+        rightPanel.add(guiGraph);
         graphScroll.setViewportView(rightPanel);
         overviewSplit.setRightComponent(graphScroll);
 
@@ -104,18 +112,20 @@ public class MainFrame extends JFrame {
         this.setLocation((int) width / 2, (int) height / 2);
     }
 
-     /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new MainFrame().setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+    /**
+    * @param args the command line arguments
+    */
+   public static void main(String args[]) {
+       java.awt.EventQueue.invokeLater(new Runnable() {
+           public void run() {
+               try {
+                   new MainFrame().setVisible(true);
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+           }
+       });
+   }
+
+
 }
