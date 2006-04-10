@@ -26,6 +26,10 @@ public class GuiGraph extends JGraph implements DropTargetListener {
 
 // Construct Model and Graph
     GraphModel model = new DefaultGraphModel();
+    // Insert all three cells in one call, so we need an array to store them
+    private DefaultGraphCell[] cells = new DefaultGraphCell[5];
+    private int arrow = GraphConstants.ARROW_CLASSIC;
+
 
     public GuiGraph() {
 
@@ -41,8 +45,7 @@ public class GuiGraph extends JGraph implements DropTargetListener {
     // When over a cell, jump to its default port (we only have one, anyway)
     this.setJumpToDefaultPort(true);
 
-    // Insert all three cells in one call, so we need an array to store them
-    DefaultGraphCell[] cells = new DefaultGraphCell[5];
+
 
     // Create Alle Länder Vertex
     cells[0] = createVertex("Alle Länder", 20, 220, 100, 100, Color.GREEN, false);
@@ -61,8 +64,8 @@ public class GuiGraph extends JGraph implements DropTargetListener {
     cells[3] = edge1;
 
     // Set Arrow Style for edge
-    int arrow1 = GraphConstants.ARROW_CLASSIC;
-    GraphConstants.setLineEnd(edge1.getAttributes(), arrow1);
+
+    GraphConstants.setLineEnd(edge1.getAttributes(), arrow);
     GraphConstants.setEndFill(edge1.getAttributes(), true);
 
         // Create Edge
@@ -74,7 +77,7 @@ public class GuiGraph extends JGraph implements DropTargetListener {
 
 
     // Set Arrow Style for edge
-    GraphConstants.setLineEnd(edge2.getAttributes(), arrow1);
+    GraphConstants.setLineEnd(edge2.getAttributes(), arrow);
     GraphConstants.setEndFill(edge2.getAttributes(), true);
 
     // Insert the cells via the cache, so they get selected
@@ -129,6 +132,20 @@ public static DefaultGraphCell createVertex(String name, double x,
     }
 
     public void drop(DropTargetDropEvent dtde) {
-        System.out.println("Object is Entered");//To change body of implemented methods use File | Settings | File Templates.
+       DefaultGraphCell danke = createVertex("Danke für das Objekt", 200, 200, 200, 200, Color.BLUE, true);
+
+        // Create Edge
+    DefaultEdge edge3 = new DefaultEdge();
+    // Fetch the ports from the new vertices, and connect them with the edge
+    edge3.setSource(cells[0].getChildAt(0));
+    edge3.setTarget(danke.getChildAt(0));
+    this.getGraphLayoutCache().insert(edge3);
+
+
+    // Set Arrow Style for edge
+    GraphConstants.setLineEnd(edge3.getAttributes(), arrow);
+    GraphConstants.setEndFill(edge3.getAttributes(), true);
+
+        this.getGraphLayoutCache().insert(danke);
     }
 }
