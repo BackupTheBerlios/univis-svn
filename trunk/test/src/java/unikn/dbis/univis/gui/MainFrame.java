@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
     private JSplitPane overviewSplit = new JSplitPane();
     private JScrollPane treeScroll = new JScrollPane();
     private JScrollPane graphScroll = new JScrollPane();
-    private JPanel rightPanel = new JPanel();
+    private JPanel rightPanel = new JPanel(new BorderLayout());
     private JPanel leftPanel = new JPanel(new GridBagLayout());
     private JLabel facts = new JLabel("FACTS");
     private JLabel measures = new JLabel("MEASURES");
@@ -89,7 +89,7 @@ public class MainFrame extends JFrame {
 
         overviewSplit.setLeftComponent(treeScroll);
 
-        rightPanel.add(guiGraph);
+        rightPanel.add(guiGraph, BorderLayout.CENTER);
         graphScroll.setViewportView(rightPanel);
         overviewSplit.setRightComponent(graphScroll);
 
