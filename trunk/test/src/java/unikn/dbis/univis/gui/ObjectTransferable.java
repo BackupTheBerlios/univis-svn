@@ -28,8 +28,8 @@ public class ObjectTransferable implements Transferable {
 
     private Map<DataFlavor, Object> flavoredObjects = new HashMap<DataFlavor, Object>();
 
-    public ObjectTransferable(DataFlavor dataFlavor, Object o) {
-        flavoredObjects.put(dataFlavor, o);
+    public ObjectTransferable() {
+       //flavoredObjects.put(dataFlavor, o);
     }
 
     public DataFlavor[] getTransferDataFlavors() {
