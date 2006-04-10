@@ -47,7 +47,7 @@ public class MainFrame extends JFrame {
         leftConstraints.gridx = 0;
         leftConstraints.gridy = y;
         leftConstraints.anchor = GridBagConstraints.NORTHWEST;
-
+        leftPanel.setBackground(Color.WHITE);
         facts.setFont(tahoma);
         leftPanel.add(facts, leftConstraints);
 
@@ -57,14 +57,14 @@ public class MainFrame extends JFrame {
         leftConstraints.gridy = ++y;
         leftPanel.add(new CubeLabel(Color.BLUE, "Students", true, 21, 22, 10), leftConstraints);
 
-        leftConstraints.gridy = ++y;
-        leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
+        //leftConstraints.gridy = ++y;
+        //leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
 
         leftConstraints.gridy = ++y;
         leftPanel.add(new MyTree(), leftConstraints);
 
-        leftConstraints.gridy = ++y;
-        leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
+        //leftConstraints.gridy = ++y;
+        //leftPanel.add(new JLabel(new VisualLine()), leftConstraints);
 
         measures.setFont(tahoma);
         leftConstraints.gridy = ++y;

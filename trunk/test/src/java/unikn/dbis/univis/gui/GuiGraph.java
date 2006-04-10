@@ -36,7 +36,6 @@ public class GuiGraph extends JGraph implements DropTargetListener {
     new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
 
     this.setModel(model);
-    this.setPreferredSize(new Dimension(600,600));
 
     // Control-drag should clone selection
     //this.setCloneable(true);

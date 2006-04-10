@@ -10,6 +10,7 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.datatransfer.Transferable;
+import java.awt.*;
 import java.util.*;
 
 // @todo document me!
@@ -31,6 +32,8 @@ public class MyTree extends JPanel implements DragGestureListener, DragSourceLis
     private JTree fakTree;
 
     public MyTree() {
+
+        this.setBackground(Color.BLACK);
         //setLayout(new BorderLayout());
         initTree();
         //DragSource -> Initiates drags and creates drag gesture recognizers
