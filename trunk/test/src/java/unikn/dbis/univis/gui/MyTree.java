@@ -1,17 +1,10 @@
 package unikn.dbis.univis.gui;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeNode;
 import javax.swing.*;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
 import java.awt.dnd.*;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.datatransfer.Transferable;
 import java.awt.*;
-import java.util.*;
+
 
 // @todo document me!
 
@@ -43,7 +36,6 @@ public class MyTree extends JPanel implements DragGestureListener, DragSourceLis
                 fakTree, // component where drag originates
                 DnDConstants.ACTION_COPY_OR_MOVE, // actions
                 this); // drag gesture recognizer
-
     }
 
     public DefaultMutableTreeNode rootDim = new DefaultMutableTreeNode("Dimensions");
@@ -85,7 +77,7 @@ public class MyTree extends JPanel implements DragGestureListener, DragSourceLis
     //Fires events in response to drag gestures in a component
     public void dragGestureRecognized(DragGestureEvent e) {
 
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) fakTree.getLastSelectedPathComponent();
+        //DefaultMutableTreeNode node = (DefaultMutableTreeNode) fakTree.getLastSelectedPathComponent();
         System.out.println("Object is choosen");
         e.startDrag(DragSource.DefaultCopyDrop, new ObjectTransferable(), this);
 

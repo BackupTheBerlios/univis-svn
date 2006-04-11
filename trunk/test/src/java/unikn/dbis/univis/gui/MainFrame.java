@@ -2,6 +2,8 @@ package unikn.dbis.univis.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.datatransfer.Transferable;
 
 
@@ -48,6 +50,7 @@ public class MainFrame extends JFrame {
         leftConstraints.gridy = y;
         leftConstraints.anchor = GridBagConstraints.NORTHWEST;
         facts.setFont(tahoma);
+
         leftPanel.add(facts, leftConstraints);
 
         leftConstraints.gridy = ++y;
@@ -82,7 +85,16 @@ public class MainFrame extends JFrame {
         Font measureFont = new Font("Serif", Font.ITALIC, 11);
         JLabel measure = new JLabel("Define new measure", new NewMeasureIcon(), 0);
         measure.setFont(measureFont);
+        measure.addMouseListener( new MouseAdapter() {
+          public void mouseClicked( MouseEvent e ) {
+            if ( e.getClickCount() >= 1 )
+                JOptionPane.showMessageDialog(rightPanel, "Definiere nun eine neue Measure", "Neue Measure", JOptionPane.YES_NO_CANCEL_OPTION);
+          }
+        } );
         leftPanel.add(measure, leftConstraints);
+
+
+
 
         treeScroll.setViewportView(leftPanel);
 
