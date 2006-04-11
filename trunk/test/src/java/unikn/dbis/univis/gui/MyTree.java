@@ -5,19 +5,19 @@ import javax.swing.*;
 import java.awt.dnd.*;
 import java.awt.*;
 
-
-// @todo document me!
-
 /**
- * MoiTree.
+ * TODO: document me!!!
  * <p/>
- * User: Andreas Weiler
- * Date: 24.11.2005
- * Time: 22:14:38
+ * MainFrame.
+ * <p/>
+ * User: raedler, weiler
+ * Date: 08.04.2006
+ * Time: 18:23:23
  *
+ * @author Roman R&auml;dle
  * @author Andreas Weiler
- * @version $Id: MyTree.java,v 1.2 2006/01/19 20:18:47 weiler Exp $
- * @since EcoBill 1.0
+ * @version $Id$
+ * @since UniVis Explorer 0.1
  */
 public class MyTree extends JPanel implements DragGestureListener, DragSourceListener {
 
