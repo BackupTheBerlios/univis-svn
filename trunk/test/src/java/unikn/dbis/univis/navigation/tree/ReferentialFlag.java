@@ -60,13 +60,13 @@ public class ReferentialFlag extends JComponent {
 
     /**
      * Returns the size of this component in the form of a
-     * <code>Dimension</code> object. The <code>height</code>
-     * field of the <code>Dimension</code> object contains
+     * <code>VDimension</code> object. The <code>height</code>
+     * field of the <code>VDimension</code> object contains
      * this component's height, and the <code>width</code>
-     * field of the <code>Dimension</code> object contains
+     * field of the <code>VDimension</code> object contains
      * this component's width.
      *
-     * @return a <code>Dimension</code> object that indicates the
+     * @return a <code>VDimension</code> object that indicates the
      *         size of this component
      * @see #setSize
      * @since JDK1.1

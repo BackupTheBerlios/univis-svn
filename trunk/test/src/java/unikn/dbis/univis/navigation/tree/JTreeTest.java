@@ -2,29 +2,28 @@ package unikn.dbis.univis.navigation.tree;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
+import org.hibernate.Hibernate;
+import org.hibernate.Transaction;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeModelListener;
 import javax.swing.plaf.basic.BasicTreeUI;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
-import unikn.dbis.univis.meta.impl.CubeImpl;
-import unikn.dbis.univis.meta.impl.DiceBoxImpl;
-import unikn.dbis.univis.meta.TreeFresh;
-import unikn.dbis.univis.meta.Dimension;
-import unikn.dbis.univis.meta.Cube;
-import unikn.dbis.univis.meta.DiceBox;
+import unikn.dbis.univis.meta.impl.VDiceBoxImpl;
+import unikn.dbis.univis.meta.impl.VHierarchyImpl;
+import unikn.dbis.univis.meta.impl.VDimensionImpl;
+import unikn.dbis.univis.meta.impl.VDataReferenceImpl;
+import unikn.dbis.univis.meta.VDimension;
+import unikn.dbis.univis.meta.VDataReference;
+import unikn.dbis.univis.meta.VHierarchy;
+import unikn.dbis.univis.helper.VTreeHelper;
+import unikn.dbis.univis.icon.VIcon;
 
-import java.awt.*;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.*;
 import java.sql.*;
 
 /**
@@ -52,25 +51,111 @@ public class JTreeTest extends JTree {
             e1.printStackTrace();
         }
 
-        DefaultTreeCellRenderer cellRenderer = new DefaultTreeCellRenderer();
+        setCellRenderer(new DefaultTreeCellRenderer() {
+            /**
+             * Configures the renderer based on the passed in components.
+             * The value is set from messaging the tree with
+             * <code>convertValueToText</code>, which ultimately invokes
+             * <code>toString</code> on <code>value</code>.
+             * The foreground color is set based on the selection and the icon
+             * is set based on on leaf and expanded.
+             */
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                Component label = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
-        //cellRenderer.setClosedIcon(new ReferentialFlag(Color.RED));
+                boolean summable = false;
+                if (value instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                    Object o = node.getUserObject();
 
-        //setCellRenderer(cellRenderer);
+                    if (o instanceof VDimension) {
+                        summable = ((VDimension) o).isSummable();
+                    }
+                }
 
-        BasicTreeUI treeUI = (BasicTreeUI) getUI();
+                JPanel panel = new JPanel(new BorderLayout());
+                panel.setBackground(Color.WHITE);
+                panel.add(new JLabel(tree.convertValueToText(value, selected, expanded, leaf,  row, hasFocus)), BorderLayout.CENTER);
+
+                if (summable) {
+                    UVIcon view = new UVIcon(VIcon.VIEW);
+
+                    view.addMouseListener(new MouseAdapter() {
+                        /**
+                         * Invoked when the mouse has been clicked on a component.
+                         */
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            System.out.println("JTreeTest.mouseClicked");
+                        }
+
+                        /**
+                         * Invoked when a mouse button has been pressed on a component.
+                         */
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            System.out.println("JTreeTest.mousePressed");
+                        }
+
+                        /**
+                         * Invoked when a mouse button has been released on a component.
+                         */
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+                            System.out.println("JTreeTest.mouseReleased");
+                        }
+
+                        /**
+                         * Invoked when the mouse enters a component.
+                         */
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            System.out.println("JTreeTest.mouseEntered");
+                        }
+
+                        /**
+                         * Invoked when the mouse exits a component.
+                         */
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                            System.out.println("JTreeTest.mouseExited");
+                        }
+                    });
+
+                    panel.add(view, BorderLayout.EAST);
+                }
+
+                return panel;
+            }
+        });
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
 
-        //Cube cube = (CubeImpl) session.load(CubeImpl.class, 1000L);
+        /*
+        java.util.List l = session.createQuery("from " + VDataReference.class.getName()).list();
 
-        DiceBoxImpl diceBox = (DiceBoxImpl) session.createQuery("from " + DiceBoxImpl.class.getName() + " where name = 'UniVis Explorer'").uniqueResult();
-        DefaultTreeModel model = new DefaultTreeModel(diceBox);
+        for (Object o : l) {
+            System.out.println("CLASS: " + o.getClass());
+
+            if (o instanceof VDimension) {
+                System.out.println("SUMM: " + ((VDimension) o).isSummable());
+            }
+        }
+        session.close();
+        */
+
+        VDiceBoxImpl diceBox = (VDiceBoxImpl) session.createQuery("from " + VDiceBoxImpl.class.getName() + " where name = 'UniVis Explorer'").uniqueResult();
+
+        DefaultTreeModel model = new DefaultTreeModel(VTreeHelper.createDefaultTree(diceBox));
         setModel(model);
-        setDragEnabled(true);
-        setEditable(true);
-        setLargeModel(true);
+
+        /*
+        for (VHierarchy hierarchy : diceBox.getChildren()) {
+            System.out.println("CLASS: " + hierarchy.getDataReference().getClass());
+        }
+        */
 
         /*
         setCellRenderer(new TreeCellRenderer() {
@@ -79,18 +164,18 @@ public class JTreeTest extends JTree {
 
                 JPanel panel = null;
 
-                if (value instanceof Dimension) {
+                if (value instanceof VDimension) {
 
-                    Dimension dimension = (Dimension) value;
+                    VDimension dimension = (VDimension) value;
 
                     panel = new JPanel(new GridLayout(1, dimension.getSupportedCubes().size()));
 
-                    for (Cube cube : dimension.getSupportedCubes()) {
+                    for (VCube cube : dimension.getSupportedCubes()) {
                         ReferentialFlag flag = new ReferentialFlag(cube.getColor());
-                        flag.setPreferredSize(new java.awt.Dimension(5, 12));
-                        flag.setSize(new java.awt.Dimension(5, 12));
-                        flag.setMaximumSize(new java.awt.Dimension(5, 12));
-                        flag.setMinimumSize(new java.awt.Dimension(5, 12));
+                        flag.setPreferredSize(new Dimension(5, 12));
+                        flag.setSize(new Dimension(5, 12));
+                        flag.setMaximumSize(new Dimension(5, 12));
+                        flag.setMinimumSize(new Dimension(5, 12));
                         panel.add(flag);
                     }
                 }
@@ -110,43 +195,59 @@ public class JTreeTest extends JTree {
         });
         */
 
+        /*
         addMouseListener(new MouseAdapter() {
             /**
              * Invoked when the mouse has been clicked on a component.
-             */
+             *
             @Override
             public void mouseClicked(MouseEvent e) {
 
                 if (SwingUtilities.isRightMouseButton(e)) {
 
-                    Object o = JTreeTest.this.getLastSelectedPathComponent();
+                    TreePath path = JTreeTest.this.getPathForLocation(e.getX(), e.getY());
 
-                    if (o instanceof TreeFresh) {
+                    System.out.println("PARENT: " + path.getParentPath().getLastPathComponent());
 
-                        TreeFresh treeFresh = (TreeFresh) o;
+                    JTreeTest.this.setSelectionPath(path);
 
-                        System.out.println("TABLE_NAME: " + treeFresh.getDataReference().getTableName());
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) JTreeTest.this.getLastSelectedPathComponent();
 
-                        /*
-                        try {
-                            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/univis", "univis", "UniVis");
+                    Object o = node.getUserObject();
 
-                            Statement stmt = connection.createStatement();
+                    if (o instanceof VDimension) {
 
-                            ResultSet result = stmt.executeQuery("SELECT * FROM " + treeFresh.getDataReference().getTableName());
+                        VDimension dimension = (VDimension) o;
 
-                            while (result.next()) {
-                                System.out.println("TEST: " + result.getString(1));
+                        if (dimension.isSummable()) {
+
+                            JPopupMenu menu = new JPopupMenu("Test");
+
+                            System.out.println("TABLE_NAME: " + dimension.getTableName());
+
+                            try {
+                                Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/univis", "univis", "UniVis");
+
+                                Statement stmt = connection.createStatement();
+
+                                ResultSet result = stmt.executeQuery("SELECT name FROM " + dimension.getTableName());
+
+                                while (result.next()) {
+                                    menu.add(result.getString(1));
+                                    System.out.println("TEST: " + result.getString(1));
+                                }
                             }
+                            catch (SQLException e1) {
+                                e1.printStackTrace();
+                            }
+
+                            menu.show(JTreeTest.this, e.getX(), e.getY());
                         }
-                        catch (SQLException e1) {
-                            e1.printStackTrace();
-                        }
-                        */
                     }
                 }
             }
         });
+        */
     }
 
     public static void main(String[] args) {
@@ -155,9 +256,9 @@ public class JTreeTest extends JTree {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        frame.getContentPane().add(new JTreeTest());
+        frame.getContentPane().add(new JScrollPane(new JTreeTest()));
 
-        frame.setSize(new java.awt.Dimension(300, 500));
+        frame.setSize(new Dimension(300, 500));
         frame.setVisible(true);
     }
 }

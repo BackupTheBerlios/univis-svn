@@ -34,7 +34,7 @@ public class MetaTest extends TestCase {
 
     /*
     public void testInsertCube() {
-        CubeImpl cube = new CubeImpl();
+        VCubeImpl cube = new VCubeImpl();
         cube.setTableName("STUDENTS");
 
         Session session = sessionFactory.openSession();
@@ -44,7 +44,7 @@ public class MetaTest extends TestCase {
         session.close();
 
         session = sessionFactory.openSession();
-        CubeImpl loadedCube = (CubeImpl) session.load(CubeImpl.class, cube.getId());
+        VCubeImpl loadedCube = (VCubeImpl) session.load(VCubeImpl.class, cube.getId());
 
         assertEquals(cube.getId(), loadedCube.getId());
         assertEquals(cube.getDimensions(), loadedCube.getDimensions());
@@ -56,9 +56,9 @@ public class MetaTest extends TestCase {
         testInsertCube();
 
         Session session = sessionFactory.openSession();
-        CubeImpl cube = (CubeImpl) session.load(CubeImpl.class, cubeId);
+        VCubeImpl cube = (VCubeImpl) session.load(VCubeImpl.class, cubeId);
 
-        DimensionImpl dimension = new DimensionImpl();
+        VDimensionImpl dimension = new VDimensionImpl();
         dimension.setSummable(true);
         dimension.setTableName("BLUEP_ZEIT");
 
@@ -70,7 +70,7 @@ public class MetaTest extends TestCase {
         session.close();
 
         session = sessionFactory.openSession();
-        CubeImpl loadedCube = (CubeImpl) session.load(CubeImpl.class, cube.getId());
+        VCubeImpl loadedCube = (VCubeImpl) session.load(VCubeImpl.class, cube.getId());
 
         assertEquals(cube.getDimensions(), loadedCube.getDimensions());
 
@@ -83,9 +83,9 @@ public class MetaTest extends TestCase {
         testAddDimensionToCube();
 
         Session session = sessionFactory.openSession();
-        DimensionImpl dimension = (DimensionImpl) session.load(DimensionImpl.class, dimensionId);
+        VDimensionImpl dimension = (VDimensionImpl) session.load(VDimensionImpl.class, dimensionId);
 
-        DimensionImpl subDimension = new DimensionImpl();
+        VDimensionImpl subDimension = new VDimensionImpl();
         subDimension.setSummable(false);
         subDimension.setTableName("DIM_HALBJAHRE");
 
@@ -97,7 +97,7 @@ public class MetaTest extends TestCase {
         session.close();
 
         session = sessionFactory.openSession();
-        DimensionImpl loadedDimension = (DimensionImpl) session.load(DimensionImpl.class, dimension.getId());
+        VDimensionImpl loadedDimension = (VDimensionImpl) session.load(VDimensionImpl.class, dimension.getId());
 
         for (int i = 0; i < dimension.getSubDimensions().size(); i++)
         assertEquals(dimension.getSubDimensions().get(i), loadedDimension.getSubDimensions().get(i));

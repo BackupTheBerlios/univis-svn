@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 
-import unikn.dbis.univis.meta.Cube;
+import unikn.dbis.univis.meta.VCube;
 
 /**
  * TODO: document me!!!
@@ -98,7 +98,7 @@ public class TreePopupTest extends JFrame {
 
     private void initListener() {
 
-        JButton button = new JButton(new ImageIcon(Cube.class.getResource("../images/view.png")));
+        JButton button = new JButton(new ImageIcon(VCube.class.getResource("../images/view.png")));
         button.addActionListener(new ActionListener() {
 
             /**

@@ -19,9 +19,9 @@ import java.awt.*;
  */
 public class UVIcon extends JComponent {
 
-    private ImageIcon icon;
+    private Icon icon;
 
-    public UVIcon(ImageIcon icon) {
+    public UVIcon(Icon icon) {
         this.icon = icon;
     }
 
@@ -58,6 +58,50 @@ public class UVIcon extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        icon.paintIcon(this, g, 0, 0);
+        icon.paintIcon(this, g, 10, 0);
+    }
+
+    /**
+     * Returns the current width of this component.
+     * This method is preferable to writing
+     * <code>component.getBounds().width</code>, or
+     * <code>component.getSize().width</code> because it doesn't cause any
+     * heap allocations.
+     *
+     * @return the current width of this component
+     */
+    @Override
+    public int getWidth() {
+        return icon.getIconWidth() + 10;
+    }
+
+    /**
+     * Returns the current height of this component.
+     * This method is preferable to writing
+     * <code>component.getBounds().height</code>, or
+     * <code>component.getSize().height</code> because it doesn't cause any
+     * heap allocations.
+     *
+     * @return the current height of this component
+     */
+    @Override
+    public int getHeight() {
+        return icon.getIconHeight();
+    }
+
+    /**
+     * If the <code>preferredSize</code> has been set to a
+     * non-<code>null</code> value just returns it.
+     * If the UI delegate's <code>getPreferredSize</code>
+     * method returns a non <code>null</code> value then return that;
+     * otherwise defer to the component's layout manager.
+     *
+     * @return the value of the <code>preferredSize</code> property
+     * @see #setPreferredSize
+     * @see javax.swing.plaf.ComponentUI
+     */
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(getWidth(), getHeight());
     }
 }
