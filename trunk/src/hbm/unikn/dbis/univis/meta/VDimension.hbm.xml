@@ -24,7 +24,7 @@
             <column name="PARENTABLE" not-null="true"/>
         </property>
 
-        <set name="supportedCubes" table="META_DIMENSION_SUPPORTED_CUBE">
+        <set name="supportedCubes" table="META_DIMENSION_SUPPORTED_CUBE" order-by="DIMENSION_ID asc">
             <key column="DIMENSION_ID" not-null="true"/>
             <many-to-many column="CUBE_ID" class="unikn.dbis.univis.meta.impl.VCubeImpl"/>
         </set>

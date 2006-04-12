@@ -1,4 +1,4 @@
-package unikn.dbis.univis.helper;
+package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.VHierarchy;
 import unikn.dbis.univis.meta.VDataReference;

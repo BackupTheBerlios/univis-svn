@@ -2,14 +2,24 @@ package unikn.dbis.univis.explorer;
 
 import unikn.dbis.univis.navigation.tree.VTree;
 import unikn.dbis.univis.meta.impl.VDiceBoxImpl;
+import unikn.dbis.univis.meta.impl.VCubeImpl;
 import unikn.dbis.univis.meta.VDiceBox;
+import unikn.dbis.univis.meta.VCube;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.icon.VIcon;
+import unikn.dbis.univis.icon.VCubeIcon;
+import unikn.dbis.univis.util.ComponentUtilities;
+import unikn.dbis.univis.visualization.VVisualization;
+import unikn.dbis.univis.visualization.graph.VGraph;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.*;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -62,6 +72,9 @@ public class VExplorer extends JFrame {
 
     private JSplitPane split = new JSplitPane();
 
+    private JPanel navigation = new JPanel(new BorderLayout());
+    private VVisualization visualization = new VVisualization(new BorderLayout());
+
     private VTree tree;
 
     /**
@@ -86,6 +99,7 @@ public class VExplorer extends JFrame {
         initToolbar();
         initNavigation();
         initVisualization();
+        initDragAndDrop();
 
         Container container = getContentPane();
         container.add(toolbar, BorderLayout.NORTH);
@@ -93,6 +107,8 @@ public class VExplorer extends JFrame {
 
         setPreferredSize(new Dimension(800, 600));
         setSize(new Dimension(800, 600));
+
+        ComponentUtilities.centerComponentOnScreen(this);
     }
 
     private void initMenubar() {
@@ -158,7 +174,12 @@ public class VExplorer extends JFrame {
             }
         });
 
+        JButton undo = new JButton(VIcon.UNDO);
+        JButton redo = new JButton(VIcon.REDO);
+
         toolbar.add(refresh);
+        toolbar.add(undo);
+        toolbar.add(redo);
     }
 
     private void initNavigation() {
@@ -167,16 +188,39 @@ public class VExplorer extends JFrame {
         Session session = sessionFactory.openSession();
         VDiceBox diceBox = (VDiceBox) session.createQuery("from " + VDiceBoxImpl.class.getName() + " where name = 'UniVis Explorer'").uniqueResult();
         tree = new VTree(diceBox);
+
+        //noinspection unchecked
+        List<VCube> cubes = session.createQuery("from " + VCubeImpl.class.getName()).list();
+
+        JPanel facts = new JPanel(new GridLayout(cubes.size(), 1));
+        for (VCube cube : cubes) {
+            facts.add(new JLabel(cube.getI18nKey(), new VCubeIcon(cube.getColor()), JLabel.LEFT));
+        }
+
         session.close();
 
-        split.setLeftComponent(new JScrollPane(tree));
+        JPanel measures = new JPanel(/*new GridLayout(?, ?)*/);
+        measures.add(new JLabel("MEASURES not yet defined"));
+
+        navigation.add(facts, BorderLayout.NORTH);
+        navigation.add(new JScrollPane(tree), BorderLayout.CENTER);
+        navigation.add(measures, BorderLayout.SOUTH);
+
+        split.setLeftComponent(navigation);
     }
 
     private void initVisualization() {
 
-        JPanel visualization = new JPanel();
         visualization.setBackground(Color.WHITE);
+        visualization.add(new VGraph(), BorderLayout.CENTER);
 
         split.setRightComponent(visualization);
+    }
+
+    private void initDragAndDrop() {
+        DragSource dragSource = DragSource.getDefaultDragSource();
+        dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY_OR_MOVE, tree);
+
+        visualization.setDropTarget(new DropTarget(visualization, visualization));
     }
 }

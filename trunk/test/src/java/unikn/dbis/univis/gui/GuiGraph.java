@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.dnd.*;
 import java.awt.geom.Rectangle2D;
 
+import unikn.dbis.univis.visualization.graph.MyCellViewFactory;
+
 
 /**
  * TODO: document me!!!
@@ -27,6 +29,7 @@ public class GuiGraph extends JGraph implements DropTargetListener {
 
 // Construct Model and Graph
     GraphModel model = new DefaultGraphModel();
+    GraphLayoutCache cache = new GraphLayoutCache(model, new MyCellViewFactory());
     // Insert all three cells in one call, so we need an array to store them
     private DefaultGraphCell[] cells = new DefaultGraphCell[5];
 
@@ -34,9 +37,13 @@ public class GuiGraph extends JGraph implements DropTargetListener {
     private int x = 200;
 
     public GuiGraph() {
-
+        
         new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
-        this.setModel(model);
+
+        setModel(model);
+        setGraphLayoutCache(cache);
+
+
         // Control-drag should clone selection
         //this.setCloneable(true);
         // Enable edit without final RETURN keystroke

@@ -19,10 +19,12 @@ import java.awt.*;
  */
 public class VIconComponent extends JComponent {
 
-    public static final VIconComponent VIEW = new VIconComponent(VIcon.VIEW, 5);
-
     private Icon icon;
     private int gap;
+
+    public VIconComponent(Icon icon) {
+        this(icon, 5);
+    }
 
     public VIconComponent(Icon icon, int gap) {
         this.icon = icon;

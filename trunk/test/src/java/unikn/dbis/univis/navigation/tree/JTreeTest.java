@@ -2,29 +2,19 @@ package unikn.dbis.univis.navigation.tree;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-import org.hibernate.Hibernate;
-import org.hibernate.Transaction;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.meta.impl.VDiceBoxImpl;
-import unikn.dbis.univis.meta.impl.VHierarchyImpl;
-import unikn.dbis.univis.meta.impl.VDimensionImpl;
-import unikn.dbis.univis.meta.impl.VDataReferenceImpl;
 import unikn.dbis.univis.meta.VDimension;
-import unikn.dbis.univis.meta.VDataReference;
-import unikn.dbis.univis.meta.VHierarchy;
-import unikn.dbis.univis.helper.VTreeHelper;
+import unikn.dbis.univis.navigation.tree.VTreeHelper;
 import unikn.dbis.univis.icon.VIcon;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.*;
-import java.sql.*;
 
 /**
  * TODO: document me!!!
@@ -171,7 +161,7 @@ public class JTreeTest extends JTree {
                     panel = new JPanel(new GridLayout(1, dimension.getSupportedCubes().size()));
 
                     for (VCube cube : dimension.getSupportedCubes()) {
-                        ReferentialFlag flag = new ReferentialFlag(cube.getColor());
+                        VCubeFlagIcon flag = new VCubeFlagIcon(cube.getColor());
                         flag.setPreferredSize(new Dimension(5, 12));
                         flag.setSize(new Dimension(5, 12));
                         flag.setMaximumSize(new Dimension(5, 12));

@@ -19,4 +19,7 @@ import javax.swing.*;
 public class VIcon {
     public static final Icon REFRESH = new ImageIcon(VIcon.class.getResource("../images/refresh.png"));
     public static final Icon VIEW = new ImageIcon(VIcon.class.getResource("../images/view.png"));
+    public static final Icon UNDO = new ImageIcon(VIcon.class.getResource("../images/undo.png"));
+    public static final Icon REDO = new ImageIcon(VIcon.class.getResource("../images/redo.png"));
+    public static final Icon FUNNEL = new ImageIcon(VIcon.class.getResource("../images/funnel.png"));
 }

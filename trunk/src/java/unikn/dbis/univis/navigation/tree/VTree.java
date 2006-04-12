@@ -2,24 +2,26 @@ package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.VDiceBox;
 import unikn.dbis.univis.meta.VDimension;
-import unikn.dbis.univis.helper.VTreeHelper;
 import unikn.dbis.univis.icon.VIcon;
-import unikn.dbis.univis.icon.VIconComponent;
+import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 import java.sql.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.dnd.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.*;
-import java.util.Collections;
-import java.util.Set;
-import java.util.HashSet;
+import java.io.IOException;
 
 /**
  * TODO: document me!!!
@@ -35,7 +37,7 @@ import java.util.HashSet;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VTree extends JTree {
+public class VTree extends JTree implements DragGestureListener, DragSourceListener {
 
     static {
         try {
@@ -56,45 +58,7 @@ public class VTree extends JTree {
     public VTree(VDiceBox diceBox) {
         super(VTreeHelper.createDefaultTree(diceBox));
 
-        setCellRenderer(new DefaultTreeCellRenderer() {
-
-            /**
-             * Sets the value of the current tree cell to <code>value</code>.
-             * If <code>selected</code> is true, the cell will be drawn as if
-             * selected. If <code>expanded</code> is true the node is currently
-             * expanded and if <code>leaf</code> is true the node represets a
-             * leaf and if <code>hasFocus</code> is true the node currently has
-             * focus. <code>tree</code> is the <code>JTree</code> the receiver is being
-             * configured for.  Returns the <code>Component</code> that the renderer
-             * uses to draw the value.
-             *
-             * @return the <code>Component</code> that the renderer uses to draw the value
-             */
-            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-
-                boolean summable = false;
-                if (value instanceof DefaultMutableTreeNode) {
-                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-                    Object o = node.getUserObject();
-
-                    if (o instanceof VDimension) {
-                        summable = ((VDimension) o).isSummable();
-                    }
-                }
-
-                Component label = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
-
-                JPanel panel = new JPanel(new BorderLayout());
-                panel.setBackground(Color.WHITE);
-                panel.add(label, BorderLayout.CENTER);
-
-                if (summable) {
-                    panel.add(VIconComponent.VIEW, BorderLayout.EAST);
-                }
-
-                return panel;
-            }
-        });
+        setCellRenderer(new VTreeCellRenderer());
 
         addMouseListener(new MouseAdapter() {
 
@@ -104,7 +68,18 @@ public class VTree extends JTree {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                System.out.println("SOURCE: " + e.getSource());
+                for (Component c : getComponents()) {
+                    if (c instanceof Container) {
+                        for (Component c1 : ((Container) c).getComponents()) {
+
+                            if (c1 instanceof Container) {
+                                for (Component c2 : ((Container) c1).getComponents()) {
+                                    //System.out.println("C: " + c2.getClass());
+                                }
+                            }
+                        }
+                    }
+                }
 
                 if (SwingUtilities.isRightMouseButton(e)) {
                     setSelectionPath(getPathForLocation(e.getX(), e.getY()));
@@ -113,6 +88,8 @@ public class VTree extends JTree {
                 }
             }
         });
+
+        setDragEnabled(true);
     }
 
     private void showPopupMenu(int x, int y) {
@@ -173,7 +150,9 @@ public class VTree extends JTree {
                             }
                         });
 
-                        popupMenu.add(view);
+                        //popupMenu.add(view);
+
+                        popupMenu.show(VTree.this, x, y);
                     }
 
                     /*
@@ -188,8 +167,6 @@ public class VTree extends JTree {
                     JOptionPane.showMessageDialog(VTree.this.getParent().getParent().getParent(), sqle.getMessage(), "Error message", JOptionPane.ERROR_MESSAGE);
                     sqle.printStackTrace();
                 }
-
-                popupMenu.show(VTree.this, x, y);
             }
         }
     }
@@ -261,5 +238,161 @@ public class VTree extends JTree {
 
     public void refresh(VDiceBox diceBox) {
         setModel(new DefaultTreeModel(VTreeHelper.createDefaultTree(diceBox)));
+    }
+
+    /**
+     * A <code>DragGestureRecognizer</code> has detected
+     * a platform-dependent drag initiating gesture and
+     * is notifying this listener
+     * in order for it to initiate the action for the user.
+     * <p/>
+     *
+     * @param dge the <code>DragGestureEvent</code> describing
+     *            the gesture that has just occurred
+     */
+
+    public void dragGestureRecognized(DragGestureEvent dge) {
+        System.out.println("VTree.dragGestureRecognized");
+
+        dge.startDrag(DragSource.DefaultCopyDrop, new Transferable() {
+            /**
+             * Returns an array of DataFlavor objects indicating the flavors the data
+             * can be provided in.  The array should be ordered according to preference
+             * for providing the data (from most richly descriptive to least descriptive).
+             *
+             * @return an array of data flavors in which this data can be transferred
+             */
+            public DataFlavor[] getTransferDataFlavors() {
+                return new DataFlavor[]{VDataReferenceFlavor.DIMENSION_FLAVOR};
+            }
+
+            /**
+             * Returns whether or not the specified data flavor is supported for
+             * this object.
+             *
+             * @param flavor the requested flavor for the data
+             * @return boolean indicating whether or not the data flavor is supported
+             */
+            public boolean isDataFlavorSupported(DataFlavor flavor) {
+                return false;
+            }
+
+            /**
+             * Returns an object which represents the data to be transferred.  The class
+             * of the object returned is defined by the representation class of the flavor.
+             *
+             * @param flavor the requested flavor for the data
+             * @throws java.io.IOException if the data is no longer available
+             *                             in the requested flavor.
+             * @throws java.awt.datatransfer.UnsupportedFlavorException
+             *                             if the requested data flavor is
+             *                             not supported.
+             * @see java.awt.datatransfer.DataFlavor#getRepresentationClass
+             */
+            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+
+                if (VDataReferenceFlavor.DIMENSION_FLAVOR.equals(flavor)) {
+                    Object o = getLastSelectedPathComponent();
+
+                    if (o instanceof DefaultMutableTreeNode) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
+
+                        Object userObject = node.getUserObject();
+
+                        if (userObject instanceof VDimension) {
+                            return userObject;
+                        }
+                    }
+                }
+
+                throw new UnsupportedFlavorException(flavor);
+            }
+        });
+    }
+
+    /**
+     * Called as the cursor's hotspot enters a platform-dependent drop site.
+     * This method is invoked when all the following conditions are true:
+     * <UL>
+     * <LI>The cursor's hotspot enters the operable part of a platform-
+     * dependent drop site.
+     * <LI>The drop site is active.
+     * <LI>The drop site accepts the drag.
+     * </UL>
+     *
+     * @param dsde the <code>DragSourceDragEvent</code>
+     */
+    public void dragEnter(DragSourceDragEvent dsde) {
+        System.out.println("VTree.dragEnter");
+    }
+
+    /**
+     * Called as the cursor's hotspot moves over a platform-dependent drop site.
+     * This method is invoked when all the following conditions are true:
+     * <UL>
+     * <LI>The cursor's hotspot has moved, but still intersects the
+     * operable part of the drop site associated with the previous
+     * dragEnter() invocation.
+     * <LI>The drop site is still active.
+     * <LI>The drop site accepts the drag.
+     * </UL>
+     *
+     * @param dsde the <code>DragSourceDragEvent</code>
+     */
+    public void dragOver(DragSourceDragEvent dsde) {
+        System.out.println("VTree.dragOver");
+    }
+
+    /**
+     * Called when the user has modified the drop gesture.
+     * This method is invoked when the state of the input
+     * device(s) that the user is interacting with changes.
+     * Such devices are typically the mouse buttons or keyboard
+     * modifiers that the user is interacting with.
+     *
+     * @param dsde the <code>DragSourceDragEvent</code>
+     */
+    public void dropActionChanged(DragSourceDragEvent dsde) {
+        System.out.println("VTree.dropActionChanged");
+    }
+
+    /**
+     * Called as the cursor's hotspot exits a platform-dependent drop site.
+     * This method is invoked when any of the following conditions are true:
+     * <UL>
+     * <LI>The cursor's hotspot no longer intersects the operable part
+     * of the drop site associated with the previous dragEnter() invocation.
+     * </UL>
+     * OR
+     * <UL>
+     * <LI>The drop site associated with the previous dragEnter() invocation
+     * is no longer active.
+     * </UL>
+     * OR
+     * <UL>
+     * <LI> The drop site associated with the previous dragEnter() invocation
+     * has rejected the drag.
+     * </UL>
+     *
+     * @param dse the <code>DragSourceEvent</code>
+     */
+    public void dragExit(DragSourceEvent dse) {
+        System.out.println("VTree.dragExit");
+    }
+
+    /**
+     * This method is invoked to signify that the Drag and Drop
+     * operation is complete. The getDropSuccess() method of
+     * the <code>DragSourceDropEvent</code> can be used to
+     * determine the termination state. The getDropAction() method
+     * returns the operation that the drop site selected
+     * to apply to the Drop operation. Once this method is complete, the
+     * current <code>DragSourceContext</code> and
+     * associated resources become invalid.
+     *
+     * @param dsde the <code>DragSourceDropEvent</code>
+     */
+    public void dragDropEnd(DragSourceDropEvent dsde) {
+        System.out.println("VTree.dragDropEnd");
     }
 }
