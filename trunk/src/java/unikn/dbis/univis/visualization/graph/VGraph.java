@@ -1,17 +1,22 @@
 package unikn.dbis.univis.visualization.graph;
 
 import org.jgraph.JGraph;
-import org.jgraph.layout.MoenLayoutAlgorithm;
+
 import org.jgraph.graph.*;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 import java.awt.*;
 import java.awt.dnd.*;
+import java.util.Map;
 
 import unikn.dbis.univis.visualization.chart.ChartSample;
 
 import javax.swing.*;
+
+import com.jgraph.layout.JGraphFacade;
+import com.jgraph.layout.JGraphLayout;
+import com.jgraph.layout.hierarchical.JGraphHierarchicalLayout;
 
 /**
  * TODO: document me!!!
@@ -35,11 +40,15 @@ public class VGraph extends JGraph implements DropTargetListener {
     private DefaultGraphCell[] cells = new DefaultGraphCell[1];
 
     private int arrow = GraphConstants.ARROW_CLASSIC;
-    private MoenLayoutAlgorithm moen = new MoenLayoutAlgorithm();
+    private JGraphHierarchicalLayout layout = new JGraphHierarchicalLayout();
+
+    //private OrderedTreeLayoutAlgorithm moen = new OrderedTreeLayoutAlgorithm();
     /**
      * Returns a <code>JGraph</code> with a sample model.
      */
     public VGraph() {
+
+
 
         setModel(model);
         setGraphLayoutCache(cache);
@@ -54,7 +63,7 @@ public class VGraph extends JGraph implements DropTargetListener {
 
         //DefaultGraphCell[] cells = new DefaultGraphCell[3];
 
-        cells[0] = createVertex("cell1", 20, 220, 160, 160, false, 1000, 500);
+        cells[0] = createVertex("cell1", 20, 220, 160, 160, false, 500, 1000);
 
         //System.out.println(cells[0].getChildren());
         //GraphConstants.setBounds(cells[0].getAttributes(), new Rectangle2D.Double(20, 220, 160, 160));
@@ -74,18 +83,19 @@ public class VGraph extends JGraph implements DropTargetListener {
 //        DefaultPort port1 = new DefaultPort();
 
 //        cells[1].add(port1);
-
         //DefaultEdge edge = new DefaultEdge();
         //edge.setSource(cells[0]/*.getChildAt(0)*/);
         //edge.setTarget(cells[1]/*.getChildAt(0)*/);
         //cells[2] = edge;
-
         //int arrow = GraphConstants.ARROW_CLASSIC;
-
+        //moen.setChildParentDistance(25);
+        //moen.setLayoutOrientation(MoenLayoutAlgorithm.LEFT_TO_RIGHT);
         //GraphConstants.setLineEnd(edge.getAttributes(), arrow);
         //GraphConstants.setEndFill(edge.getAttributes(), true);
         this.getGraphLayoutCache().insert(cells);
-        moen.run(this, cells);
+
+
+        //moen.run(this, cells);
     }
 
 
@@ -97,7 +107,7 @@ public class VGraph extends JGraph implements DropTargetListener {
 
         // Set bounds
         GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(
-                x, y, w, h));
+          x, y, w, h));
 
         // Set fill color
         //if (bg != null) {
@@ -137,13 +147,10 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void drop(DropTargetDropEvent dtde) {
 
-        DefaultGraphCell nextCell = createVertex("cell2",200, 200, 160, 160, false, 1, 500);
-        //GraphConstants.setBounds(nextCell.getAttributes(), new Rectangle2D.Double(200, 120, 160, 160));
-
-        DefaultGraphCell nextCell1 = createVertex("cell3", 350, 200, 160, 160, false, 1, 500);
-        //GraphConstants.setBounds(nextCell1.getAttributes(), new Rectangle2D.Double(200, 320, 160, 160));
-        // Create Edge
-        DefaultEdge edge3 = new DefaultEdge();
+        int x = 5;
+        for (int i = 0; i < x; i++) {
+            DefaultGraphCell nextCell = createVertex("cell2",200, 200, 160, 160, false, 500, 1);
+            DefaultEdge edge3 = new DefaultEdge();
         // Fetch the ports from the new vertices, and connect them with the edge
         edge3.setSource(cells[0].getChildAt(0));
         edge3.setTarget(nextCell.getChildAt(0));
@@ -151,25 +158,13 @@ public class VGraph extends JGraph implements DropTargetListener {
         GraphConstants.setLineEnd(edge3.getAttributes(), arrow);
         GraphConstants.setEndFill(edge3.getAttributes(), true);
         this.getGraphLayoutCache().insert(edge3);
-
-
-
-        // Create Edge
-        DefaultEdge edge4 = new DefaultEdge();
-        // Fetch the ports from the new vertices, and connect them with the edge
-        edge4.setSource(cells[0].getChildAt(0));
-        edge4.setTarget(nextCell1.getChildAt(0));
-             //Set Arrow Style for edge
-        GraphConstants.setLineEnd(edge4.getAttributes(), arrow);
-        GraphConstants.setEndFill(edge4.getAttributes(), true);
-        this.getGraphLayoutCache().insert(edge4);
-
-
-        this.getGraphLayoutCache().insert(nextCell);
-        this.getGraphLayoutCache().insert(nextCell1);
-
-        moen.run(this, cells);
-
+            this.getGraphLayoutCache().insert(nextCell);
+        }
+        JGraphFacade facade = new JGraphFacade(this, cells, true, true, true, true);
+        //moen.run(this, cells);
+        layout.run(facade);
+        Map nested = facade.createNestedMap(true, true);
+        this.getGraphLayoutCache().edit(nested);
         dtde.dropComplete(true);
     }
 }
