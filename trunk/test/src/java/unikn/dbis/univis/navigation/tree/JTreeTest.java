@@ -4,6 +4,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.tree.*;
 
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
@@ -12,9 +14,10 @@ import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.navigation.tree.VTreeHelper;
 import unikn.dbis.univis.icon.VIcon;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.*;
+import java.util.EventObject;
+import java.lang.reflect.Field;
 
 /**
  * TODO: document me!!!
@@ -41,7 +44,7 @@ public class JTreeTest extends JTree {
             e1.printStackTrace();
         }
 
-        setCellRenderer(new DefaultTreeCellRenderer() {
+        final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
             /**
              * Configures the renderer based on the passed in components.
              * The value is set from messaging the tree with
@@ -64,59 +67,81 @@ public class JTreeTest extends JTree {
                     }
                 }
 
+                TreeRow treeRow = new TreeRow();
+                treeRow.setContent(label);
+                treeRow.setIcon(new UVIcon(VIcon.VIEW));
+
+                /*
                 JPanel panel = new JPanel(new BorderLayout());
                 panel.setBackground(Color.WHITE);
-                panel.add(new JLabel(tree.convertValueToText(value, selected, expanded, leaf,  row, hasFocus)), BorderLayout.CENTER);
+                panel.add(new JLabel(), BorderLayout.CENTER);
 
                 if (summable) {
                     UVIcon view = new UVIcon(VIcon.VIEW);
-
-                    view.addMouseListener(new MouseAdapter() {
-                        /**
-                         * Invoked when the mouse has been clicked on a component.
-                         */
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            System.out.println("JTreeTest.mouseClicked");
-                        }
-
-                        /**
-                         * Invoked when a mouse button has been pressed on a component.
-                         */
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                            System.out.println("JTreeTest.mousePressed");
-                        }
-
-                        /**
-                         * Invoked when a mouse button has been released on a component.
-                         */
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                            System.out.println("JTreeTest.mouseReleased");
-                        }
-
-                        /**
-                         * Invoked when the mouse enters a component.
-                         */
-                        @Override
-                        public void mouseEntered(MouseEvent e) {
-                            System.out.println("JTreeTest.mouseEntered");
-                        }
-
-                        /**
-                         * Invoked when the mouse exits a component.
-                         */
-                        @Override
-                        public void mouseExited(MouseEvent e) {
-                            System.out.println("JTreeTest.mouseExited");
-                        }
-                    });
-
                     panel.add(view, BorderLayout.EAST);
                 }
+                */
 
-                return panel;
+                return treeRow;
+            }
+        };
+
+        setEditable(true);
+
+        setCellRenderer(renderer);
+
+        final DefaultTreeCellEditor editor = new DefaultTreeCellEditor(this, renderer) {
+            @Override
+            public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
+                Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+
+                if (c instanceof TreeRow) {
+                    UVIcon icon = ((TreeRow) c).getIcon();
+
+
+                }
+
+                return renderer.getTreeCellRendererComponent(tree, value, isSelected, expanded, leaf, row, hasFocus());
+            }
+        };
+
+        setCellEditor(editor);
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    System.out.println("RIGHT CLICK");
+                    //editor.actionPerformed(new ActionEvent(JTreeTest.this, 0, "asdf"));
+
+                    /*
+                    int row = JTreeTest.this.getRowForLocation(e.getX(), e.getY());
+
+                    JTreeTest tree = JTreeTest.this;
+
+                    Component c = renderer.getTreeCellRendererComponent(tree, "nothing", tree.isRowSelected(row), tree.isExpanded(row), false, row, tree.hasFocus());
+
+
+                    if (c instanceof TreeRow) {
+                        UVIcon icon = ((TreeRow) c).getIcon();
+
+                        System.out.println("BOUNDS: " + icon.getX());
+
+                        System.out.println("ECHO: " + icon.getBounds().contains(e.getPoint()));
+
+
+                    }
+                    */
+
+                    System.out.println("e.getX() = " + e.getX());
+                    System.out.println("e.getY() = " + e.getY());
+
+                    System.out.println("COMP: " + e.getComponent());
+                    System.out.println("DEEP: " + SwingUtilities.getDeepestComponentAt(e.getComponent(), e.getX(), e.getY()));
+
+                    //editor.getTreeCellEditorComponent(JTreeTest.this, "asdf", true, JTreeTest.this.isE)
+                }
             }
         });
 
@@ -238,6 +263,32 @@ public class JTreeTest extends JTree {
             }
         });
         */
+    }
+
+    public class TreeRow extends JPanel {
+
+        private UVIcon icon;
+
+        public TreeRow() {
+            super(new BorderLayout());
+
+            setBackground(Color.WHITE);
+        }
+
+        public void setContent(Component c) {
+            add(c, BorderLayout.CENTER);
+        }
+
+        public void setIcon(UVIcon icon) {
+
+            this.icon = icon;
+
+            add(icon, BorderLayout.EAST);
+        }
+
+        public UVIcon getIcon() {
+            return icon;
+        }
     }
 
     public static void main(String[] args) {

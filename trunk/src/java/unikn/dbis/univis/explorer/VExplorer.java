@@ -212,7 +212,7 @@ public class VExplorer extends JFrame {
     private void initVisualization() {
 
         visualization.setBackground(Color.WHITE);
-        visualization.add(new VGraph(), BorderLayout.CENTER);
+        visualization.add(new JScrollPane(new VGraph()), BorderLayout.CENTER);
 
         split.setRightComponent(visualization);
     }
