@@ -152,7 +152,6 @@ public class VGraph extends JGraph implements DropTargetListener {
         if (check == 0) {
             int x = 5;
             for (int i = 0; i < x; i++) {
-                cells[0].setAllowsChildren(true);
 
                 DefaultGraphCell nextCell = createVertex("cell2", 200, 200, 160, 160, false, 500, 0);
                 DefaultEdge edge3 = new DefaultEdge();
@@ -183,8 +182,9 @@ public class VGraph extends JGraph implements DropTargetListener {
             //for (int i = 0; i < facade.getVertices().size(); i++) {
               //  System.out.println(facade.getEdges());
                 //if (facade.getVertices().iterator().next().equals(facade.getRoots().get(0))) {
-                    DefaultGraphCell newCell = createVertex("cellNew", 200, 200, 160, 160, false, 500, 0);
-                    DefaultEdge edge4 = new DefaultEdge();
+                for (int x = 0; x < 3; x++) {
+               DefaultGraphCell newCell = createVertex("cellNew", 200, 200, 160, 160, false, 500, 0);
+               DefaultEdge edge4 = new DefaultEdge();
                     // Fetch the ports from the new vertices, and connect them with the edge
                 edge4.setSource(action.getChildAt(1));
                 edge4.setTarget(newCell.getChildAt(0));
@@ -195,6 +195,7 @@ public class VGraph extends JGraph implements DropTargetListener {
 
                 this.getGraphLayoutCache().insert(newCell);
                 }
+            }
                /* else{
                     System.out.println("Hansi");
                 }
