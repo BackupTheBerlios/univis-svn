@@ -3,6 +3,8 @@ package unikn.dbis.univis.visualization.graph;
 import org.jgraph.JGraph;
 
 import org.jgraph.graph.*;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.chart.ChartFactory;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
@@ -15,16 +17,18 @@ import java.util.Map;
 import java.io.IOException;
 
 import unikn.dbis.univis.visualization.chart.ChartSample;
+import unikn.dbis.univis.visualization.chart.Pie3DChart;
+import unikn.dbis.univis.visualization.chart.Bar3DChart;
+import unikn.dbis.univis.visualization.item.ChartData;
+import unikn.dbis.univis.visualization.item.VisualizationItem;
+import unikn.dbis.univis.visualization.item.DefaultVisualizationItem;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.jgraph.layout.JGraphFacade;
-import com.jgraph.layout.JGraphLayout;
 import com.jgraph.layout.tree.JGraphTreeLayout;
-import com.jgraph.layout.hierarchical.JGraphHierarchicalLayout;
 
 /**
  * TODO: document me!!!
@@ -49,6 +53,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     private JGraphTreeLayout layout = new JGraphTreeLayout();
     private int check;
     public Transferable tr;
+    private static ChartData chartData = new ChartData();
 
     /**
      * Returns a <code>JGraph</code> with a sample model.
@@ -60,18 +65,21 @@ public class VGraph extends JGraph implements DropTargetListener {
         setEditable(false);
         setMoveable(false);
 
-        //DefaultGraphCell[] cells = new DefaultGraphCell[3];
-        cells[0] = createVertex("cell1", 20, 220, 160, 160, false, 500, 1000);
-        cache.insert(cells);
-
     }
 
 
-    public static DefaultGraphCell createVertex(String name, double x,
-                                                double y, double w, double h, boolean raised, int pointx, int pointy) {
+    public static DefaultGraphCell createVertex(String chartName, double x,
+                                                double y, double w, double h, boolean raised) {
 
+        DefaultPieDataset data = new DefaultPieDataset();
+        Pie3DChart pie3DChart = new Pie3DChart(data, chartName);
+        for (VisualizationItem visualizationItem : chartData.getVisualizationItems()) {
+            System.out.println("Name: " + visualizationItem.getName() + " Value: " + visualizationItem.getValue());
+            data.setValue(visualizationItem.getName(), visualizationItem.getValue());
+            pie3DChart.setName(visualizationItem.getName());
+        }
         // Create vertex with the given name
-        DefaultGraphCell cell = new DefaultGraphCell(new ChartSample());
+        DefaultGraphCell cell = new DefaultGraphCell(pie3DChart);
 
         // Set bounds
         GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(
@@ -86,9 +94,27 @@ public class VGraph extends JGraph implements DropTargetListener {
             GraphConstants.setBorderColor(cell.getAttributes(), Color.black);
 
         // Add a Floating Port
-        cell.addPort(new Point2D.Double(pointx, pointy));
+        cell.addPort(new Point2D.Double(500, 0));
         cell.addPort(new Point2D.Double(500, 1000));
         return cell;
+    }
+
+    public void createEdges(DefaultGraphCell source, DefaultGraphCell target) {
+        DefaultEdge edge = new DefaultEdge();
+
+        edge.setSource(source.getChildAt(1));
+        edge.setTarget(target.getChildAt(0));
+        GraphConstants.setLineEnd(edge.getAttributes(), GraphConstants.ARROW_CLASSIC);
+        GraphConstants.setEndFill(edge.getAttributes(), true);
+        cache.insert(edge);
+    }
+
+    public void fillChartData(VDimension vDim) {
+
+        String name = vDim.getI18nKey();
+        double value = Math.random();
+        VisualizationItem visualizationItem = new DefaultVisualizationItem(name, value);
+        chartData.addVisualizationItem(visualizationItem);
     }
 
     public void dragEnter(DropTargetDragEvent dtde) {
@@ -117,58 +143,49 @@ public class VGraph extends JGraph implements DropTargetListener {
             e.printStackTrace();
         }
         if (o instanceof VDimension) {
-            System.out.println("ECHO: " + ((VDimension) o).getI18nKey());
-            layout.setAlignment(SwingConstants.TOP);
+            //System.out.println("ECHO: " + ((VDimension) o).getI18nKey());
+            VDimension vDim = (VDimension) o;
+
+            fillChartData(vDim);
+
+            layout.setAlignment(SwingConstants.CENTER);
             layout.setOrientation(SwingConstants.NORTH);
-            JGraphFacade facade = new JGraphFacade(this, cells, true, true, true, true);
             if (check == 0) {
+                cells[0] = createVertex(vDim.getI18nKey() ,220, 220, 160, 160, false);
+                //ChartSample root = (ChartSample) cells[0].getUserObject();
+                cells[0].isRoot();
+
+                //root.setIdentify("Root");
+                cache.insert(cells);
+            } else if (check == 1) {
                 int x = 5;
                 for (int i = 0; i < x; i++) {
 
-                    DefaultGraphCell nextCell = createVertex("cell2", 200, 200, 160, 160, false, 500, 0);
-                    DefaultEdge edge3 = new DefaultEdge();
-                    // Fetch the ports from the new vertices, and connect them with the edge
-                    edge3.setSource(cells[0].getChildAt(0));
-                    edge3.setTarget(nextCell.getChildAt(0));
-                    //Set Arrow Style for edge
-                    GraphConstants.setLineEnd(edge3.getAttributes(), GraphConstants.ARROW_CLASSIC);
-                    GraphConstants.setEndFill(edge3.getAttributes(), true);
-                    cache.insert(edge3);
-
+                    DefaultGraphCell nextCell = createVertex(vDim.getI18nKey(),200, 200, 160, 160, false);
+                    //ChartSample kids = (ChartSample) nextCell.getUserObject();
+                    //kids.setIdentify("Kids");
+                    createEdges(cells[0], nextCell);
                     cache.insert(nextCell);
                 }
-                layout.run(facade);
-                Map nested = facade.createNestedMap(true, true);
-                cache.edit(nested);
-                dtde.dropComplete(true);
-                check++;
             } else {
                 for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
                     DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(cells[0], null, true, true).get(i);
-                    ChartSample hans = (ChartSample) action.getUserObject();
-                    hans.setIdentify("Hansi");
-                    System.out.println(hans.getIdentify());
+                    //ChartSample all = (ChartSample) action.getUserObject();
+                    //System.out.println(all.getIdentify());
                     for (int x = 0; x < 3; x++) {
-                        DefaultGraphCell newCell = createVertex("cellNew", 200, 200, 160, 160, false, 500, 0);
-                        DefaultEdge edge4 = new DefaultEdge();
-                        // Fetch the ports from the new vertices, and connect them with the edge
-                        edge4.setSource(action.getChildAt(1));
-                        edge4.setTarget(newCell.getChildAt(0));
-                        //Set Arrow Style for edge
-                        GraphConstants.setLineEnd(edge4.getAttributes(), GraphConstants.ARROW_CLASSIC);
-                        GraphConstants.setEndFill(edge4.getAttributes(), true);
-                        cache.insert(edge4);
+                        DefaultGraphCell newCell = createVertex(vDim.getI18nKey(), 200, 200, 160, 160, false);
 
+                        createEdges(action, newCell);
                         cache.insert(newCell);
                     }
                 }
-                facade = new JGraphFacade(this, cells, true, true, true, true);
-                layout.run(facade);
-                Map nested = facade.createNestedMap(true, true);
-                cache.edit(nested);
-                dtde.dropComplete(true);
             }
-
+            JGraphFacade facade = new JGraphFacade(this, cells, true, true, true, true);
+            layout.run(facade);
+            Map nested = facade.createNestedMap(true, true);
+            cache.edit(nested);
+            check++;
+            dtde.dropComplete(true);
         }
     }
 }

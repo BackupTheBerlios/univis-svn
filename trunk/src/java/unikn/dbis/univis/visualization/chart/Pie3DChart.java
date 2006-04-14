@@ -3,6 +3,7 @@ package unikn.dbis.univis.visualization.chart;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.util.Rotation;
 
@@ -33,6 +34,17 @@ public class Pie3DChart extends JPanel {
 
     public String identify;
 
+    public Pie3DChart(DefaultPieDataset data, String chartName) {
+        this.data = data;
+
+        chart = ChartFactory.createPieChart3D(chartName, data, false, false, false);
+
+        chartPanel = new ChartPanel(chart, 150, 150, 100, 80, 200, 160, true, true, true, true, true, true);
+        add(chartPanel);
+
+        startChart();
+    }
+
     public void startChart() {
 
         PiePlot3D plot = (PiePlot3D) chart.getPlot();
@@ -55,15 +67,6 @@ public class Pie3DChart extends JPanel {
 
     public void setData(DefaultPieDataset data) {
         this.data = data;
-
-
-    }
-
-    public void setChart(JFreeChart chart) {
-        this.chart = chart;
-
-        chartPanel = new ChartPanel(chart, 400, 350, 500, 500, 500, 500, false, false, false, false ,false ,false);
-        add(chartPanel);
     }
 
     public String getIdentify() {
