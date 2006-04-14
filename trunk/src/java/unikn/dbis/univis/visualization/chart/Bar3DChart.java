@@ -26,8 +26,12 @@ import javax.swing.*;
 public class Bar3DChart extends JPanel {
 
     public DefaultCategoryDataset dataset = null;
+
     public JFreeChart chart = null;
+
     public ChartPanel chartPanel = null;
+
+    public String identify;
 
     public void startChart() {
 
@@ -61,5 +65,13 @@ public class Bar3DChart extends JPanel {
 
     public void removeChart() {
         remove(chartPanel);
+    }
+
+    public String getIdentify() {
+        return identify;
+    }
+
+    public void setIdentify(String identify) {
+        this.identify = identify;
     }
 }

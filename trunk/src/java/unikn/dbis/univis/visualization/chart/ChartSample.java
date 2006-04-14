@@ -35,6 +35,16 @@ public class ChartSample extends JPanel {
 
     public ChartPanel chartPanel = null;
 
+    public String identify;
+
+    public String getIdentify() {
+        return identify;
+    }
+
+    public void setIdentify(String identify) {
+        this.identify = identify;
+    }
+
     /**
      * Creates a new <code>JPanel</code> with a double buffer
      * and a flow layout.

@@ -31,6 +31,8 @@ public class Pie3DChart extends JPanel {
 
     public ChartPanel chartPanel = null;
 
+    public String identify;
+
     public void startChart() {
 
         PiePlot3D plot = (PiePlot3D) chart.getPlot();
@@ -62,5 +64,13 @@ public class Pie3DChart extends JPanel {
 
         chartPanel = new ChartPanel(chart, 400, 350, 500, 500, 500, 500, false, false, false, false ,false ,false);
         add(chartPanel);
+    }
+
+    public String getIdentify() {
+        return identify;
+    }
+
+    public void setIdentify(String identify) {
+        this.identify = identify;
     }
 }
