@@ -4,6 +4,7 @@ import org.jgraph.JGraph;
 
 import org.jgraph.graph.*;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.chart.ChartFactory;
 
 import java.awt.geom.Rectangle2D;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import unikn.dbis.univis.visualization.chart.ChartSample;
 import unikn.dbis.univis.visualization.chart.Pie3DChart;
 import unikn.dbis.univis.visualization.chart.Bar3DChart;
+import unikn.dbis.univis.visualization.chart.BothCharts;
 import unikn.dbis.univis.visualization.item.ChartData;
 import unikn.dbis.univis.visualization.item.VisualizationItem;
 import unikn.dbis.univis.visualization.item.DefaultVisualizationItem;
@@ -71,14 +73,17 @@ public class VGraph extends JGraph implements DropTargetListener {
                                                 double y, double w, double h, boolean raised) {
 
         DefaultPieDataset data = new DefaultPieDataset();
-        Pie3DChart pie3DChart = new Pie3DChart(data, chartData.getHeadline());
+        BothCharts pie3DChart = new BothCharts(chartData.getHeadline(), data);
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        BothCharts bar3DChart = new BothCharts(chartData.getHeadline(), dataset);
         for (VisualizationItem visualizationItem : chartData.getVisualizationItems()) {
             System.out.println("Name: " + visualizationItem.getName() + " Value: " + visualizationItem.getValue());
-            data.setValue(visualizationItem.getName(), visualizationItem.getValue());
+            dataset.setValue(visualizationItem.getValue(), visualizationItem.getName(), "");
             pie3DChart.setName(visualizationItem.getName());
         }
         // Create vertex with the given name
-        DefaultGraphCell cell = new DefaultGraphCell(pie3DChart);
+        DefaultGraphCell cell = new DefaultGraphCell(bar3DChart);
 
         // Set bounds
         GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(
