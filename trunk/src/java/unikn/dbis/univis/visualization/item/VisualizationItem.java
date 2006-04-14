@@ -3,11 +3,11 @@ package unikn.dbis.univis.visualization.item;
 /**
  * TODO: document me!!!
  * <p/>
- * <code>VGraph</code>.
+ * VisualizationItem.
  * <p/>
  * User: raedler, weiler
- * Date: 12.04.2006
- * Time: 00:02:10
+ * Date: 14.04.2006
+ * Time: 23:10:27
  *
  * @author Roman R&auml;dle
  * @author Andreas Weiler
