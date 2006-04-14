@@ -27,8 +27,7 @@ public class ChartData {
 
     private String nodeName;
 
-    public ChartData(String headline) {
-        this.headline = headline;
+    public ChartData() {
     }
 
     public String getHeadline() {
