@@ -54,8 +54,6 @@ public class VGraph extends JGraph implements DropTargetListener {
      * Returns a <code>JGraph</code> with a sample model.
      */
     public VGraph() {
-
-
         setModel(model);
         setGraphLayoutCache(cache);
         new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
@@ -147,7 +145,9 @@ public class VGraph extends JGraph implements DropTargetListener {
             } else {
                 for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
                     DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(cells[0], null, true, true).get(i);
-
+                    ChartSample hans = (ChartSample) action.getUserObject();
+                    hans.setIdentify("Hansi");
+                    System.out.println(hans.getIdentify());
                     for (int x = 0; x < 3; x++) {
                         DefaultGraphCell newCell = createVertex("cellNew", 200, 200, 160, 160, false, 500, 0);
                         DefaultEdge edge4 = new DefaultEdge();
