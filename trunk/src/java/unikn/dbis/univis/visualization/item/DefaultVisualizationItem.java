@@ -3,7 +3,7 @@ package unikn.dbis.univis.visualization.item;
 /**
  * TODO: document me!!!
  * <p/>
- * <code>VGraph</code>.
+ * <code>DefaultVisualizationItem</code>.
  * <p/>
  * User: raedler, weiler
  * Date: 12.04.2006
@@ -24,10 +24,8 @@ public class DefaultVisualizationItem implements VisualizationItem {
     }
 
     public DefaultVisualizationItem(String name, double value) {
-
         this.name = name;
         this.value = value;
-
     }
 
     public double getValue() {

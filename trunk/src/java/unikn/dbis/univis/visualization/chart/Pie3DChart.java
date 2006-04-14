@@ -13,7 +13,7 @@ import java.awt.*;
 /**
  * TODO: document me!!!
  * <p/>
- * <code>VGraph</code>.
+ * <code>Pie3DChart</code>.
  * <p/>
  * User: raedler, weiler
  * Date: 12.04.2006

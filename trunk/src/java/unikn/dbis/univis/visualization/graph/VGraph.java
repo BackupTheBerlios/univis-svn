@@ -67,12 +67,11 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     }
 
-
-    public static DefaultGraphCell createVertex(String chartName, double x,
+    public static DefaultGraphCell createVertex(double x,
                                                 double y, double w, double h, boolean raised) {
 
         DefaultPieDataset data = new DefaultPieDataset();
-        Pie3DChart pie3DChart = new Pie3DChart(data, chartName);
+        Pie3DChart pie3DChart = new Pie3DChart(data, chartData.getHeadline());
         for (VisualizationItem visualizationItem : chartData.getVisualizationItems()) {
             System.out.println("Name: " + visualizationItem.getName() + " Value: " + visualizationItem.getValue());
             data.setValue(visualizationItem.getName(), visualizationItem.getValue());
@@ -115,6 +114,7 @@ public class VGraph extends JGraph implements DropTargetListener {
         double value = Math.random();
         VisualizationItem visualizationItem = new DefaultVisualizationItem(name, value);
         chartData.addVisualizationItem(visualizationItem);
+        chartData.setHeadline(name);
     }
 
     public void dragEnter(DropTargetDragEvent dtde) {
@@ -151,7 +151,7 @@ public class VGraph extends JGraph implements DropTargetListener {
             layout.setAlignment(SwingConstants.CENTER);
             layout.setOrientation(SwingConstants.NORTH);
             if (check == 0) {
-                cells[0] = createVertex(vDim.getI18nKey() ,220, 220, 160, 160, false);
+                cells[0] = createVertex(150, 150, 160, 160, false);
                 //ChartSample root = (ChartSample) cells[0].getUserObject();
                 cells[0].isRoot();
 
@@ -161,7 +161,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                 int x = 5;
                 for (int i = 0; i < x; i++) {
 
-                    DefaultGraphCell nextCell = createVertex(vDim.getI18nKey(),200, 200, 160, 160, false);
+                    DefaultGraphCell nextCell = createVertex(200, 200, 160, 160, false);
                     //ChartSample kids = (ChartSample) nextCell.getUserObject();
                     //kids.setIdentify("Kids");
                     createEdges(cells[0], nextCell);
@@ -173,7 +173,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                     //ChartSample all = (ChartSample) action.getUserObject();
                     //System.out.println(all.getIdentify());
                     for (int x = 0; x < 3; x++) {
-                        DefaultGraphCell newCell = createVertex(vDim.getI18nKey(), 200, 200, 160, 160, false);
+                        DefaultGraphCell newCell = createVertex(200, 200, 160, 160, false);
 
                         createEdges(action, newCell);
                         cache.insert(newCell);
