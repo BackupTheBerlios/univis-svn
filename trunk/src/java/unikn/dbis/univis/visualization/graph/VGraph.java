@@ -18,9 +18,6 @@ import java.io.IOException;
 import java.sql.*;
 
 import unikn.dbis.univis.visualization.chart.BothCharts;
-import unikn.dbis.univis.visualization.item.ChartData;
-import unikn.dbis.univis.visualization.item.VisualizationItem;
-import unikn.dbis.univis.visualization.item.DefaultVisualizationItem;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 
@@ -52,8 +49,10 @@ public class VGraph extends JGraph implements DropTargetListener {
     private JGraphTreeLayout layout = new JGraphTreeLayout();
     private int dimensionCount;
     public Transferable tr;
-    private static ChartData chartData = null;
     private Stack dimensionStack = new Stack();
+    private DefaultPieDataset pieDataSet;
+    private String chartName;
+    private int cellsize = 300;
 
     /**
      * Returns a <code>JGraph</code> with a sample model.
@@ -67,25 +66,17 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     }
 
-    public static DefaultGraphCell createVertex(double x,
-                                                double y, double w, double h, boolean raised) {
+    public DefaultGraphCell createVertex(double x,
+                                                double y, boolean raised) {
 
-        DefaultPieDataset data = new DefaultPieDataset();
-        BothCharts pie3DChart = new BothCharts(chartData.getHeadline(), data);
+        BothCharts pie3DChart = new BothCharts(chartName, pieDataSet);
 
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        BothCharts bar3DChart = new BothCharts(chartData.getHeadline(), dataset);
-        for (VisualizationItem visualizationItem : chartData.getVisualizationItems()) {
-            System.out.println("Name: " + visualizationItem.getName() + " Value: " + visualizationItem.getValue());
-            dataset.setValue(visualizationItem.getValue(), visualizationItem.getName(), "");
-            pie3DChart.setName(visualizationItem.getName());
-        }
         // Create vertex with the given name
-        DefaultGraphCell cell = new DefaultGraphCell(bar3DChart);
+        DefaultGraphCell cell = new DefaultGraphCell(pie3DChart);
 
         // Set bounds
         GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(
-                x, y, w, h));
+                x, y, cellsize, cellsize));
         // Set raised border
         if (raised)
             GraphConstants.setBorder(cell.getAttributes(), BorderFactory
@@ -110,16 +101,24 @@ public class VGraph extends JGraph implements DropTargetListener {
         cache.insert(edge);
     }
 
-    public void fillChartData(ResultSet result, String name) throws SQLException {
+    public void fillChartData(ResultSet result) throws SQLException {
 
-        chartData = new ChartData();
+        pieDataSet = new DefaultPieDataset();
+
+        if (dimensionCount == 0) {
         while(result.next()) {
             String visName = result.getString(1);
             double value = result.getDouble(2);
-            VisualizationItem visualizationItem = new DefaultVisualizationItem(visName, value);
-            chartData.addVisualizationItem(visualizationItem);
+            pieDataSet.setValue(visName, value);
         }
-        chartData.setHeadline(name);
+        }
+        if (dimensionCount == 1) {
+            while(result.next()) {
+            String visName = result.getString(1);
+            double value = result.getDouble(2);
+            pieDataSet.setValue(visName, value);
+            }
+        }
     }
 
     public void connection(VDimension vDim) throws SQLException {
@@ -127,26 +126,35 @@ public class VGraph extends JGraph implements DropTargetListener {
         Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "univis", "UniVis");
 
         Statement stmt = connection.createStatement();
+        String sql = "";
 
         if (dimensionCount == 0) {
-        String sql = "SELECT " + vDim.getTableName() + ".name, " + "SUM(koepfe) FROM " +vDim.getTableName() + ", " + vDim.getParent().getTableName()
-                + " GROUP BY " + vDim.getTableName() + ".name";
+            dimensionStack.push(vDim);
+        }
+        else if (dimensionCount == 1) {
+            if (!dimensionStack.isEmpty()) {
+                VDimension vOld = (VDimension) dimensionStack.pop();
+            }
+
+        }
+        if (!vDim.isParentable() && !vDim.isSummable()) {
+        sql = "SELECT " + vDim.getTableName() + ".name, " + "SUM(koepfe) FROM " + vDim.getTableName() + " INNER JOIN sos_cube ON "
+        + vDim.getTableName() + ".id " + " = sos_cube." + vDim.getTableName().substring(6) + " GROUP BY " + vDim.getTableName() + ".name";
+        }
+        else if (vDim.isParentable() && !vDim.isSummable()) {
+            sql = "Select";
+        }
+        else if (!vDim.isParentable() && vDim.isSummable()) {
+
+        }
+        else if (vDim.isParentable() && vDim.isSummable()) {
+
+        }
         System.out.println("SQL: " + sql);
         ResultSet result = stmt.executeQuery(sql);
-        String name = vDim.getI18nKey();
-        fillChartData(result, name);
-        }
-        if (dimensionCount == 1) {
-        VDimension vDimOld = (VDimension) dimensionStack.pop();
-        String sql = "SELECT " + vDim.getTableName() + ".name, " + vDimOld.getTableName() +".name," + "SUM(koepfe) FROM " +vDim.getTableName() + ", " + vDim.getParent().getTableName()
-                + vDimOld.getTableName() +" GROUP BY " + vDim.getTableName() + ".name" + vDimOld.getTableName() + ".name";
-        System.out.println("SQL: " + sql);
-        ResultSet result = stmt.executeQuery(sql);
-        String name = vDim.getI18nKey();
-        fillChartData(result, name);
-        }
+        chartName = vDim.getI18nKey();
+        fillChartData(result);
         connection.close();
-        dimensionStack.push(vDim);
     }
 
     public void dragEnter(DropTargetDragEvent dtde) {
@@ -187,13 +195,13 @@ public class VGraph extends JGraph implements DropTargetListener {
 
             double width = this.getWidth();
             double height = this.getHeight();
-            width -= 160;
-            height -= 160;
+            width -= cellsize;
+            height -= cellsize;
 
             layout.setAlignment(SwingConstants.CENTER);
             layout.setOrientation(SwingConstants.NORTH);
             if (dimensionCount == 0) {
-                cells[0] = createVertex(((int) width/2), ((int) height/2), 160, 160, false);
+                cells[0] = createVertex(((int) width/2), ((int) height/2), false);
                 //ChartSample root = (ChartSample) cells[0].getUserObject();
                 cells[0].isRoot();
 
@@ -203,7 +211,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                 int x = 5;
                 for (int i = 0; i < x; i++) {
 
-                    DefaultGraphCell nextCell = createVertex(200, 200, 160, 160, false);
+                    DefaultGraphCell nextCell = createVertex(200, 200, false);
                     //ChartSample kids = (ChartSample) nextCell.getUserObject();
                     //kids.setIdentify("Kids");
                     createEdges(cells[0], nextCell);
@@ -216,7 +224,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                     //System.out.println(all.getIdentify());
                     if (i == 2) {
                     for (int x = 0; x < 3; x++) {
-                        DefaultGraphCell newCell = createVertex(200, 200, 160, 160, false);
+                        DefaultGraphCell newCell = createVertex(200, 200, false);
                         createEdges(action, newCell);
                         cache.insert(newCell);
                     }
@@ -228,6 +236,7 @@ public class VGraph extends JGraph implements DropTargetListener {
             Map nested = facade.createNestedMap(true, true);
             cache.edit(nested);
             dimensionCount++;
+            System.out.println("Ende");
             dtde.dropComplete(true);
         }
     }
