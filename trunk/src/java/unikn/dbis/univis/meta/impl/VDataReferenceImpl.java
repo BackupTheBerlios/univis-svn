@@ -68,7 +68,6 @@ public abstract class VDataReferenceImpl implements VDataReference {
         this.id = id;
     }
 
-
     /**
      * Returns the internationalization key to allow
      * international application support.
