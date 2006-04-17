@@ -80,6 +80,17 @@ public abstract class VDataReferenceImpl implements VDataReference {
     }
 
     /**
+     * Sets the internationalization key to allow international
+     * application support.
+     *
+     * @param i18nKey The i18n key to allow international
+     *                application support.
+     */
+    public void setI18nKey(String i18nKey) {
+        this.i18nKey = i18nKey;
+    }
+
+    /**
      * Sets the joinable key.
      *
      * @param joinable The joinable key shows the join attribute.
@@ -95,17 +106,6 @@ public abstract class VDataReferenceImpl implements VDataReference {
      */
     public String getJoinable() {
         return joinable;
-    }
-
-    /**
-     * Sets the internationalization key to allow international
-     * application support.
-     *
-     * @param i18nKey The i18n key to allow international
-     *                application support.
-     */
-    public void setI18nKey(String i18nKey) {
-        this.i18nKey = i18nKey;
     }
 
     /**
