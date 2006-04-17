@@ -23,6 +23,10 @@
             <column name="I18N_KEY" not-null="true"/>
         </property>
 
+        <property name="joinable" type="string" lazy="false">
+            <column name="JOINABLE" not-null="false"/>
+        </property>
+
         <property name="tableName" type="string">
             <column name="TABLE_NAME" not-null="true"/>
         </property>
