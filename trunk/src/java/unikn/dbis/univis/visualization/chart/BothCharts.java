@@ -43,9 +43,10 @@ public class BothCharts extends JPanel {
 
     public BothCharts(String chartName, DefaultPieDataset data) {
         this.data = data;
-        chart = ChartFactory.createPieChart3D(chartName, data, false, false, false);
+        chart = ChartFactory.createPieChart3D(chartName, data, true, false, false);
 
-        chartPanel = new ChartPanel(chart, 150, 150, 100, 80, 200, 160, true, true, true, true, true, true);
+        chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(290, 290));
         add(chartPanel);
 
         startPie3DChart();
@@ -53,9 +54,9 @@ public class BothCharts extends JPanel {
 
     public BothCharts(String chartName, DefaultCategoryDataset dataset) {
         this.dataset = dataset;
-        chart = ChartFactory.createBarChart3D(chartName,"", "", dataset, PlotOrientation.HORIZONTAL, true, true, false);
-
-        chartPanel = new ChartPanel(chart, 150, 150, 100, 80, 200, 160, true, true, true, true, true, true);
+        chart = ChartFactory.createBarChart3D(chartName, "", "", dataset, PlotOrientation.HORIZONTAL, true, false, false);
+        chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(290, 290));
         add(chartPanel);
 
         startBar3DChart();
@@ -67,11 +68,8 @@ public class BothCharts extends JPanel {
         plot.setStartAngle(290);
         plot.setDirection(Rotation.CLOCKWISE);
         plot.setForegroundAlpha(0.5f);
-        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
         plot.setNoDataMessage("No data available");
-        plot.setCircular(false);
-        plot.setLabelGap(0.02);
-
+        plot.setLabelGenerator(null);
         add(chartPanel);
         setVisible(true);
 
@@ -87,7 +85,6 @@ public class BothCharts extends JPanel {
 
         add(chartPanel);
         setVisible(true);
-
     }
 
     public DefaultPieDataset getData() {
