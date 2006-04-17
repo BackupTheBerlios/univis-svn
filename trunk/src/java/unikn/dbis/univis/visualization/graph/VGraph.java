@@ -9,6 +9,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
@@ -20,7 +22,6 @@ import java.sql.*;
 import unikn.dbis.univis.visualization.chart.BothCharts;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
-import unikn.dbis.univis.meta.VDataReference;
 
 import javax.swing.*;
 
@@ -52,7 +53,9 @@ public class VGraph extends JGraph implements DropTargetListener {
     public Transferable tr;
     private Stack dimensionStack = new Stack();
     private DefaultCategoryDataset barDataSet;
+    private DefaultPieDataset pieDataSet;
     private String chartName;
+    private String chartCheck = "barChart";
     private int cellsize = 300;
 
     /**
@@ -70,11 +73,16 @@ public class VGraph extends JGraph implements DropTargetListener {
     public DefaultGraphCell createVertex(double x,
                                          double y, boolean raised) {
 
-        BothCharts bar3DChart = new BothCharts(chartName, barDataSet);
-
-        // Create vertex with the given name
-        DefaultGraphCell cell = new DefaultGraphCell(bar3DChart);
-
+        DefaultGraphCell cell = new DefaultGraphCell();
+        if (chartCheck.equals("barChart")) {
+            BothCharts bar3DChart = new BothCharts(chartName, barDataSet);
+            // Create vertex with the given name
+            cell = new DefaultGraphCell(bar3DChart);
+        } else {
+            BothCharts pie3DChart = new BothCharts(chartName, pieDataSet);
+            // Create vertex with the given name
+            cell = new DefaultGraphCell(pie3DChart);
+        }
         // Set bounds
         GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(
                 x, y, cellsize, cellsize));
@@ -104,21 +112,41 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void fillChartData(ResultSet result) throws SQLException {
 
-        barDataSet = new DefaultCategoryDataset();
+        if (chartCheck.equals("barChart")) {
+            barDataSet = new DefaultCategoryDataset();
 
-        if (dimensionCount == 0) {
-            while (result.next()) {
-                String visName = result.getString(1);
-                double value = result.getDouble(2);
-                barDataSet.setValue(value, visName, "");
+            if (dimensionCount == 0) {
+                while (result.next()) {
+                    String visName = result.getString(1);
+                    double value = result.getDouble(2);
+                    barDataSet.setValue(value, visName, "");
+                }
             }
-        }
-        if (dimensionCount == 1) {
-            while (result.next()) {
-                String visName = result.getString(1);
-                double value = result.getDouble(2);
-                barDataSet.setValue(value, visName, "");
+            if (dimensionCount == 1) {
+                while (result.next()) {
+                    String visName = result.getString(1);
+                    double value = result.getDouble(2);
+                    barDataSet.setValue(value, visName, "");
+                }
             }
+        } else {
+            pieDataSet = new DefaultPieDataset();
+
+            if (dimensionCount == 0) {
+                while (result.next()) {
+                    String visName = result.getString(1);
+                    double value = result.getDouble(2);
+                    pieDataSet.setValue(visName, value);
+                }
+            }
+            if (dimensionCount == 1) {
+                while (result.next()) {
+                    String visName = result.getString(1);
+                    double value = result.getDouble(2);
+                    pieDataSet.setValue(visName, value);
+                }
+            }
+
         }
     }
 
@@ -238,5 +266,40 @@ public class VGraph extends JGraph implements DropTargetListener {
             dimensionCount++;
             dtde.dropComplete(true);
         }
+    }
+
+    public void createVisualizationSetts(JMenu visualization) {
+
+        final JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart");
+        barChart.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(barChart))
+
+                    chartCheck = "barChart";
+            }
+        });
+
+        final JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart");
+        pieChart.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(pieChart))
+
+                    chartCheck = "pieChart";
+            }
+        });
+
+        ButtonGroup charts = new ButtonGroup();
+
+        barChart.setState(true);
+
+        pieChart.setState(false);
+
+        charts.add(barChart);
+        charts.add(pieChart);
+
+        visualization.add(barChart);
+        visualization.add(pieChart);
     }
 }
