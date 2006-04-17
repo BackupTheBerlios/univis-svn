@@ -112,42 +112,53 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void fillChartData(ResultSet result) throws SQLException {
 
-        if (chartCheck.equals("barChart")) {
-            barDataSet = new DefaultCategoryDataset();
+        double width = this.getWidth();
+        double height = this.getHeight();
+        width -= cellsize;
+        height -= cellsize;
 
-            if (dimensionCount == 0) {
+        layout.setAlignment(SwingConstants.CENTER);
+        layout.setOrientation(SwingConstants.NORTH);
+        if (dimensionCount == 0) {
+            if (chartCheck.equals("barChart")) {
+                barDataSet = new DefaultCategoryDataset();
                 while (result.next()) {
-                    String visName = result.getString(1);
-                    double value = result.getDouble(2);
-                    barDataSet.setValue(value, visName, "");
+                    barDataSet.addValue(result.getDouble(2), result.getString(1), "");
                 }
             }
-            if (dimensionCount == 1) {
+            if (chartCheck.equals("pieChart")) {
+                pieDataSet = new DefaultPieDataset();
                 while (result.next()) {
-                    String visName = result.getString(1);
-                    double value = result.getDouble(2);
-                    barDataSet.setValue(value, visName, "");
+                    pieDataSet.setValue(result.getString(1), result.getDouble(2));
                 }
             }
-        } else {
-            pieDataSet = new DefaultPieDataset();
+            cells[0] = createVertex(((int) width / 2), ((int) height / 2), false);
+            cells[0].isRoot();
+            cache.insert(cells);
+        } else if (dimensionCount == 1) {
+            for (int i = 0; i < 5; i++) {
 
-            if (dimensionCount == 0) {
-                while (result.next()) {
-                    String visName = result.getString(1);
-                    double value = result.getDouble(2);
-                    pieDataSet.setValue(visName, value);
+                DefaultGraphCell nextCell = createVertex(200, 200, false);
+                createEdges(cells[0], nextCell);
+                cache.insert(nextCell);
+            }
+        } else if (dimensionCount == 2) {
+            for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
+                DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(cells[0], null, true, true).get(i);
+                if (i == 2) {
+                    for (int x = 0; x < 3; x++) {
+                        DefaultGraphCell newCell = createVertex(200, 200, false);
+                        createEdges(action, newCell);
+                        cache.insert(newCell);
+                    }
                 }
             }
-            if (dimensionCount == 1) {
-                while (result.next()) {
-                    String visName = result.getString(1);
-                    double value = result.getDouble(2);
-                    pieDataSet.setValue(visName, value);
-                }
-            }
-
         }
+        JGraphFacade facade = new JGraphFacade(this, cells, true, true, true, true);
+        layout.run(facade);
+        Map nested = facade.createNestedMap(true, true);
+        cache.edit(nested);
+        dimensionCount++;
     }
 
     public void connection(VDimension vDim) throws SQLException {
@@ -161,8 +172,8 @@ public class VGraph extends JGraph implements DropTargetListener {
         } else if (dimensionCount == 1) {
             if (!dimensionStack.isEmpty()) {
                 VDimension vOld = (VDimension) dimensionStack.pop();
+                sql = "SELECT gender, dim_land.name, sum FROM dim_land, (SELECT bluep_geschlecht.name AS gender, sos_cube.nation AS nation, SUM(koepfe) AS sum FROM bluep_geschlecht INNER JOIN sos_cube ON bluep_geschlecht.id = sos_cube.geschlecht GROUP BY bluep_geschlecht.name, sos_cube.nation) AS first WHERE dim_land.id = first.nation GROUP BY dim_land.name, first.gender, first.sum";
             }
-
         }
 
         if (!vDim.isParentable() && !vDim.isSummable()) {
@@ -221,51 +232,8 @@ public class VGraph extends JGraph implements DropTargetListener {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            double width = this.getWidth();
-            double height = this.getHeight();
-            width -= cellsize;
-            height -= cellsize;
-
-            layout.setAlignment(SwingConstants.CENTER);
-            layout.setOrientation(SwingConstants.NORTH);
-            if (dimensionCount == 0) {
-                cells[0] = createVertex(((int) width / 2), ((int) height / 2), false);
-                //ChartSample root = (ChartSample) cells[0].getUserObject();
-                cells[0].isRoot();
-
-                //root.setIdentify("Root");
-                cache.insert(cells);
-            } else if (dimensionCount == 1) {
-                for (int i = 0; i < 5; i++) {
-
-                    DefaultGraphCell nextCell = createVertex(200, 200, false);
-                    //ChartSample kids = (ChartSample) nextCell.getUserObject();
-                    //kids.setIdentify("Kids");
-                    createEdges(cells[0], nextCell);
-                    cache.insert(nextCell);
-                }
-            } else if (dimensionCount == 2) {
-                for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
-                    DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(cells[0], null, true, true).get(i);
-                    //ChartSample all = (ChartSample) action.getUserObject();
-                    //System.out.println(all.getIdentify());
-                    if (i == 2) {
-                        for (int x = 0; x < 3; x++) {
-                            DefaultGraphCell newCell = createVertex(200, 200, false);
-                            createEdges(action, newCell);
-                            cache.insert(newCell);
-                        }
-                    }
-                }
-            }
-            JGraphFacade facade = new JGraphFacade(this, cells, true, true, true, true);
-            layout.run(facade);
-            Map nested = facade.createNestedMap(true, true);
-            cache.edit(nested);
-            dimensionCount++;
-            dtde.dropComplete(true);
         }
+        dtde.dropComplete(true);
     }
 
     public void createVisualizationSetts(JMenu visualization) {
