@@ -77,6 +77,8 @@ public class VExplorer extends JFrame {
 
     private VTree tree;
 
+    private VGraph graph = new VGraph();
+
     /**
      * Constructs a new frame that is initially invisible.
      * <p/>
@@ -128,7 +130,11 @@ public class VExplorer extends JFrame {
 
         file.add(exit);
 
+        JMenu visualization = new JMenu("Visualization");
+        graph.createVisualizationSetts(visualization);
+
         menubar.add(file);
+        menubar.add(visualization);
 
         setJMenuBar(menubar);
     }
@@ -212,7 +218,7 @@ public class VExplorer extends JFrame {
     private void initVisualization() {
 
         visualization.setBackground(Color.WHITE);
-        visualization.add(new JScrollPane(new VGraph()), BorderLayout.CENTER);
+        visualization.add(new JScrollPane(graph), BorderLayout.CENTER);
 
         split.setRightComponent(visualization);
     }
