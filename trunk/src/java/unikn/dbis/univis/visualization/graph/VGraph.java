@@ -20,6 +20,7 @@ import java.sql.*;
 import unikn.dbis.univis.visualization.chart.BothCharts;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
+import unikn.dbis.univis.meta.VDataReference;
 
 import javax.swing.*;
 
@@ -50,7 +51,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     private int dimensionCount;
     public Transferable tr;
     private Stack dimensionStack = new Stack();
-    private DefaultPieDataset pieDataSet;
+    private DefaultCategoryDataset barDataSet;
     private String chartName;
     private int cellsize = 300;
 
@@ -67,12 +68,12 @@ public class VGraph extends JGraph implements DropTargetListener {
     }
 
     public DefaultGraphCell createVertex(double x,
-                                                double y, boolean raised) {
+                                         double y, boolean raised) {
 
-        BothCharts pie3DChart = new BothCharts(chartName, pieDataSet);
+        BothCharts bar3DChart = new BothCharts(chartName, barDataSet);
 
         // Create vertex with the given name
-        DefaultGraphCell cell = new DefaultGraphCell(pie3DChart);
+        DefaultGraphCell cell = new DefaultGraphCell(bar3DChart);
 
         // Set bounds
         GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(
@@ -103,20 +104,20 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void fillChartData(ResultSet result) throws SQLException {
 
-        pieDataSet = new DefaultPieDataset();
+        barDataSet = new DefaultCategoryDataset();
 
         if (dimensionCount == 0) {
-        while(result.next()) {
-            String visName = result.getString(1);
-            double value = result.getDouble(2);
-            pieDataSet.setValue(visName, value);
-        }
+            while (result.next()) {
+                String visName = result.getString(1);
+                double value = result.getDouble(2);
+                barDataSet.setValue(value, visName, "");
+            }
         }
         if (dimensionCount == 1) {
-            while(result.next()) {
-            String visName = result.getString(1);
-            double value = result.getDouble(2);
-            pieDataSet.setValue(visName, value);
+            while (result.next()) {
+                String visName = result.getString(1);
+                double value = result.getDouble(2);
+                barDataSet.setValue(value, visName, "");
             }
         }
     }
@@ -124,31 +125,31 @@ public class VGraph extends JGraph implements DropTargetListener {
     public void connection(VDimension vDim) throws SQLException {
 
         Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "univis", "UniVis");
-
         Statement stmt = connection.createStatement();
         String sql = "";
 
         if (dimensionCount == 0) {
             dimensionStack.push(vDim);
-        }
-        else if (dimensionCount == 1) {
+        } else if (dimensionCount == 1) {
             if (!dimensionStack.isEmpty()) {
                 VDimension vOld = (VDimension) dimensionStack.pop();
             }
 
         }
+
         if (!vDim.isParentable() && !vDim.isSummable()) {
-        sql = "SELECT " + vDim.getTableName() + ".name, " + "SUM(koepfe) FROM " + vDim.getTableName() + " INNER JOIN sos_cube ON "
-        + vDim.getTableName() + ".id " + " = sos_cube." + vDim.getTableName().substring(6) + " GROUP BY " + vDim.getTableName() + ".name";
-        }
-        else if (vDim.isParentable() && !vDim.isSummable()) {
-            sql = "Select";
-        }
-        else if (!vDim.isParentable() && vDim.isSummable()) {
+            sql = "SELECT " + vDim.getTableName() + ".name, " + "SUM(koepfe) FROM " + vDim.getTableName() + " INNER JOIN sos_cube ON "
+                    + vDim.getTableName() + ".id " + " = sos_cube." + vDim.getJoinable() + " GROUP BY " + vDim.getTableName() + ".name";
 
-        }
-        else if (vDim.isParentable() && vDim.isSummable()) {
+        } else if (vDim.isParentable() && !vDim.isSummable()) {
 
+            String tableName = vDim.getTableName();
+            String dataName = "bluep_nation";
+
+            sql = "SELECT " + tableName + ".name, sum FROM (SELECT " + dataName + "." + vDim.getJoinable() +
+                    " AS name, SUM(koepfe) AS sum FROM " + dataName + " INNER JOIN sos_cube ON " + dataName + ".id = sos_cube." +
+                    dataName.substring(6) + " GROUP BY " + dataName + "." + vDim.getJoinable() + ") AS complete, " + tableName +
+                    " WHERE complete.name = " + tableName + ".id";
         }
         System.out.println("SQL: " + sql);
         ResultSet result = stmt.executeQuery(sql);
@@ -201,15 +202,14 @@ public class VGraph extends JGraph implements DropTargetListener {
             layout.setAlignment(SwingConstants.CENTER);
             layout.setOrientation(SwingConstants.NORTH);
             if (dimensionCount == 0) {
-                cells[0] = createVertex(((int) width/2), ((int) height/2), false);
+                cells[0] = createVertex(((int) width / 2), ((int) height / 2), false);
                 //ChartSample root = (ChartSample) cells[0].getUserObject();
                 cells[0].isRoot();
 
                 //root.setIdentify("Root");
                 cache.insert(cells);
             } else if (dimensionCount == 1) {
-                int x = 5;
-                for (int i = 0; i < x; i++) {
+                for (int i = 0; i < 5; i++) {
 
                     DefaultGraphCell nextCell = createVertex(200, 200, false);
                     //ChartSample kids = (ChartSample) nextCell.getUserObject();
@@ -223,11 +223,11 @@ public class VGraph extends JGraph implements DropTargetListener {
                     //ChartSample all = (ChartSample) action.getUserObject();
                     //System.out.println(all.getIdentify());
                     if (i == 2) {
-                    for (int x = 0; x < 3; x++) {
-                        DefaultGraphCell newCell = createVertex(200, 200, false);
-                        createEdges(action, newCell);
-                        cache.insert(newCell);
-                    }
+                        for (int x = 0; x < 3; x++) {
+                            DefaultGraphCell newCell = createVertex(200, 200, false);
+                            createEdges(action, newCell);
+                            cache.insert(newCell);
+                        }
                     }
                 }
             }
@@ -236,7 +236,6 @@ public class VGraph extends JGraph implements DropTargetListener {
             Map nested = facade.createNestedMap(true, true);
             cache.edit(nested);
             dimensionCount++;
-            System.out.println("Ende");
             dtde.dropComplete(true);
         }
     }
