@@ -36,6 +36,20 @@ public interface VDataReference {
     public void setI18nKey(String i18nKey);
 
     /**
+     * Returns the join attribute.
+     *
+     * @return The join attribute to join tables.
+     */
+    public String getJoinable();
+
+    /**
+     * Sets the joinable key.
+     *
+     * @param joinable The joinable key shows the join attribute.
+     */
+    public void setJoinable(String joinable);
+
+    /**
      * Returns the name of the table that contains the
      * data.
      *
