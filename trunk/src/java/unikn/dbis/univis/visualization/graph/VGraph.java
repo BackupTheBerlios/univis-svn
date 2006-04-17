@@ -141,10 +141,16 @@ public class VGraph extends JGraph implements DropTargetListener {
             cells[0].isRoot();
             cache.insert(cells);
         } else if (dimensionCount == 1) {
-            for (int i = 0; i < 2; i++) {
-                DefaultGraphCell nextCell = createVertex(200, 200, false);
-                createEdges(cells[0], nextCell);
-                cache.insert(nextCell);
+            if (chartCheck.equals("barChart")) {
+                barDataSet = new DefaultCategoryDataset();
+                for (int i = 0; i < 2; i++) {
+                    while (result.next()) {
+                        barDataSet.addValue(result.getInt(2), result.getString(1), "");
+                    }
+                    DefaultGraphCell nextCell = createVertex(200, 200, false);
+                    createEdges(cells[0], nextCell);
+                    cache.insert(nextCell);
+                }
             }
         } else if (dimensionCount == 2) {
             for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
