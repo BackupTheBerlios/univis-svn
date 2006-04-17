@@ -125,8 +125,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                 while (result.next()) {
                     barDataSet.addValue(result.getDouble(2), result.getString(1), "");
                 }
-            }
-            if (chartCheck.equals("pieChart")) {
+            } else {
                 pieDataSet = new DefaultPieDataset();
                 while (result.next()) {
                     pieDataSet.setValue(result.getString(1), result.getDouble(2));
