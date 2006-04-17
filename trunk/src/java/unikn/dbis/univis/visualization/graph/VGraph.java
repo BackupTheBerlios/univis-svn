@@ -67,7 +67,6 @@ public class VGraph extends JGraph implements DropTargetListener {
         new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
         setEditable(false);
         setMoveable(false);
-
     }
 
     public DefaultGraphCell createVertex(double x,
@@ -166,6 +165,7 @@ public class VGraph extends JGraph implements DropTargetListener {
         Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "univis", "UniVis");
         Statement stmt = connection.createStatement();
         String sql = "";
+
 
         if (dimensionCount == 0) {
             dimensionStack.push(vDim);
