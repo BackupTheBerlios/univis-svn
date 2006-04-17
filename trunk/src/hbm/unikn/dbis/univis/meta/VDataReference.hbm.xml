@@ -19,11 +19,11 @@
             <generator class="native"/>
         </id>
 
-        <property name="i18nKey" type="string" lazy="false">
+        <property name="i18nKey" type="string">
             <column name="I18N_KEY" not-null="true"/>
         </property>
 
-        <property name="joinable" type="string" lazy="false">
+        <property name="joinable" type="string">
             <column name="JOINABLE" not-null="false"/>
         </property>
 
