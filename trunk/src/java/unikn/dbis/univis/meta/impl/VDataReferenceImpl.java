@@ -68,10 +68,13 @@ public abstract class VDataReferenceImpl implements VDataReference {
         this.id = id;
     }
 
+
     /**
-     * Returns the join attribute.
+     * Returns the internationalization key to allow
+     * international application support.
      *
-     * @return The join attribute to join tables.
+     * @return The i18n key to allow international application
+     *         support.
      */
     public String getI18nKey() {
         return i18nKey;
@@ -87,11 +90,9 @@ public abstract class VDataReferenceImpl implements VDataReference {
     }
 
     /**
-     * Returns the internationalization key to allow
-     * international application support.
+     * Returns the join attribute.
      *
-     * @return The i18n key to allow international application
-     *         support.
+     * @return The join attribute to join tables.
      */
     public String getJoinable() {
         return joinable;
