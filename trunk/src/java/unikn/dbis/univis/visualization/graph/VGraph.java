@@ -47,16 +47,21 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     GraphModel model = new DefaultGraphModel();
     GraphLayoutCache cache = new GraphLayoutCache(model, new VCellViewFactory());
-    // Insert all three cells in one call, so we need an array to store them
     private DefaultGraphCell[] cells = new DefaultGraphCell[1];
     private JGraphTreeLayout layout = new JGraphTreeLayout();
-    private int dimensionCount;
+
+
     public Transferable tr;
+
     private Stack dimensionStack = new Stack();
+
     private DefaultCategoryDataset barDataSet;
     private DefaultPieDataset pieDataSet;
+
     private String chartName;
     private String chartCheck = "barChart";
+
+    private int dimensionCount;
     private int cellsize = 300;
 
     /**
@@ -164,7 +169,6 @@ public class VGraph extends JGraph implements DropTargetListener {
         Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "univis", "UniVis");
         Statement stmt = connection.createStatement();
         String sql = "";
-
 
         if (dimensionCount == 0) {
             dimensionStack.push(vDim);
