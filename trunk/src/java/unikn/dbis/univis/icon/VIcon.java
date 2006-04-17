@@ -22,4 +22,6 @@ public class VIcon {
     public static final Icon UNDO = new ImageIcon(VIcon.class.getResource("../images/undo.png"));
     public static final Icon REDO = new ImageIcon(VIcon.class.getResource("../images/redo.png"));
     public static final Icon FUNNEL = new ImageIcon(VIcon.class.getResource("../images/funnel.png"));
+    public static final Icon BARCHART = new ImageIcon(VIcon.class.getResource("../images/barChart.png"));
+    public static final Icon PIECHART = new ImageIcon(VIcon.class.getResource("../images/pieChart.png"));
 }
