@@ -124,6 +124,7 @@ public class VGraph extends JGraph implements DropTargetListener {
 
         layout.setAlignment(SwingConstants.CENTER);
         layout.setOrientation(SwingConstants.NORTH);
+
         if (dimensionCount == 0) {
             if (chartCheck.equals("barChart")) {
                 barDataSet = new DefaultCategoryDataset();
@@ -140,9 +141,11 @@ public class VGraph extends JGraph implements DropTargetListener {
             cells[0].isRoot();
             cache.insert(cells);
         } else if (dimensionCount == 1) {
-            DefaultGraphCell nextCell = createVertex(200, 200, false);
-            createEdges(cells[0], nextCell);
-            cache.insert(nextCell);
+            for (int i = 0; i < 2; i++) {
+                DefaultGraphCell nextCell = createVertex(200, 200, false);
+                createEdges(cells[0], nextCell);
+                cache.insert(nextCell);
+            }
         } else if (dimensionCount == 2) {
             for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
                 DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(cells[0], null, true, true).get(i);
