@@ -35,6 +35,9 @@ public abstract class VDataReferenceImpl implements VDataReference {
     // The i18n key to allow international application support.
     private String i18nKey;
 
+    // The joinable attribute.
+    private String joinable;
+
     // The name of the table that contains the data.
     private String tableName;
 
@@ -66,14 +69,32 @@ public abstract class VDataReferenceImpl implements VDataReference {
     }
 
     /**
+     * Returns the join attribute.
+     *
+     * @return The join attribute to join tables.
+     */
+    public String getI18nKey() {
+        return i18nKey;
+    }
+
+    /**
+     * Sets the joinable key.
+     *
+     * @param joinable The joinable key shows the join attribute.
+     */
+    public void setJoinable(String joinable) {
+        this.joinable = joinable;
+    }
+
+    /**
      * Returns the internationalization key to allow
      * international application support.
      *
      * @return The i18n key to allow international application
      *         support.
      */
-    public String getI18nKey() {
-        return i18nKey;
+    public String getJoinable() {
+        return joinable;
     }
 
     /**
