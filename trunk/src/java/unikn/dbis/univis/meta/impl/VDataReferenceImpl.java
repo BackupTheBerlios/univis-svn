@@ -91,9 +91,10 @@ public abstract class VDataReferenceImpl implements VDataReference {
     }
 
     /**
-     * Sets the joinable key.
+     * Sets the joinable attribute.
      *
-     * @param joinable The joinable key shows the join attribute.
+     * @param joinable The joinable key shows the join
+     *                 attribute.
      */
     public void setJoinable(String joinable) {
         this.joinable = joinable;

@@ -43,9 +43,10 @@ public interface VDataReference {
     public String getJoinable();
 
     /**
-     * Sets the joinable key.
+     * Sets the joinable attribute.
      *
-     * @param joinable The joinable key shows the join attribute.
+     * @param joinable The joinable key shows the join
+     *                 attribute.
      */
     public void setJoinable(String joinable);
 
