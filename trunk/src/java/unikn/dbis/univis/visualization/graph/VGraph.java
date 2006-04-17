@@ -128,23 +128,21 @@ public class VGraph extends JGraph implements DropTargetListener {
             if (chartCheck.equals("barChart")) {
                 barDataSet = new DefaultCategoryDataset();
                 while (result.next()) {
-                    barDataSet.addValue(result.getDouble(2), result.getString(1), "");
+                    barDataSet.addValue(result.getInt(2), result.getString(1), "");
                 }
             } else {
                 pieDataSet = new DefaultPieDataset();
                 while (result.next()) {
-                    pieDataSet.setValue(result.getString(1), result.getDouble(2));
+                    pieDataSet.setValue(result.getString(1), result.getInt(2));
                 }
             }
             cells[0] = createVertex(((int) width / 2), ((int) height / 2), false);
             cells[0].isRoot();
             cache.insert(cells);
         } else if (dimensionCount == 1) {
-            for (int i = 0; i < 5; i++) {
-                DefaultGraphCell nextCell = createVertex(200, 200, false);
-                createEdges(cells[0], nextCell);
-                cache.insert(nextCell);
-            }
+            DefaultGraphCell nextCell = createVertex(200, 200, false);
+            createEdges(cells[0], nextCell);
+            cache.insert(nextCell);
         } else if (dimensionCount == 2) {
             for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
                 DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(cells[0], null, true, true).get(i);
