@@ -130,11 +130,11 @@ public class VExplorer extends JFrame {
 
         file.add(exit);
 
-        JMenu visualizationSettings = new JMenu("Visualization");
-        graph.createVisualizationSetts(visualizationSettings);
+        JMenu visualSettings = new JMenu("VisualSettings");
+        graph.createVisualizationSetts(visualSettings);
 
         menubar.add(file);
-        menubar.add(visualizationSettings);
+        menubar.add(visualSettings);
 
         setJMenuBar(menubar);
     }
