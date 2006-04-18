@@ -2,15 +2,13 @@ package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.VDiceBox;
 import unikn.dbis.univis.meta.VDimension;
-import unikn.dbis.univis.icon.VIcon;
+import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
+import unikn.dbis.univis.explorer.VExplorer;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import java.sql.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -20,7 +18,6 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.*;
 import java.io.IOException;
 
 /**
@@ -39,15 +36,6 @@ import java.io.IOException;
  */
 public class VTree extends JTree implements DragGestureListener, DragSourceListener {
 
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        }
-        catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
-        }
-    }
-
     /**
      * Returns a <code>JTree</code> with a sample model.
      * The default model used by the tree defines a leaf node as any node
@@ -58,41 +46,26 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
     public VTree(VDiceBox diceBox) {
         super(VTreeHelper.createDefaultTree(diceBox));
 
-        setCellRenderer(new VTreeCellRenderer());
+        VTreeCellRenderer renderer = new VTreeCellRenderer();
+        setCellRenderer(renderer);
+        setCellEditor(new VTreeCellEditor(renderer));
+        setEditable(true);
+        setDragEnabled(true);
 
         addMouseListener(new MouseAdapter() {
-
             /**
-             * Invoked when the mouse has been clicked on a component.
+             * Invoked when a mouse button has been pressed on a component.
              */
             @Override
-            public void mouseClicked(MouseEvent e) {
-
-                for (Component c : getComponents()) {
-                    if (c instanceof Container) {
-                        for (Component c1 : ((Container) c).getComponents()) {
-
-                            if (c1 instanceof Container) {
-                                for (Component c2 : ((Container) c1).getComponents()) {
-                                    //System.out.println("C: " + c2.getClass());
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (SwingUtilities.isRightMouseButton(e)) {
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
                     setSelectionPath(getPathForLocation(e.getX(), e.getY()));
-
-                    showPopupMenu(e.getX(), e.getY());
                 }
             }
         });
-
-        setDragEnabled(true);
     }
 
-    private void showPopupMenu(int x, int y) {
+    public void showPopupMenu(int x, int y) {
 
         final JPopupMenu popupMenu = new JPopupMenu();
 
@@ -109,7 +82,7 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
                 VDimension dimension = (VDimension) userObject;
 
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/univis", "univis", "UniVis");
+                    Connection connection = VExplorer.getConnection();
 
                     Statement stmt = connection.createStatement();
 
@@ -119,7 +92,6 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
 
                     ResultSet result = stmt.executeQuery(sql);
 
-                    //Set<Long> selections = new HashSet<Long>();
                     boolean hasNoTupel = true;
                     while (result.next()) {
                         hasNoTupel = false;
@@ -132,15 +104,13 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
                             checkBox = new VIdCheckBox(dimension, result.getLong(1), result.getString(2));
                         }
                         popupMenu.add(checkBox);
-
-                        //selections.add(result.getLong(1));
                     }
 
                     if (hasNoTupel) {
                         JOptionPane.showMessageDialog(VTree.this.getParent().getParent().getParent(), "No items found.", "Error message", JOptionPane.INFORMATION_MESSAGE);
                     }
                     else {
-                        JButton view = new JButton(VIcon.VIEW);
+                        JButton view = new JButton(VIcons.VIEW);
                         view.addActionListener(new ActionListener() {
                             /**
                              * Invoked when an action occurs.
@@ -274,6 +244,11 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
              * @return boolean indicating whether or not the data flavor is supported
              */
             public boolean isDataFlavorSupported(DataFlavor flavor) {
+                for (DataFlavor dataFlavor : getTransferDataFlavors()) {
+                    if (dataFlavor.equals(flavor)) {
+                        return true;
+                    }
+                }
                 return false;
             }
 

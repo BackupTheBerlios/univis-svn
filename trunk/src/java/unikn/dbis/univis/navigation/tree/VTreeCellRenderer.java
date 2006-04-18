@@ -3,7 +3,7 @@ package unikn.dbis.univis.navigation.tree;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VCube;
 import unikn.dbis.univis.icon.VIconComponent;
-import unikn.dbis.univis.icon.VIcon;
+import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.icon.VCubeFlagIcon;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 
@@ -11,9 +11,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -62,7 +59,7 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                 VDimension dimension = (VDimension) o;
 
                 if (dimension.isSummable()) {
-                    panel.add(new VIconComponent(VIcon.FUNNEL), BorderLayout.EAST);
+                    panel.add(new VIconComponent(VIcons.FUNNEL), BorderLayout.EAST);
                 }
 
                 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();

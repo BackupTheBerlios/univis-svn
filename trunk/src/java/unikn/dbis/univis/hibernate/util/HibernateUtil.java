@@ -31,22 +31,6 @@ public class HibernateUtil {
     static {
         // Create the SessionFactory from the hibernate.cfg.xml
         try {
-
-            /*
-            Properties props = new Properties();
-
-            try {
-                props.load(new FileInputStream("d:/projects/univis explorer/build/classes/hibernate.properties"));
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Configuration cfg = new Configuration().addProperties(props);
-            cfg.addDirectory(new File("d:/projects/univis explorer/build/classes/unikn/dbis/univis/meta"));
-
-            sessionFactory = cfg.buildSessionFactory();
-            */
             sessionFactory = new Configuration().configure().buildSessionFactory();
         }
         catch (HibernateException he) {

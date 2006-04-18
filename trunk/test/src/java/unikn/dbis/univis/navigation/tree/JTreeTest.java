@@ -4,20 +4,16 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 
 import javax.swing.*;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.tree.*;
 
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.meta.impl.VDiceBoxImpl;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.navigation.tree.VTreeHelper;
-import unikn.dbis.univis.icon.VIcon;
+import unikn.dbis.univis.icon.VIcons;
 
 import java.awt.event.*;
 import java.awt.*;
-import java.util.EventObject;
-import java.lang.reflect.Field;
 
 /**
  * TODO: document me!!!
@@ -69,7 +65,7 @@ public class JTreeTest extends JTree {
 
                 TreeRow treeRow = new TreeRow();
                 treeRow.setContent(label);
-                treeRow.setIcon(new UVIcon(VIcon.VIEW));
+                treeRow.setIcon(new UVIcon(VIcons.VIEW));
 
                 /*
                 JPanel panel = new JPanel(new BorderLayout());
@@ -77,7 +73,7 @@ public class JTreeTest extends JTree {
                 panel.add(new JLabel(), BorderLayout.CENTER);
 
                 if (summable) {
-                    UVIcon view = new UVIcon(VIcon.VIEW);
+                    UVIcon view = new UVIcon(VIcons.VIEW);
                     panel.add(view, BorderLayout.EAST);
                 }
                 */
@@ -87,25 +83,6 @@ public class JTreeTest extends JTree {
         };
 
         setEditable(true);
-
-        setCellRenderer(renderer);
-
-        final DefaultTreeCellEditor editor = new DefaultTreeCellEditor(this, renderer) {
-            @Override
-            public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
-                Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
-
-                if (c instanceof TreeRow) {
-                    UVIcon icon = ((TreeRow) c).getIcon();
-
-
-                }
-
-                return renderer.getTreeCellRendererComponent(tree, value, isSelected, expanded, leaf, row, hasFocus());
-            }
-        };
-
-        setCellEditor(editor);
 
         addMouseListener(new MouseAdapter() {
             @Override

@@ -22,7 +22,7 @@ import java.sql.*;
 import unikn.dbis.univis.visualization.chart.BothCharts;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
-import unikn.dbis.univis.icon.VIcon;
+import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.explorer.VExplorer;
 
 import javax.swing.*;
@@ -261,7 +261,7 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void createVisualizationSetts(JMenu visualization) {
 
-        final JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcon.BARCHART);
+        final JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
         barChart.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -271,7 +271,7 @@ public class VGraph extends JGraph implements DropTargetListener {
             }
         });
 
-        final JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcon.PIECHART);
+        final JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
         pieChart.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {

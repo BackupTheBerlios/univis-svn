@@ -1,4 +1,4 @@
-package unikn.dbis.univis.dialect;
+package unikn.dbis.univis.sql.dialect;
 
 /**
  * TODO: document me!!!
