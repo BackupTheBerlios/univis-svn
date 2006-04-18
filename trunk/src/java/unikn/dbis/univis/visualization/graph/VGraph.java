@@ -23,6 +23,7 @@ import unikn.dbis.univis.visualization.chart.BothCharts;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.icon.VIcon;
+import unikn.dbis.univis.explorer.VExplorer;
 
 import javax.swing.*;
 
@@ -183,7 +184,7 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void connection(VDimension vDim) throws SQLException {
 
-        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "univis", "UniVis");
+        Connection connection = VExplorer.getConnection();
         Statement stmt = connection.createStatement();
         String sql = "";
         String select = "";
