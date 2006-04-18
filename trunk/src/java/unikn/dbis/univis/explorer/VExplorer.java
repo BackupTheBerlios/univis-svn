@@ -73,15 +73,6 @@ public class VExplorer extends JFrame {
 
     private static Connection connection;
 
-    static {
-        try {
-            connection = ConnectionProviderFactory.newConnectionProvider().getConnection();
-        }
-        catch (SQLException sqle) {
-            sqle.printStackTrace();
-        }
-    }
-
     public static Connection getConnection() {
         return connection;
     }
@@ -131,6 +122,8 @@ public class VExplorer extends JFrame {
         Container container = getContentPane();
         container.add(toolbar, BorderLayout.NORTH);
         container.add(split, BorderLayout.CENTER);
+
+        connection = HibernateUtil.getSessionFactory().openSession().connection();
 
         addWindowListener(new WindowAdapter() {
 
