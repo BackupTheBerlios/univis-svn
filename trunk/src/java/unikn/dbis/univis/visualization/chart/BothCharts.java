@@ -5,12 +5,14 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.util.Rotation;
+import org.jfree.ui.RectangleEdge;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +46,10 @@ public class BothCharts extends JPanel {
     public BothCharts(String chartName, DefaultPieDataset data) {
         this.data = data;
         chart = ChartFactory.createPieChart3D(chartName, data, true, false, false);
-
+        LegendTitle legend = chart.getLegend();
+        if (legend != null) {
+            legend.setItemFont(new Font("Tahoma", Font.PLAIN, 10));
+        }
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(290, 290));
         add(chartPanel);
@@ -55,6 +60,10 @@ public class BothCharts extends JPanel {
     public BothCharts(String chartName, DefaultCategoryDataset dataset) {
         this.dataset = dataset;
         chart = ChartFactory.createBarChart3D(chartName, "", "", dataset, PlotOrientation.HORIZONTAL, true, false, false);
+        LegendTitle legend = chart.getLegend();
+        if (legend != null) {
+            legend.setItemFont(new Font("Tahoma", Font.PLAIN, 10));
+        }
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(290, 290));
         add(chartPanel);
@@ -82,7 +91,7 @@ public class BothCharts extends JPanel {
         axis.setTickLabelsVisible(false);
         BarRenderer3D renderer = (BarRenderer3D) plot.getRenderer();
         renderer.setDrawBarOutline(false);
-
+        plot.setNoDataMessage("No data available");
         add(chartPanel);
         setVisible(true);
     }
