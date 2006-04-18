@@ -62,7 +62,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     private String chartCheck = "barChart";
 
     private int dimensionCount = 0;
-    private int cellsize = 500;
+    private int cellsize = 300;
 
     /**
      * Returns a <code>JGraph</code> with a sample model.
@@ -186,27 +186,31 @@ public class VGraph extends JGraph implements DropTargetListener {
         Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "univis", "UniVis");
         Statement stmt = connection.createStatement();
         String sql = "";
+        String select = "";
+        String from = "";
+        String where = "";
+        String group = "";
 
         if (dimensionCount == 0) {
             dimensionStack.push(vDim);
-        } else if (dimensionCount == 1) {
-            if (!dimensionStack.isEmpty()) {
-                VDimension vOld = (VDimension) dimensionStack.pop();
-            }
-        }
-
-        if (!vDim.isParentable() && !vDim.isSummable()) {
-            sql = "SELECT " + vDim.getTableName() + ".name, " + "SUM(koepfe) FROM " + vDim.getTableName() + " INNER JOIN sos_cube ON "
-                    + vDim.getTableName() + ".id " + " = sos_cube." + vDim.getJoinable() + " GROUP BY " + vDim.getTableName() + ".name";
-
-        } else if (vDim.isParentable() && !vDim.isSummable()) {
 
             String tableName = vDim.getTableName();
             String dataName = "bluep_nation";
+            select = "SELECT " + tableName + ".name, SUM(koepfe) ";
+            from = "FROM " + tableName + ", " + dataName + ", sos_cube ";
+            where = "WHERE " + tableName + ".id = " + dataName + "." + vDim.getJoinable() +
+                    " AND " + dataName + ".id = sos_cube.nation";
+            group = " GROUP BY " + tableName + ".name";
+            sql = select + from + where + group;
 
-            sql = "SELECT " + tableName + ".name, SUM(koepfe) FROM " + tableName + ", " + dataName + ", sos_cube WHERE " +
-                    tableName + ".id = " + dataName + "." + vDim.getJoinable() + " AND " + dataName + ".id = sos_cube.nation GROUP BY " +
-                    tableName + ".name";
+        } else if (dimensionCount == 1) {
+            if (!dimensionStack.isEmpty()) {
+                VDimension vOld = (VDimension) dimensionStack.pop();
+
+                String tableNameNew = vDim.getTableName();
+                String tableNameOld = vOld.getTableName();
+
+            }
         }
         System.out.println("SQL: " + sql);
         ResultSet result = stmt.executeQuery(sql);
@@ -277,15 +281,31 @@ public class VGraph extends JGraph implements DropTargetListener {
         });
 
         ButtonGroup charts = new ButtonGroup();
-
         barChart.setState(true);
-
         pieChart.setState(false);
-
         charts.add(barChart);
         charts.add(pieChart);
 
-        visualization.add(barChart);
-        visualization.add(pieChart);
+        JMenu chartsMenu = new JMenu("Charts");
+        chartsMenu.add(barChart);
+        chartsMenu.add(pieChart);
+
+        JMenu measuresMenu = new JMenu("Measures");
+        final JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe");
+        final JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle");
+        final JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag");
+
+        ButtonGroup measuresGroup = new ButtonGroup();
+        heads.setState(true);
+        cases.setState(false);
+        amount.setState(false);
+        measuresGroup.add(heads);
+        measuresGroup.add(cases);
+        measuresGroup.add(amount);
+        measuresMenu.add(heads);
+        measuresMenu.add(cases);
+        measuresMenu.add(amount);
+        visualization.add(chartsMenu);
+        visualization.add(measuresMenu);
     }
 }
