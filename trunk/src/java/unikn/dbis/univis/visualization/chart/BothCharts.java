@@ -43,17 +43,17 @@ public class BothCharts extends JPanel {
 
     public String identify;
 
+    private Font legendFont = new Font("Tahoma", Font.PLAIN, 10);
+
     public BothCharts(String chartName, DefaultPieDataset data) {
         this.data = data;
         chart = ChartFactory.createPieChart3D(chartName, data, true, false, false);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
-            legend.setItemFont(new Font("Tahoma", Font.PLAIN, 10));
+            legend.setItemFont(legendFont);
         }
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(290, 290));
-        add(chartPanel);
-
         startPie3DChart();
     }
 
@@ -62,12 +62,10 @@ public class BothCharts extends JPanel {
         chart = ChartFactory.createBarChart3D(chartName, "", "", dataset, PlotOrientation.HORIZONTAL, true, false, false);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
-            legend.setItemFont(new Font("Tahoma", Font.PLAIN, 10));
+            legend.setItemFont(legendFont);
         }
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(290, 290));
-        add(chartPanel);
-
         startBar3DChart();
     }
 
@@ -79,9 +77,10 @@ public class BothCharts extends JPanel {
         plot.setForegroundAlpha(0.5f);
         plot.setNoDataMessage("No data available");
         plot.setLabelGenerator(null);
-        add(chartPanel);
+        setPreferredSize(new Dimension(300, 300));
+        setLayout(new BorderLayout());
+        add(chartPanel, BorderLayout.CENTER);
         setVisible(true);
-
     }
 
     public void startBar3DChart() {
@@ -92,7 +91,9 @@ public class BothCharts extends JPanel {
         BarRenderer3D renderer = (BarRenderer3D) plot.getRenderer();
         renderer.setDrawBarOutline(false);
         plot.setNoDataMessage("No data available");
-        add(chartPanel);
+        setPreferredSize(new Dimension(300, 300));
+        setLayout(new BorderLayout());
+        add(chartPanel, BorderLayout.CENTER);
         setVisible(true);
     }
 
