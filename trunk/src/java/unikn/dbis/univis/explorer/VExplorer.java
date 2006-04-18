@@ -6,7 +6,7 @@ import unikn.dbis.univis.meta.impl.VCubeImpl;
 import unikn.dbis.univis.meta.VDiceBox;
 import unikn.dbis.univis.meta.VCube;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
-import unikn.dbis.univis.icon.VIcon;
+import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.icon.VCubeIcon;
 import unikn.dbis.univis.util.ComponentUtilities;
 import unikn.dbis.univis.visualization.VVisualization;
@@ -15,14 +15,19 @@ import unikn.dbis.univis.visualization.graph.VGraph;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.*;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
+import org.hibernate.connection.ConnectionProviderFactory;
 
 /**
  * TODO: document me!!!
@@ -66,6 +71,21 @@ public class VExplorer extends JFrame {
         });
     }
 
+    private static Connection connection;
+
+    static {
+        try {
+            connection = ConnectionProviderFactory.newConnectionProvider().getConnection();
+        }
+        catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
+
+    public static Connection getConnection() {
+        return connection;
+    }
+
     private JMenuBar menubar = new JMenuBar();
 
     private JToolBar toolbar = new JToolBar();
@@ -95,6 +115,11 @@ public class VExplorer extends JFrame {
     public VExplorer() throws HeadlessException {
         super("UniVis Explorer 0.1 - (c) 2005 a.d. - DBIS, University of Konstanz");
 
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(800, 600));
+        setSize(new Dimension(800, 600));
+        ComponentUtilities.centerComponentOnScreen(this);
+
         split.setDividerLocation(300);
 
         initMenubar();
@@ -107,10 +132,25 @@ public class VExplorer extends JFrame {
         container.add(toolbar, BorderLayout.NORTH);
         container.add(split, BorderLayout.CENTER);
 
-        setPreferredSize(new Dimension(800, 600));
-        setSize(new Dimension(800, 600));
+        addWindowListener(new WindowAdapter() {
 
-        ComponentUtilities.centerComponentOnScreen(this);
+            /**
+             * Invoked when a window is in the process of being closed.
+             * The close operation can be overridden at this point.
+             */
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (connection != null) {
+                    try {
+                        connection.commit();
+                        connection.close();
+                    }
+                    catch (SQLException sqle) {
+                        sqle.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     private void initMenubar() {
@@ -141,7 +181,7 @@ public class VExplorer extends JFrame {
 
     private void initToolbar() {
 
-        JButton refresh = new JButton(VIcon.REFRESH);
+        JButton refresh = new JButton(VIcons.REFRESH);
         refresh.addActionListener(new ActionListener() {
             /**
              * Invoked when an action occurs.
@@ -180,8 +220,8 @@ public class VExplorer extends JFrame {
             }
         });
 
-        JButton undo = new JButton(VIcon.UNDO);
-        JButton redo = new JButton(VIcon.REDO);
+        JButton undo = new JButton(VIcons.UNDO);
+        JButton redo = new JButton(VIcons.REDO);
 
         toolbar.add(refresh);
         toolbar.add(undo);
