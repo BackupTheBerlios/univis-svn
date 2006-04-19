@@ -12,7 +12,6 @@ import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.util.Rotation;
-import org.jfree.ui.RectangleEdge;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +58,7 @@ public class BothCharts extends JPanel {
 
     public BothCharts(String chartName, DefaultCategoryDataset dataset) {
         this.dataset = dataset;
-        chart = ChartFactory.createBarChart3D(chartName, "", "", dataset, PlotOrientation.HORIZONTAL, true, false, false);
+        chart = ChartFactory.createBarChart3D(chartName, "", "", dataset, PlotOrientation.HORIZONTAL, true, false, true);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(legendFont);
