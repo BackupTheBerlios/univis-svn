@@ -15,6 +15,7 @@ import org.jfree.util.Rotation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 /**
  * TODO: document me!!!
@@ -52,19 +53,19 @@ public class BothCharts extends JPanel {
             legend.setItemFont(legendFont);
         }
         chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(290, 290));
+        chartPanel.setPreferredSize(new Dimension(1000, 1000));
         startPie3DChart();
     }
 
     public BothCharts(String chartName, DefaultCategoryDataset dataset) {
         this.dataset = dataset;
-        chart = ChartFactory.createBarChart3D(chartName, "", "", dataset, PlotOrientation.HORIZONTAL, true, false, true);
+        chart = ChartFactory.createBarChart3D(chartName, "Countries", "Students", dataset, PlotOrientation.HORIZONTAL, true, false, false);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(legendFont);
         }
         chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(290, 290));
+        chartPanel.scale(new Rectangle2D.Double(0, 0, 300, 300));
         startBar3DChart();
     }
 
