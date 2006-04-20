@@ -6,16 +6,19 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.title.LegendTitle;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.util.Rotation;
+import org.jfree.util.SortOrder;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * TODO: document me!!!
@@ -45,27 +48,35 @@ public class BothCharts extends JPanel {
 
     private Font legendFont = new Font("Tahoma", Font.PLAIN, 10);
 
-    public BothCharts(String chartName, DefaultPieDataset data) {
+    private ArrayList l = new ArrayList();
+
+    public BothCharts(String chartName, DefaultPieDataset data, int total) {
         this.data = data;
         chart = ChartFactory.createPieChart3D(chartName, data, true, false, false);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(legendFont);
         }
+        setSubtitles(total, legend);
         chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(1000, 1000));
+        if (data.getItemCount() >= 50) {
+            makeScale();
+        }
         startPie3DChart();
     }
 
-    public BothCharts(String chartName, DefaultCategoryDataset dataset) {
+    public BothCharts(String chartName, DefaultCategoryDataset dataset, int total, String xAxis) {
         this.dataset = dataset;
-        chart = ChartFactory.createBarChart3D(chartName, "Countries", "Students", dataset, PlotOrientation.HORIZONTAL, true, false, false);
+        chart = ChartFactory.createBarChart3D(chartName, "", xAxis, dataset, PlotOrientation.HORIZONTAL, true, false, false);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(legendFont);
         }
+        setSubtitles(total, legend);
         chartPanel = new ChartPanel(chart);
-        chartPanel.scale(new Rectangle2D.Double(0, 0, 300, 300));
+        if (dataset.getColumnCount() >= 50) {
+            makeScale();
+        }
         startBar3DChart();
     }
 
@@ -91,10 +102,31 @@ public class BothCharts extends JPanel {
         BarRenderer3D renderer = (BarRenderer3D) plot.getRenderer();
         renderer.setDrawBarOutline(false);
         plot.setNoDataMessage("No data available");
+        plot.getDomainAxis().setLabelFont(legendFont);
+        plot.getRangeAxis().setLabelFont(legendFont);
         setPreferredSize(new Dimension(300, 300));
         setLayout(new BorderLayout());
         add(chartPanel, BorderLayout.CENTER);
         setVisible(true);
+    }
+
+    public void makeScale() {
+
+        chartPanel.setMinimumDrawHeight(600);
+        chartPanel.setMinimumDrawWidth(600);
+        chartPanel.scale(new Rectangle2D.Double(0, 0, 300, 300));
+
+    }
+
+    public void setSubtitles(int total, LegendTitle legend) {
+
+        Integer totalHelp = total;
+        String totalName = "Total: " + totalHelp.toString();
+        TextTitle totalTitle = new TextTitle(totalName);
+        l.add(totalTitle);
+        l.add(legend);
+        chart.setSubtitles(l);
+
     }
 
     public DefaultPieDataset getData() {
