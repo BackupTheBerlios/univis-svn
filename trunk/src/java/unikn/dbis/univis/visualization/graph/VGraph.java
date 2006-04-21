@@ -14,7 +14,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.util.Map;
-import java.util.Stack;
 import java.io.IOException;
 import java.sql.*;
 
@@ -45,20 +44,30 @@ import com.jgraph.layout.tree.JGraphTreeLayout;
  */
 public class VGraph extends JGraph implements DropTargetListener {
 
+    /*
+     * Different Objects for the graph.
+     */
     GraphModel model = new DefaultGraphModel();
     GraphLayoutCache cache = new GraphLayoutCache(model, new VCellViewFactory());
     private DefaultGraphCell[] cells = new DefaultGraphCell[1];
     private JGraphTreeLayout layout = new JGraphTreeLayout();
 
-
+    /*
+     * Object Transferable for Drag & Drop.
+     */
     public Transferable tr;
 
+    /*
+     * Datasets for creating Charts.
+     */
     private DefaultCategoryDataset barDataSet;
     private DefaultPieDataset pieDataSet;
 
+    /*
+     * Strings for different topics.
+     */
     private String chartName;
     private String chartCheck = "barChart";
-
     private String sql = "";
     private String select = "";
     private String from = "";
@@ -68,17 +77,18 @@ public class VGraph extends JGraph implements DropTargetListener {
     private String order = "";
     private String cubeName = "sos_cube";
     private String cubeAttribute = "SUM(koepfe)";
-
     private String xAxis = "Studenten";
 
+    /*
+     * Int values for different topics.
+     */
     private int dimensionCount = 0;
     private int cellsize = 300;
-
     private int whichRowA = 0;
     private int whichRowB = 0;
 
     /**
-     * Returns a <code>JGraph</code> with a sample model.
+     * Standard Constructor
      */
     public VGraph() {
         setModel(model);
@@ -88,6 +98,13 @@ public class VGraph extends JGraph implements DropTargetListener {
         setMoveable(false);
     }
 
+    /**
+     * @param x       : x-Position of the Rectangle.
+     * @param y       : y-Position of the Rectangle.
+     * @param dataSet : dataSet for the Chart.
+     * @param total   : total amount of all chartvalues.
+     * @return a DefaultGraphCell
+     */
     public DefaultGraphCell createVertex(double x, double y, Object dataSet, int total) {
 
         DefaultGraphCell cell = new DefaultGraphCell();
@@ -110,6 +127,10 @@ public class VGraph extends JGraph implements DropTargetListener {
         return cell;
     }
 
+    /**
+     * @param source : source where the edge is starting.
+     * @param target : target where the edge is ending.
+     */
     public void createEdges(DefaultGraphCell source, DefaultGraphCell target) {
         DefaultEdge edge = new DefaultEdge();
 
@@ -120,6 +141,10 @@ public class VGraph extends JGraph implements DropTargetListener {
         cache.insert(edge);
     }
 
+    /**
+     * @param result : the given resultset from the sql action.
+     * @throws SQLException
+     */
     public void fillChartData(ResultSet result) throws SQLException {
 
         double width = this.getWidth();
@@ -229,6 +254,10 @@ public class VGraph extends JGraph implements DropTargetListener {
         dimensionCount++;
     }
 
+    /**
+     * @param vDim : the given VDimension from the drag & drop.
+     * @throws SQLException
+     */
     public void connection(VDimension vDim) throws SQLException {
 
         Connection connection = VExplorer.getConnection();
@@ -284,6 +313,10 @@ public class VGraph extends JGraph implements DropTargetListener {
         connection.close();
     }
 
+    /**
+     * @param vDim : VDimension from the drag & drop.
+     * @return VDimension which is the bluep of the Dimension
+     */
     public VDimension searchBluep(VDimension vDim) {
 
         VDimension parent = (VDimension) vDim.getParent();
@@ -294,22 +327,35 @@ public class VGraph extends JGraph implements DropTargetListener {
         return parent;
     }
 
+    /**
+     * @param dtde
+     */
     public void dragEnter(DropTargetDragEvent dtde) {
-
     }
 
+    /**
+     * @param dtde
+     */
     public void dragOver(DropTargetDragEvent dtde) {
-
     }
 
+    /**
+     * @param dtde
+     */
     public void dropActionChanged(DropTargetDragEvent dtde) {
-
     }
 
+    /**
+     * @param dte
+     */
     public void dragExit(DropTargetEvent dte) {
-
     }
 
+    /**
+     * Action when a VDimension is dropt into the graph.
+     *
+     * @param dtde
+     */
     public void drop(DropTargetDropEvent dtde) {
         Object o = null;
 
@@ -333,6 +379,9 @@ public class VGraph extends JGraph implements DropTargetListener {
         dtde.dropComplete(true);
     }
 
+    /**
+     * @param visualization : JMenu which is created.
+     */
     public void createVisualizationSetts(JMenu visualization) {
 
         JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
@@ -373,6 +422,10 @@ public class VGraph extends JGraph implements DropTargetListener {
         visualization.add(measuresMenu);
     }
 
+    /**
+     * @param checkBoxMenuItem : Item which gets the Listener.
+     * @param chartName        : String which is need to set.
+     */
     public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final String chartName) {
 
         checkBoxMenuItem.addActionListener(new ActionListener() {
@@ -385,6 +438,11 @@ public class VGraph extends JGraph implements DropTargetListener {
         });
     }
 
+    /**
+     * @param checkBoxMenuItem : Item which gets the Listener.
+     * @param cube             : String which is need to set.
+     * @param measureName      : String which is need to set.
+     */
     public void makeActionListenerMeasures(final JCheckBoxMenuItem checkBoxMenuItem, final String cube, final String measureName) {
 
         checkBoxMenuItem.addActionListener(new ActionListener() {
