@@ -66,6 +66,8 @@ public class VGraph extends JGraph implements DropTargetListener {
     private String and = "";
     private String group = "";
     private String order = "";
+    private String cubeName = "sos_cube";
+    private String cubeAttribute = "SUM(koepfe)";
 
     private String xAxis = "Studenten";
 
@@ -237,15 +239,16 @@ public class VGraph extends JGraph implements DropTargetListener {
             if (vDim.isParentable()) {
                 VDimension bluep = searchBluep(vDim);
                 String dataName = bluep.getTableName();
-                from = " FROM " + tableName + ", " + dataName + ", sos_cube";
+                from = " FROM " + tableName + ", " + dataName + ", " + cubeName;
                 where = " WHERE " + tableName + ".id = " + dataName + "." + vDim.getJoinable();
-                and = " AND " + dataName + ".id = sos_cube." + bluep.getJoinable();
+                and = " AND " + dataName + ".id = " + cubeName + "." + bluep.getJoinable();
+                order = " ORDER BY " + tableName + ".name";
             } else {
-                from = " FROM " + tableName + ", " + "sos_cube";
-                where = " WHERE " + tableName + ".id = " + "sos_cube." + vDim.getJoinable();
+                from = " FROM " + tableName + ", " + cubeName;
+                where = " WHERE " + tableName + ".id = " + cubeName + "." + vDim.getJoinable();
                 and = "";
             }
-            select = "SELECT " + tableName + ".name, SUM(koepfe)";
+            select = "SELECT " + tableName + ".name, " + cubeAttribute;
             group = " GROUP BY " + tableName + ".name";
 
             sql = select + from + where + and + group;
@@ -259,23 +262,22 @@ public class VGraph extends JGraph implements DropTargetListener {
                 String dataName = bluep.getTableName();
                 from = from + ", " + tableName + ", " + dataName;
                 and = and + " AND " + dataName + "." + vDim.getJoinable() + " = " + tableName + ".id" +
-                        " AND sos_cube." + bluep.getJoinable() + " = " + dataName + ".id";
+                        " AND " + cubeName + "." + bluep.getJoinable() + " = " + dataName + ".id";
+                order = " ORDER BY " + tableName + ".name";
 
             } else {
                 whichRowA = 1;
                 whichRowB = 3;
                 from = from + ", " + tableName;
-                and = and + " AND sos_cube." + vDim.getJoinable() + " = " + tableName + ".id";
+                and = and + " AND " + cubeName + "." + vDim.getJoinable() + " = " + tableName + ".id";
             }
             select = select + ", " + tableName + ".name";
             group = group + ", " + tableName + ".name";
-            order = " ORDER BY dim_kontinent.name";
 
             sql = select + from + where + and + group + order;
         }
 
         System.out.println("SQL: " + sql);
-        //System.out.println("Select: " + select);
         ResultSet result = stmt.executeQuery(sql);
         chartName = vDim.getI18nKey();
         fillChartData(result);
@@ -333,26 +335,11 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void createVisualizationSetts(JMenu visualization) {
 
-        final JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
-        barChart.addActionListener(new ActionListener() {
+        JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
+        JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
 
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(barChart))
-
-                    chartCheck = "barChart";
-            }
-        });
-
-        final JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
-        pieChart.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(pieChart))
-
-                    chartCheck = "pieChart";
-            }
-        });
-
+        makeActionListenerCharts(barChart, "barChart");
+        makeActionListenerCharts(pieChart, "pieChart");
         ButtonGroup charts = new ButtonGroup();
         barChart.setState(true);
         pieChart.setState(false);
@@ -364,9 +351,13 @@ public class VGraph extends JGraph implements DropTargetListener {
         chartsMenu.add(pieChart);
 
         JMenu measuresMenu = new JMenu("Measures");
-        final JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe");
-        final JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle");
-        final JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag");
+        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe");
+        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle");
+        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag");
+
+        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe");
+        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)");
+        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag");
 
         ButtonGroup measuresGroup = new ButtonGroup();
         heads.setState(true);
@@ -380,5 +371,30 @@ public class VGraph extends JGraph implements DropTargetListener {
         measuresMenu.add(amount);
         visualization.add(chartsMenu);
         visualization.add(measuresMenu);
+    }
+
+    public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final String chartName) {
+
+        checkBoxMenuItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(checkBoxMenuItem))
+
+                    chartCheck = chartName;
+            }
+        });
+    }
+
+    public void makeActionListenerMeasures(final JCheckBoxMenuItem checkBoxMenuItem, final String cube, final String measureName) {
+
+        checkBoxMenuItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(checkBoxMenuItem))
+
+                    cubeName = cube;
+                cubeAttribute = measureName;
+            }
+        });
     }
 }
