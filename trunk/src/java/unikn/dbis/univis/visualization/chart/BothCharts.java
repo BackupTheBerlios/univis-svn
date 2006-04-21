@@ -13,7 +13,6 @@ import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.util.Rotation;
-import org.jfree.util.SortOrder;
 
 import javax.swing.*;
 import java.awt.geom.Rectangle2D;
@@ -36,20 +35,39 @@ import java.util.ArrayList;
  */
 public class BothCharts extends JPanel {
 
+    /*
+     * Datasets which are needed for the charts.
+     */
     public DefaultPieDataset data = null;
-
     public DefaultCategoryDataset dataset = null;
 
+    /*
+     * Chart itself.
+     */
     public JFreeChart chart = null;
 
+    /*
+     * ChartPanel on which is the chart.
+     */
     public ChartPanel chartPanel = null;
 
     public String identify;
 
+    /*
+     * Font.
+     */
     private Font legendFont = new Font("Tahoma", Font.PLAIN, 10);
 
+    /*
+     * ArrayList for the subtitles.
+     */
     private ArrayList l = new ArrayList();
 
+    /**
+     * @param chartName : Headline of the chart.
+     * @param data      : Dataset of the Chart.
+     * @param total     : total Amount of the Chart.
+     */
     public BothCharts(String chartName, DefaultPieDataset data, int total) {
         this.data = data;
         chart = ChartFactory.createPieChart3D(chartName, data, true, false, false);
@@ -65,6 +83,12 @@ public class BothCharts extends JPanel {
         startPie3DChart();
     }
 
+    /**
+     * @param chartName : Headline of the chart.
+     * @param dataset   : Dataset of the chart.
+     * @param total     : total Amount of the chart.
+     * @param xAxis     : Description of the xAxis on the Barchart.
+     */
     public BothCharts(String chartName, DefaultCategoryDataset dataset, int total, String xAxis) {
         this.dataset = dataset;
         chart = ChartFactory.createBarChart3D(chartName, "", xAxis, dataset, PlotOrientation.HORIZONTAL, true, false, false);
@@ -80,6 +104,9 @@ public class BothCharts extends JPanel {
         startBar3DChart();
     }
 
+    /**
+     * starts the Pie3DChart.
+     */
     public void startPie3DChart() {
 
         PiePlot3D plot = (PiePlot3D) chart.getPlot();
@@ -94,6 +121,9 @@ public class BothCharts extends JPanel {
         setVisible(true);
     }
 
+    /**
+     * starts the Bar3DChart.
+     */
     public void startBar3DChart() {
 
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
@@ -110,14 +140,22 @@ public class BothCharts extends JPanel {
         setVisible(true);
     }
 
+    /**
+     * scales the charts which have too much values.
+     */
     public void makeScale() {
 
         chartPanel.setMinimumDrawHeight(600);
         chartPanel.setMinimumDrawWidth(600);
         chartPanel.scale(new Rectangle2D.Double(0, 0, 300, 300));
-
     }
 
+    /**
+     * Sets the subtitels and the legend.
+     *
+     * @param total  : total amount of the chart.
+     * @param legend : the legend of the chart
+     */
     public void setSubtitles(int total, LegendTitle legend) {
 
         Integer totalHelp = total;
@@ -126,7 +164,6 @@ public class BothCharts extends JPanel {
         l.add(totalTitle);
         l.add(legend);
         chart.setSubtitles(l);
-
     }
 
     public DefaultPieDataset getData() {
