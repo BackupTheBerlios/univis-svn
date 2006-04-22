@@ -5,6 +5,7 @@ import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.explorer.VExplorer;
+import unikn.dbis.univis.sql.dialect.UniVisDialect;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -19,6 +20,12 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+
+import org.hibernate.sql.Select;
+import org.hibernate.sql.QuerySelect;
+import org.hibernate.sql.JoinFragment;
+import org.hibernate.dialect.PostgreSQLDialect;
+import org.hibernate.mapping.Join;
 
 /**
  * TODO: document me!!!
@@ -67,6 +74,9 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
 
     public void showPopupMenu(int x, int y) {
 
+        Select select = new Select(new PostgreSQLDialect());
+        QuerySelect querySelect = new QuerySelect(new PostgreSQLDialect());
+
         final JPopupMenu popupMenu = new JPopupMenu();
 
         Object o = getLastSelectedPathComponent();
@@ -85,6 +95,12 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
                     Connection connection = VExplorer.getConnection();
 
                     Statement stmt = connection.createStatement();
+
+                    querySelect.addSelectColumn("id", "id");
+                    if (dimension.isParentable()) querySelect.addSelectColumn("parent", "parent");
+                    querySelect.addSelectColumn("name", "name");
+                    querySelect.getJoinFragment().addJoin(dimension.getTableName(), UniVisDialect.generateTableAlias(dimension.getTableName(), 1), new String[]{"parent"}, new String[]{"id"}, JoinFragment.FULL_JOIN);
+
 
                     String sql = "SELECT " + dimension.getTableName() + ".id, " + (dimension.isParentable() ? dimension.getTableName() + ".parent, " : "") + dimension.getTableName() + ".name " + getWhere(node);
 
@@ -138,6 +154,8 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
                     sqle.printStackTrace();
                 }
             }
+
+            System.out.println("querySelect = " + querySelect.toQueryString());
         }
     }
 

@@ -14,7 +14,7 @@ package unikn.dbis.univis.sql.dialect;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class PostgreSQLDialect extends Dialect {
+public class PostgreSQLDialect extends UniVisDialect {
     public String getSelect() {
         return null;
     }
