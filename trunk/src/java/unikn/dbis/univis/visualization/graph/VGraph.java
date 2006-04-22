@@ -404,9 +404,9 @@ public class VGraph extends JGraph implements DropTargetListener {
         JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle");
         JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag");
 
-        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe");
-        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)");
-        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag");
+        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe", "Studenten");
+        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
+        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Beträge");
 
         ButtonGroup measuresGroup = new ButtonGroup();
         heads.setState(true);
@@ -443,7 +443,7 @@ public class VGraph extends JGraph implements DropTargetListener {
      * @param cube             : String which is need to set.
      * @param measureName      : String which is need to set.
      */
-    public void makeActionListenerMeasures(final JCheckBoxMenuItem checkBoxMenuItem, final String cube, final String measureName) {
+    public void makeActionListenerMeasures(final JCheckBoxMenuItem checkBoxMenuItem, final String cube, final String measureName, final String xAxisName) {
 
         checkBoxMenuItem.addActionListener(new ActionListener() {
 
@@ -452,6 +452,7 @@ public class VGraph extends JGraph implements DropTargetListener {
 
                     cubeName = cube;
                 cubeAttribute = measureName;
+                xAxis = xAxisName;
             }
         });
     }
