@@ -2,13 +2,18 @@ package unikn.dbis.univis.visualization.chart;
 
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.labels.CategoryItemLabelGenerator;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.renderer.category.BarRenderer3D;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -18,6 +23,7 @@ import javax.swing.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.*;
 import java.util.ArrayList;
+import java.text.NumberFormat;
 
 /**
  * TODO: document me!!!
@@ -98,7 +104,8 @@ public class BothCharts extends JPanel {
         }
         setSubtitles(total, legend);
         chartPanel = new ChartPanel(chart);
-        if (dataset.getColumnCount() >= 50) {
+
+        if (dataset.getRowCount() >= 50) {
             makeScale();
         }
         startBar3DChart();
