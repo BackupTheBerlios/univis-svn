@@ -1,19 +1,14 @@
 package unikn.dbis.univis.visualization.chart;
 
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.PieDataset;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.labels.CategoryItemLabelGenerator;
-import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.renderer.category.BarRenderer3D;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -23,7 +18,6 @@ import javax.swing.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.*;
 import java.util.ArrayList;
-import java.text.NumberFormat;
 
 /**
  * TODO: document me!!!
@@ -42,22 +36,14 @@ import java.text.NumberFormat;
 public class BothCharts extends JPanel {
 
     /*
-     * Datasets which are needed for the charts.
-     */
-    public DefaultPieDataset data = null;
-    public DefaultCategoryDataset dataset = null;
-
-    /*
-     * Chart itself.
-     */
+    * Chart itself.
+    */
     public JFreeChart chart = null;
 
     /*
      * ChartPanel on which is the chart.
      */
     public ChartPanel chartPanel = null;
-
-    public String identify;
 
     /*
      * Font.
@@ -71,19 +57,18 @@ public class BothCharts extends JPanel {
 
     /**
      * @param chartName : Headline of the chart.
-     * @param data      : Dataset of the Chart.
+     * @param dataset      : Dataset of the Chart.
      * @param total     : total Amount of the Chart.
      */
-    public BothCharts(String chartName, DefaultPieDataset data, int total) {
-        this.data = data;
-        chart = ChartFactory.createPieChart3D(chartName, data, true, false, false);
+    public BothCharts(String chartName, PieDataset dataset, int total) {
+        chart = ChartFactory.createPieChart3D(chartName, dataset, true, false, false);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(legendFont);
         }
         setSubtitles(total, legend);
         chartPanel = new ChartPanel(chart);
-        if (data.getItemCount() >= 50) {
+        if (dataset.getItemCount() >= 50) {
             makeScale();
         }
         startPie3DChart();
@@ -95,8 +80,7 @@ public class BothCharts extends JPanel {
      * @param total     : total Amount of the chart.
      * @param xAxis     : Description of the xAxis on the Barchart.
      */
-    public BothCharts(String chartName, DefaultCategoryDataset dataset, int total, String xAxis) {
-        this.dataset = dataset;
+    public BothCharts(String chartName, CategoryDataset dataset, int total, String xAxis) {
         chart = ChartFactory.createBarChart3D(chartName, "", xAxis, dataset, PlotOrientation.HORIZONTAL, true, false, false);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
@@ -171,29 +155,5 @@ public class BothCharts extends JPanel {
         l.add(totalTitle);
         l.add(legend);
         chart.setSubtitles(l);
-    }
-
-    public DefaultPieDataset getData() {
-        return data;
-    }
-
-    public void setData(DefaultPieDataset data) {
-        this.data = data;
-    }
-
-    public DefaultCategoryDataset getDataset() {
-        return dataset;
-    }
-
-    public void setDataset(DefaultCategoryDataset dataset) {
-        this.dataset = dataset;
-    }
-
-    public String getIdentify() {
-        return identify;
-    }
-
-    public void setIdentify(String identify) {
-        this.identify = identify;
     }
 }

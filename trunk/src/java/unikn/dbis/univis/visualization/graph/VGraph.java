@@ -4,7 +4,10 @@ import org.jgraph.JGraph;
 
 import org.jgraph.graph.*;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.AbstractDataset;
+import org.jfree.data.general.PieDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.category.CategoryDataset;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
@@ -60,8 +63,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     /*
      * Datasets for creating Charts.
      */
-    private DefaultCategoryDataset barDataSet;
-    private DefaultPieDataset pieDataSet;
+    private AbstractDataset dataset;
 
     /*
      * Strings for different topics.
@@ -99,27 +101,24 @@ public class VGraph extends JGraph implements DropTargetListener {
     }
 
     /**
-     * @param x       : x-Position of the Rectangle.
-     * @param y       : y-Position of the Rectangle.
-     * @param dataSet : dataSet for the Chart.
-     * @param total   : total amount of all chartvalues.
+     * @param total : total amount of all chartvalues.
      * @return a DefaultGraphCell
      */
-    public DefaultGraphCell createVertex(double x, double y, Object dataSet, int total) {
+    public DefaultGraphCell createVertex(int total) {
 
-        DefaultGraphCell cell = new DefaultGraphCell();
+        BothCharts chart;
         if (chartCheck.equals("barChart")) {
-            BothCharts bar3DChart = new BothCharts(chartName, (DefaultCategoryDataset) dataSet, total, xAxis);
-            // Create vertex with the given name
-            cell = new DefaultGraphCell(bar3DChart);
-        } else {
-            BothCharts pie3DChart = new BothCharts(chartName, (DefaultPieDataset) dataSet, total);
-            // Create vertex with the given name
-            cell = new DefaultGraphCell(pie3DChart);
+            chart = new BothCharts(chartName, (DefaultCategoryDataset) dataset, total, xAxis);
         }
+        else {
+            chart = new BothCharts(chartName, (DefaultPieDataset) dataset, total);
+        }
+
+        // Create vertex with the given name
+        DefaultGraphCell cell = new DefaultGraphCell(chart);
+
         // Set bounds
-        GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(
-                x, y, cellsize, cellsize));
+        GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(chart.getX(), chart.getY(), cellsize, cellsize));
 
         // Add a Floating Port
         cell.addPort(new Point2D.Double(500, 0));
@@ -133,6 +132,8 @@ public class VGraph extends JGraph implements DropTargetListener {
      */
     public void createEdges(DefaultGraphCell source, DefaultGraphCell target) {
         DefaultEdge edge = new DefaultEdge();
+
+        //source.getAttributes().applyValue()
 
         edge.setSource(source.getChildAt(1));
         edge.setTarget(target.getChildAt(0));
@@ -158,89 +159,91 @@ public class VGraph extends JGraph implements DropTargetListener {
 
         if (dimensionCount == 0) {
             if (chartCheck.equals("barChart")) {
-                barDataSet = new DefaultCategoryDataset();
+                dataset = new DefaultCategoryDataset();
                 while (result.next()) {
-                    barDataSet.addValue(result.getInt(2), result.getString(1), "");
+                    ((DefaultCategoryDataset) dataset).addValue(result.getInt(2), result.getString(1), "");
                     total = total + result.getInt(2);
                 }
-                cells[0] = createVertex((int) (width / 2), (int) (height / 2), barDataSet, total);
-                cells[0].isRoot();
-                cache.insert(cells);
-            } else {
-                pieDataSet = new DefaultPieDataset();
+            }
+            else {
+                dataset = new DefaultPieDataset();
                 while (result.next()) {
-                    pieDataSet.setValue(result.getString(1), result.getInt(2));
+                    ((DefaultPieDataset) dataset).setValue(result.getString(1), result.getInt(2));
                     total = total + result.getInt(2);
                 }
-                cells[0] = createVertex((int) (width / 2), (int) (height / 2), pieDataSet, total);
-                cells[0].isRoot();
-                cache.insert(cells);
             }
 
-
-        } else if (dimensionCount == 1) {
+            cells[0] = createVertex(total);
+            cells[0].isRoot();
+            cache.insert(cells);
+        }
+        else if (dimensionCount == 1) {
             String buffer = "";
             if (chartCheck.equals("barChart")) {
-                barDataSet = new DefaultCategoryDataset();
+                dataset = new DefaultCategoryDataset();
                 while (result.next()) {
                     if (result.isFirst()) {
                         buffer = result.getString(whichRowA);
                         chartName = buffer;
                     }
                     if (!buffer.equals(result.getString(whichRowA))) {
-                        DefaultGraphCell nextCell = createVertex(200, 200, barDataSet, total);
+                        DefaultGraphCell nextCell = createVertex(total);
                         createEdges(cells[0], nextCell);
                         cache.insert(nextCell);
-                        barDataSet = new DefaultCategoryDataset();
+                        dataset = new DefaultCategoryDataset();
                         total = 0;
                         chartName = result.getString(whichRowA);
-                        barDataSet.addValue(result.getInt(2), result.getString(whichRowB), "");
+                        ((DefaultCategoryDataset) dataset).addValue(result.getInt(2), result.getString(whichRowB), "");
                         total = total + result.getInt(2);
-                    } else {
-                        barDataSet.addValue(result.getInt(2), result.getString(whichRowB), "");
+                    }
+                    else {
+                        ((DefaultCategoryDataset) dataset).addValue(result.getInt(2), result.getString(whichRowB), "");
                         total = total + result.getInt(2);
                     }
                     buffer = result.getString(whichRowA);
                     if (result.isLast()) {
-                        DefaultGraphCell nextCell = createVertex(200, 200, barDataSet, total);
-                        createEdges(cells[0], nextCell);
-                        cache.insert(nextCell);
-                    }
-                }
-            } else {
-                pieDataSet = new DefaultPieDataset();
-                while (result.next()) {
-                    if (result.isFirst()) {
-                        buffer = result.getString(whichRowA);
-                        chartName = buffer;
-                    }
-                    if (!buffer.equals(result.getString(whichRowA))) {
-                        DefaultGraphCell nextCell = createVertex(200, 200, pieDataSet, total);
-                        createEdges(cells[0], nextCell);
-                        cache.insert(nextCell);
-                        pieDataSet = new DefaultPieDataset();
-                        total = 0;
-                        chartName = result.getString(whichRowA);
-                        pieDataSet.setValue(result.getString(whichRowB), result.getInt(2));
-                        total = total + result.getInt(2);
-                    } else {
-                        pieDataSet.setValue(result.getString(whichRowB), result.getInt(2));
-                        total = total + result.getInt(2);
-                    }
-                    buffer = result.getString(whichRowA);
-                    if (result.isLast()) {
-                        DefaultGraphCell nextCell = createVertex(200, 200, pieDataSet, total);
+                        DefaultGraphCell nextCell = createVertex(total);
                         createEdges(cells[0], nextCell);
                         cache.insert(nextCell);
                     }
                 }
             }
-        } else if (dimensionCount == 2) {
+            else {
+                dataset = new DefaultPieDataset();
+                while (result.next()) {
+                    if (result.isFirst()) {
+                        buffer = result.getString(whichRowA);
+                        chartName = buffer;
+                    }
+                    if (!buffer.equals(result.getString(whichRowA))) {
+                        DefaultGraphCell nextCell = createVertex(total);
+                        createEdges(cells[0], nextCell);
+                        cache.insert(nextCell);
+                        dataset = new DefaultPieDataset();
+                        total = 0;
+                        chartName = result.getString(whichRowA);
+                        ((DefaultPieDataset) dataset).setValue(result.getString(whichRowB), result.getInt(2));
+                        total = total + result.getInt(2);
+                    }
+                    else {
+                        ((DefaultPieDataset) dataset).setValue(result.getString(whichRowB), result.getInt(2));
+                        total = total + result.getInt(2);
+                    }
+                    buffer = result.getString(whichRowA);
+                    if (result.isLast()) {
+                        DefaultGraphCell nextCell = createVertex(total);
+                        createEdges(cells[0], nextCell);
+                        cache.insert(nextCell);
+                    }
+                }
+            }
+        }
+        else if (dimensionCount == 2) {
             for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
                 DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(cells[0], null, true, true).get(i);
                 if (i == 2) {
                     for (int x = 0; x < 3; x++) {
-                        DefaultGraphCell newCell = createVertex(200, 200, pieDataSet, total);
+                        DefaultGraphCell newCell = createVertex(total);
                         createEdges(action, newCell);
                         cache.insert(newCell);
                     }
@@ -272,7 +275,8 @@ public class VGraph extends JGraph implements DropTargetListener {
                 where = " WHERE " + tableName + ".id = " + dataName + "." + vDim.getJoinable();
                 and = " AND " + dataName + ".id = " + cubeName + "." + bluep.getJoinable();
                 order = " ORDER BY " + tableName + ".name";
-            } else {
+            }
+            else {
                 from = " FROM " + tableName + ", " + cubeName;
                 where = " WHERE " + tableName + ".id = " + cubeName + "." + vDim.getJoinable();
                 and = "";
@@ -282,7 +286,8 @@ public class VGraph extends JGraph implements DropTargetListener {
 
             sql = select + from + where + and + group;
 
-        } else if (dimensionCount == 1) {
+        }
+        else if (dimensionCount == 1) {
             String tableName = vDim.getTableName();
             if (vDim.isParentable()) {
                 whichRowA = 3;
@@ -294,7 +299,8 @@ public class VGraph extends JGraph implements DropTargetListener {
                         " AND " + cubeName + "." + bluep.getJoinable() + " = " + dataName + ".id";
                 order = " ORDER BY " + tableName + ".name";
 
-            } else {
+            }
+            else {
                 whichRowA = 1;
                 whichRowB = 3;
                 from = from + ", " + tableName;
@@ -361,9 +367,11 @@ public class VGraph extends JGraph implements DropTargetListener {
 
         try {
             o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
-        } catch (UnsupportedFlavorException e) {
+        }
+        catch (UnsupportedFlavorException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         if (o instanceof VDimension) {
@@ -372,7 +380,8 @@ public class VGraph extends JGraph implements DropTargetListener {
 
             try {
                 connection(vDim);
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 e.printStackTrace();
             }
         }
