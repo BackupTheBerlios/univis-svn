@@ -71,7 +71,7 @@ public class BothCharts extends JPanel {
         if (dataset.getItemCount() >= 50) {
             makeScale();
         }
-        startPie3DChart();
+        startPie3DChart(total);
     }
 
     /**
@@ -98,7 +98,7 @@ public class BothCharts extends JPanel {
     /**
      * starts the Pie3DChart.
      */
-    public void startPie3DChart() {
+    public void startPie3DChart(int total) {
 
         PiePlot3D plot = (PiePlot3D) chart.getPlot();
         plot.setStartAngle(290);
@@ -106,6 +106,7 @@ public class BothCharts extends JPanel {
         plot.setForegroundAlpha(0.5f);
         plot.setNoDataMessage("No data available");
         plot.setLabelGenerator(null);
+        plot.setLegendLabelGenerator(new PieLabelGenerator(total));
         setPreferredSize(new Dimension(300, 300));
         setLayout(new BorderLayout());
         add(chartPanel, BorderLayout.CENTER);
