@@ -5,9 +5,7 @@ import org.jgraph.JGraph;
 import org.jgraph.graph.*;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.AbstractDataset;
-import org.jfree.data.general.PieDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.category.CategoryDataset;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
@@ -147,10 +145,6 @@ public class VGraph extends JGraph implements DropTargetListener {
      */
     public void fillChartData(ResultSet result) throws SQLException {
 
-        double width = this.getWidth();
-        double height = this.getHeight();
-        width -= cellsize;
-        height -= cellsize;
         int total = 0;
 
         layout.setAlignment(SwingConstants.CENTER);
