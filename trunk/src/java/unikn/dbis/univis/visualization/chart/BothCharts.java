@@ -5,8 +5,8 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.plot.PiePlot3D;
@@ -57,7 +57,7 @@ public class BothCharts extends JPanel {
 
     /**
      * @param chartName : Headline of the chart.
-     * @param dataset      : Dataset of the Chart.
+     * @param dataset   : Dataset of the Chart.
      * @param total     : total Amount of the Chart.
      */
     public BothCharts(String chartName, PieDataset dataset, int total) {
@@ -92,7 +92,7 @@ public class BothCharts extends JPanel {
         if (dataset.getRowCount() >= 50) {
             makeScale();
         }
-        startBar3DChart();
+        startBar3DChart(total);
     }
 
     /**
@@ -115,13 +115,15 @@ public class BothCharts extends JPanel {
     /**
      * starts the Bar3DChart.
      */
-    public void startBar3DChart() {
+    public void startBar3DChart(int total) {
+
 
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryAxis axis = plot.getDomainAxis();
         axis.setTickLabelsVisible(false);
         BarRenderer3D renderer = (BarRenderer3D) plot.getRenderer();
         renderer.setDrawBarOutline(false);
+        renderer.setLegendItemLabelGenerator(new BarLabelGenerator(total));
         plot.setNoDataMessage("No data available");
         plot.getDomainAxis().setLabelFont(legendFont);
         plot.getRangeAxis().setLabelFont(legendFont);
