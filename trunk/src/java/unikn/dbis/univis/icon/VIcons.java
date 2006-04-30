@@ -24,4 +24,7 @@ public class VIcons {
     public static final Icon FUNNEL = new ImageIcon(VIcons.class.getResource("../images/funnel.png"));
     public static final Icon BARCHART = new ImageIcon(VIcons.class.getResource("../images/barChart.png"));
     public static final Icon PIECHART = new ImageIcon(VIcons.class.getResource("../images/pieChart.png"));
+    public static final Icon USERK = new ImageIcon(VIcons.class.getResource("../images/userf.png"));
+    public static final Icon USERF = new ImageIcon(VIcons.class.getResource("../images/userk.png"));
+    public static final Icon EURO = new ImageIcon(VIcons.class.getResource("../images/euro.png"));
 }
