@@ -50,8 +50,8 @@ public class VGraph extends JGraph implements DropTargetListener {
      */
     GraphModel model = new DefaultGraphModel();
     GraphLayoutCache cache = new GraphLayoutCache(model, new VCellViewFactory());
-    private DefaultGraphCell[] cells = new DefaultGraphCell[1];
     private JGraphTreeLayout layout = new JGraphTreeLayout();
+    private DefaultGraphCell root = null;
 
     /*
      * Object Transferable for Drag & Drop.
@@ -129,9 +129,6 @@ public class VGraph extends JGraph implements DropTargetListener {
      */
     public void createEdges(DefaultGraphCell source, DefaultGraphCell target) {
         DefaultEdge edge = new DefaultEdge();
-
-        //source.getAttributes().applyValue()
-
         edge.setSource(source.getChildAt(1));
         edge.setTarget(target.getChildAt(0));
         GraphConstants.setLineEnd(edge.getAttributes(), GraphConstants.ARROW_CLASSIC);
@@ -165,9 +162,8 @@ public class VGraph extends JGraph implements DropTargetListener {
                 }
             }
 
-            cells[0] = createVertex(total);
-            cells[0].isRoot();
-            cache.insert(cells);
+            root = createVertex(total);
+            cache.insert(root);
         } else if (dimensionCount == 1) {
             String buffer = "";
             if (chartCheck.equals("barChart")) {
@@ -179,7 +175,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                     }
                     if (!buffer.equals(result.getString(whichRowA))) {
                         DefaultGraphCell nextCell = createVertex(total);
-                        createEdges(cells[0], nextCell);
+                        createEdges(root, nextCell);
                         cache.insert(nextCell);
                         dataset = new DefaultCategoryDataset();
                         total = 0;
@@ -193,7 +189,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                     buffer = result.getString(whichRowA);
                     if (result.isLast()) {
                         DefaultGraphCell nextCell = createVertex(total);
-                        createEdges(cells[0], nextCell);
+                        createEdges(root, nextCell);
                         cache.insert(nextCell);
                     }
                 }
@@ -206,7 +202,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                     }
                     if (!buffer.equals(result.getString(whichRowA))) {
                         DefaultGraphCell nextCell = createVertex(total);
-                        createEdges(cells[0], nextCell);
+                        createEdges(root, nextCell);
                         cache.insert(nextCell);
                         dataset = new DefaultPieDataset();
                         total = 0;
@@ -220,14 +216,14 @@ public class VGraph extends JGraph implements DropTargetListener {
                     buffer = result.getString(whichRowA);
                     if (result.isLast()) {
                         DefaultGraphCell nextCell = createVertex(total);
-                        createEdges(cells[0], nextCell);
+                        createEdges(root, nextCell);
                         cache.insert(nextCell);
                     }
                 }
             }
         } else if (dimensionCount == 2) {
-            for (int i = 0; i < cache.getNeighbours(cells[0], null, true, true).size(); i++) {
-                DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(cells[0], null, true, true).get(i);
+            for (int i = 0; i < cache.getNeighbours(root, null, true, true).size(); i++) {
+                DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(root, null, true, true).get(i);
                 if (i == 2) {
                     for (int x = 0; x < 3; x++) {
                         DefaultGraphCell newCell = createVertex(total);
@@ -237,7 +233,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                 }
             }
         }
-        JGraphFacade facade = new JGraphFacade(this, cells, true, true, true, true);
+        JGraphFacade facade = new JGraphFacade(cache);
         layout.run(facade);
         Map nested = facade.createNestedMap(true, true);
         cache.edit(nested);
