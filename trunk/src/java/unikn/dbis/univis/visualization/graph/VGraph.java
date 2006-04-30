@@ -393,9 +393,9 @@ public class VGraph extends JGraph implements DropTargetListener {
         chartsMenu.add(pieChart);
 
         JMenu measuresMenu = new JMenu("Measures");
-        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe");
-        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle");
-        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag");
+        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe", VIcons.USERK);
+        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle", VIcons.USERF);
+        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag", VIcons.EURO);
 
         makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe", "Studenten");
         makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
