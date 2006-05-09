@@ -15,6 +15,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.util.Map;
+import java.util.Stack;
 import java.io.IOException;
 import java.sql.*;
 
@@ -69,23 +70,20 @@ public class VGraph extends JGraph implements DropTargetListener {
     private String chartName;
     private String chartCheck = "barChart";
     private String sql = "";
-    private String select = "";
-    private String from = "";
-    private String where = "";
-    private String and = "";
-    private String group = "";
-    private String order = "";
+    private String from = " FROM ";
+    private String where = " WHERE ";
+    private String group = " GROUP BY ";
+    private String order = " ORDER BY ";
     private String cubeName = "sos_cube";
     private String cubeAttribute = "SUM(koepfe)";
+    private String select = "SELECT " + cubeAttribute;
     private String xAxis = "Studenten";
+    private boolean isRoot = true;
 
     /*
      * Int values for different topics.
      */
-    private int dimensionCount = 0;
     private int cellsize = 300;
-    private int whichRowA = 0;
-    private int whichRowB = 0;
 
     /**
      * Standard Constructor
@@ -147,46 +145,53 @@ public class VGraph extends JGraph implements DropTargetListener {
         layout.setAlignment(SwingConstants.CENTER);
         layout.setOrientation(SwingConstants.NORTH);
 
-        if (dimensionCount == 0) {
+        ResultSetMetaData data = result.getMetaData();
+        int name = data.getColumnCount();
+
+        if (isRoot) {
             if (chartCheck.equals("barChart")) {
                 dataset = new DefaultCategoryDataset();
+
                 while (result.next()) {
-                    ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(2), "");
+
+                    ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(name), "");
                     total = total + result.getInt(1);
                 }
             } else {
                 dataset = new DefaultPieDataset();
+
                 while (result.next()) {
-                    ((DefaultPieDataset) dataset).setValue(result.getString(2), result.getInt(1));
+
+                    ((DefaultPieDataset) dataset).setValue(result.getString(name), result.getInt(1));
                     total = total + result.getInt(1);
                 }
             }
-
             root = createVertex(total);
             cache.insert(root);
-        } else if (dimensionCount == 1) {
+            isRoot = false;
+        } else {
             String buffer = "";
             if (chartCheck.equals("barChart")) {
                 dataset = new DefaultCategoryDataset();
                 while (result.next()) {
                     if (result.isFirst()) {
-                        buffer = result.getString(whichRowA);
+                        buffer = result.getString(name - 1);
                         chartName = buffer;
                     }
-                    if (!buffer.equals(result.getString(whichRowA))) {
+                    if (!buffer.equals(result.getString(name - 1))) {
                         DefaultGraphCell nextCell = createVertex(total);
                         createEdges(root, nextCell);
                         cache.insert(nextCell);
                         dataset = new DefaultCategoryDataset();
                         total = 0;
-                        chartName = result.getString(whichRowA);
-                        ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(whichRowB), "");
+                        chartName = result.getString(name - 1);
+                        ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(name), "");
                         total = total + result.getInt(1);
                     } else {
-                        ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(whichRowB), "");
+                        ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(name), "");
                         total = total + result.getInt(1);
                     }
-                    buffer = result.getString(whichRowA);
+                    buffer = result.getString(name - 1);
                     if (result.isLast()) {
                         DefaultGraphCell nextCell = createVertex(total);
                         createEdges(root, nextCell);
@@ -197,38 +202,27 @@ public class VGraph extends JGraph implements DropTargetListener {
                 dataset = new DefaultPieDataset();
                 while (result.next()) {
                     if (result.isFirst()) {
-                        buffer = result.getString(whichRowA);
+                        buffer = result.getString(name - 1);
                         chartName = buffer;
                     }
-                    if (!buffer.equals(result.getString(whichRowA))) {
+                    if (!buffer.equals(result.getString(name - 1))) {
                         DefaultGraphCell nextCell = createVertex(total);
                         createEdges(root, nextCell);
                         cache.insert(nextCell);
                         dataset = new DefaultPieDataset();
                         total = 0;
-                        chartName = result.getString(whichRowA);
-                        ((DefaultPieDataset) dataset).setValue(result.getString(whichRowB), result.getInt(1));
+                        chartName = result.getString(name - 1);
+                        ((DefaultPieDataset) dataset).setValue(result.getString(name), result.getInt(1));
                         total = total + result.getInt(1);
                     } else {
-                        ((DefaultPieDataset) dataset).setValue(result.getString(whichRowB), result.getInt(1));
+                        ((DefaultPieDataset) dataset).setValue(result.getString(name), result.getInt(1));
                         total = total + result.getInt(1);
                     }
-                    buffer = result.getString(whichRowA);
+                    buffer = result.getString(name);
                     if (result.isLast()) {
                         DefaultGraphCell nextCell = createVertex(total);
                         createEdges(root, nextCell);
                         cache.insert(nextCell);
-                    }
-                }
-            }
-        } else if (dimensionCount == 2) {
-            for (int i = 0; i < cache.getNeighbours(root, null, true, true).size(); i++) {
-                DefaultGraphCell action = (DefaultGraphCell) cache.getNeighbours(root, null, true, true).get(i);
-                if (i == 2) {
-                    for (int x = 0; x < 3; x++) {
-                        DefaultGraphCell newCell = createVertex(total);
-                        createEdges(action, newCell);
-                        cache.insert(newCell);
                     }
                 }
             }
@@ -237,7 +231,6 @@ public class VGraph extends JGraph implements DropTargetListener {
         layout.run(facade);
         Map nested = facade.createNestedMap(true, true);
         cache.edit(nested);
-        dimensionCount++;
     }
 
     /**
@@ -248,7 +241,48 @@ public class VGraph extends JGraph implements DropTargetListener {
 
         Connection connection = VExplorer.getConnection();
         Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        String tableName = vDim.getTableName();
 
+        if (isRoot) {
+
+            if (vDim.isParentable()) {
+                VDimension bluep = searchBluep(vDim);
+                String bluepName = bluep.getTableName();
+                from = from + cubeName + ", " + tableName + ", " + bluepName;
+                where = where + tableName + ".id = " + bluepName + "." + vDim.getJoinable() +
+                        " AND " + bluepName + ".id = " + cubeName + "." + bluep.getJoinable();
+            } else {
+                from = from + cubeName + ", " + tableName;
+                where = where + tableName + ".id = " + cubeName + "." + vDim.getJoinable();
+            }
+
+            group = group + tableName + ".name";
+            order = order + tableName + ".name";
+
+        } else {
+
+            if (vDim.isParentable()) {
+                VDimension bluep = searchBluep(vDim);
+                String bluepName = bluep.getTableName();
+                from = from + ", " + bluepName + ", " + tableName;
+                where = where + " AND " + tableName + ".id = " + bluepName + "." + vDim.getJoinable() +
+                        " AND " + bluepName + ".id = " + cubeName + "." + bluep.getJoinable();
+
+            } else {
+                from = from + ", " + tableName;
+                where = where + " AND " + tableName + ".id = " + cubeName + "." + vDim.getJoinable();
+            }
+            group = group + ", " + tableName + ".name";
+            order = order + ", " + tableName + ".name";
+
+
+        }
+
+        select = select + ", " + tableName + ".name";
+
+
+        sql = select + from + where + group + order;
+        /*
         if (dimensionCount == 0) {
             String tableName = vDim.getTableName();
             if (vDim.isParentable()) {
@@ -290,7 +324,7 @@ public class VGraph extends JGraph implements DropTargetListener {
             group = group + ", " + tableName + ".name";
 
             sql = select + from + where + and + group + order;
-        }
+        }*/
 
         System.out.println("SQL: " + sql);
         ResultSet result = stmt.executeQuery(sql);
