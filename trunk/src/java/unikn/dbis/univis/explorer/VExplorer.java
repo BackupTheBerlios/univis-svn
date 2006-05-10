@@ -117,7 +117,6 @@ public class VExplorer extends JFrame {
 
         split.setDividerLocation(300);
 
-        initMenubar();
         initToolbar();
         initNavigation();
         initVisualization();
@@ -146,32 +145,6 @@ public class VExplorer extends JFrame {
                 }
             }
         });
-    }
-
-    private void initMenubar() {
-
-        JMenu file = new JMenu("File");
-
-        JMenuItem exit = new JMenuItem("Exit");
-        exit.addActionListener(new ActionListener() {
-
-            /**
-             * Invoked when an action occurs.
-             */
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-
-        file.add(exit);
-
-        JMenu visualSettings = new JMenu("VisualSettings");
-        graph.createVisualizationSetts(visualSettings);
-
-        menubar.add(file);
-        menubar.add(visualSettings);
-
-        setJMenuBar(menubar);
     }
 
     private void initToolbar() {
@@ -217,13 +190,28 @@ public class VExplorer extends JFrame {
 
         JButton undo = new JButton(VIcons.UNDO);
         JButton redo = new JButton(VIcons.REDO);
-        JButton delete = graph.makeDeleteButton();
-        JButton charts = graph.makeChartsButton();
+        JButton delete = graph.createDeleteButton();
+        JButton chartsButton = graph.createChartsButton();
+        JButton measureButton = graph.createMeasureButton();
+        JButton exit = new JButton(VIcons.EXIT);
+
+        exit.addActionListener(new ActionListener() {
+
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
 
         toolbar.add(refresh);
         toolbar.add(undo);
         toolbar.add(redo);
         toolbar.add(delete);
+        toolbar.add(chartsButton);
+        toolbar.add(measureButton);
+        toolbar.add(exit);
     }
 
     private void initNavigation() {
