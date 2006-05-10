@@ -100,7 +100,7 @@ public class VQuery {
         return sql.toString();
     }
 
-    public void clear() {
+    public void reset() {
         root = true;
         from = new StringBuilder(" FROM ");
         where = new StringBuilder(" WHERE ");
@@ -108,5 +108,6 @@ public class VQuery {
         order = new StringBuilder(" ORDER BY ");
         select = new StringBuilder("SELECT " + cubeAttribute);
         concatenation = new StringBuilder();
+        lastTableName = "";
     }
 }
