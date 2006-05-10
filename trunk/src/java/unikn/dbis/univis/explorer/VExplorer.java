@@ -217,10 +217,13 @@ public class VExplorer extends JFrame {
 
         JButton undo = new JButton(VIcons.UNDO);
         JButton redo = new JButton(VIcons.REDO);
+        JButton delete = graph.makeDeleteButton();
+        JButton charts = graph.makeChartsButton();
 
         toolbar.add(refresh);
         toolbar.add(undo);
         toolbar.add(redo);
+        toolbar.add(delete);
     }
 
     private void initNavigation() {
@@ -253,7 +256,7 @@ public class VExplorer extends JFrame {
     private void initVisualization() {
 
         visualization.setBackground(Color.WHITE);
-        visualization.add(new JScrollPane(graph), BorderLayout.CENTER);
+        visualization.add(new JScrollPane(graph.getGraph()), BorderLayout.CENTER);
 
         split.setRightComponent(visualization);
     }
