@@ -28,4 +28,7 @@ public class VIcons {
     public static final Icon USERK = new ImageIcon(VIcons.class.getResource("../images/userf.png"));
     public static final Icon USERF = new ImageIcon(VIcons.class.getResource("../images/userk.png"));
     public static final Icon EURO = new ImageIcon(VIcons.class.getResource("../images/euro.png"));
+    public static final Icon EXIT = new ImageIcon(VIcons.class.getResource("../images/exit.png"));
+    public static final Icon CHART = new ImageIcon(VIcons.class.getResource("../images/chart.png"));
+    public static final Icon MEASURE = new ImageIcon(VIcons.class.getResource("../images/measure.png"));
 }
