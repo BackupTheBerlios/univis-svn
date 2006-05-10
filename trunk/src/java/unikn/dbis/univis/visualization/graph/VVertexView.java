@@ -87,7 +87,7 @@ public class VVertexView extends VertexView {
                 panel.add(c, BorderLayout.CENTER);
             }
             else {
-                panel.add(new JLabel("QWERTZ"), BorderLayout.CENTER);
+                panel.add(new JLabel("n/a @see VVertexView"), BorderLayout.CENTER);
             }
 
             return panel;
