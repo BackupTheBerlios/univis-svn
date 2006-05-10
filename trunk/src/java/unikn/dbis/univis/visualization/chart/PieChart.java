@@ -75,6 +75,6 @@ public class PieChart extends AbstractChart<PieDataset> implements Renderable {
         plot.setForegroundAlpha(0.5f);
         plot.setNoDataMessage("No data available");
         plot.setLabelGenerator(null);
-        plot.setLegendLabelGenerator(new PieLabelGenerator(createTotal()));
+        plot.setLegendLabelGenerator(new LabelGenerator(createTotal()));
     }
 }

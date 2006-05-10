@@ -77,7 +77,7 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
         axis.setTickLabelsVisible(false);
         BarRenderer3D renderer = (BarRenderer3D) plot.getRenderer();
         renderer.setDrawBarOutline(false);
-        renderer.setLegendItemLabelGenerator(new BarLabelGenerator(createTotal()));
+        renderer.setLegendItemLabelGenerator(new LabelGenerator(createTotal()));
         plot.setNoDataMessage("No data available");
         plot.getDomainAxis().setLabelFont(getLegendFont());
         plot.getRangeAxis().setLabelFont(getLegendFont());
