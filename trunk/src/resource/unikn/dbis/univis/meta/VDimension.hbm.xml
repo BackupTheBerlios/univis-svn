@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <!--
    @author Roman R&auml;dle
@@ -12,7 +12,8 @@
 
 <hibernate-mapping>
 
-    <joined-subclass name="unikn.dbis.univis.meta.impl.VDimensionImpl" table="META_DIMENSION" extends="unikn.dbis.univis.meta.impl.VDataReferenceImpl">
+    <joined-subclass name="unikn.dbis.univis.meta.impl.VDimensionImpl" table="META_DIMENSION"
+                     extends="unikn.dbis.univis.meta.impl.VDataReferenceImpl">
 
         <key column="DATA_REFERENCE_ID"/>
 
@@ -22,6 +23,10 @@
 
         <property name="parentable" type="boolean">
             <column name="PARENTABLE" not-null="true"/>
+        </property>
+
+        <property name="visible" type="boolean">
+            <column name="VISIBLE" not-null="true"/>
         </property>
 
         <set name="supportedCubes" table="META_DIMENSION_SUPPORTED_CUBE" order-by="DIMENSION_ID asc">
