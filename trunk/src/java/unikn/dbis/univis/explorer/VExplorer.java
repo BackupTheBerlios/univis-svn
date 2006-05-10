@@ -81,8 +81,6 @@ public class VExplorer extends JFrame {
         return connection;
     }
 
-    private JMenuBar menubar = new JMenuBar();
-
     private JToolBar toolbar = new JToolBar();
 
     private JSplitPane split = new JSplitPane();
@@ -188,7 +186,7 @@ public class VExplorer extends JFrame {
             }
         });
 
-        JButton undo = new JButton(VIcons.UNDO);
+        final JButton undo = new JButton(VIcons.UNDO);
         JButton redo = new JButton(VIcons.REDO);
         JButton delete = graph.createDeleteButton();
         JButton chartsButton = graph.createChartsButton();
@@ -196,7 +194,6 @@ public class VExplorer extends JFrame {
         JButton exit = new JButton(VIcons.EXIT);
 
         exit.addActionListener(new ActionListener() {
-
             /**
              * Invoked when an action occurs.
              */
@@ -207,6 +204,17 @@ public class VExplorer extends JFrame {
 
         toolbar.add(refresh);
         toolbar.add(undo);
+
+        undo.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(undo)) {
+
+                    graph.undoCells();
+                }
+            }
+        });
+
         toolbar.add(redo);
         toolbar.add(delete);
         toolbar.add(chartsButton);
