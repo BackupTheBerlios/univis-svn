@@ -11,11 +11,11 @@ import org.jfree.data.category.CategoryDataset;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
+import java.awt.*;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -353,20 +353,6 @@ public class VGraph implements DropTargetListener {
      */
     public void createVisualizationSetts(JMenu visualization) {
 
-        JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
-        JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
-
-        makeActionListenerCharts(barChart, "barChart");
-        makeActionListenerCharts(pieChart, "pieChart");
-        ButtonGroup charts = new ButtonGroup();
-        barChart.setState(true);
-        pieChart.setState(false);
-        charts.add(barChart);
-        charts.add(pieChart);
-
-        JMenu chartsMenu = new JMenu("Charts");
-        chartsMenu.add(barChart);
-        chartsMenu.add(pieChart);
 
         JMenu measuresMenu = new JMenu("Measures");
         JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe", VIcons.USERK);
@@ -387,7 +373,7 @@ public class VGraph implements DropTargetListener {
         measuresMenu.add(heads);
         measuresMenu.add(cases);
         measuresMenu.add(amount);
-        visualization.add(chartsMenu);
+        //visualization.add(chartsMenu);
         visualization.add(measuresMenu);
     }
 
@@ -426,19 +412,46 @@ public class VGraph implements DropTargetListener {
         });
     }
 
-    public JButton makeButton() {
+    public JButton makeDeleteButton() {
+
         final JButton delete = new JButton(VIcons.DELETE);
 
-        delete.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(delete)) {
-                    JOptionPane.showMessageDialog(null, "Hier kann man den ganzen Graph löschen");
-                }
-            }
-        });
 
         return delete;
+    }
+
+    public JButton makeChartsButton() {
+        final JButton chartsButton = new JButton();
+
+        final JPopupMenu pop = new JPopupMenu();
+
+        JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
+        JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
+
+        makeActionListenerCharts(barChart, "barChart");
+        makeActionListenerCharts(pieChart, "pieChart");
+        ButtonGroup charts = new ButtonGroup();
+        barChart.setState(true);
+        pieChart.setState(false);
+        charts.add(barChart);
+        charts.add(pieChart);
+
+        JMenu chartsMenu = new JMenu("Charts");
+        chartsMenu.add(barChart);
+        chartsMenu.add(pieChart);
+
+        pop.add(chartsMenu);
+
+        chartsButton.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent evt) {
+                Point bl = chartsButton.getLocationOnScreen();
+                pop.show(chartsButton, 0, chartsButton.getHeight());
+            }
+
+        });
+
+        return chartsButton;
     }
 
     public JGraph getGraph() {
