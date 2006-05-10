@@ -110,4 +110,8 @@ public class VQuery {
         concatenation = new StringBuilder();
         lastTableName = "";
     }
+
+    public void undo() {
+
+    }
 }

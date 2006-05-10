@@ -15,7 +15,6 @@ import java.awt.event.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
-import java.awt.*;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -80,6 +79,7 @@ public class VGraph implements DropTargetListener {
      * Strings for different topics.
      */
     private String chartCheck = "barChart";
+    private String rootHeadLine = "";
     private String xAxis = "Studenten";
     private boolean isRoot = true;
 
@@ -202,7 +202,7 @@ public class VGraph implements DropTargetListener {
                 }
             }
 
-            root = createVertex("ROOT_NODE", "");
+            root = createVertex(rootHeadLine, "");
             cache.insert(root);
             cellList.add(root);
             isRoot = false;
@@ -270,7 +270,7 @@ public class VGraph implements DropTargetListener {
         VDimension bluep = searchBluep(vDim);
 
         ResultSet result = stmt.executeQuery(vquery.createChartQuery(vDim, bluep));
-        //chartName = vDim.getI18nKey();
+        rootHeadLine = vDim.getI18nKey();
         fillChartData(result);
         connection.close();
     }
@@ -335,7 +335,6 @@ public class VGraph implements DropTargetListener {
             e.printStackTrace();
         }
         if (o instanceof VDimension) {
-            //System.out.println("ECHO: " + ((VDimension) o).getI18nKey());
             VDimension vDim = (VDimension) o;
 
             try {
@@ -399,7 +398,8 @@ public class VGraph implements DropTargetListener {
                 if (e.getSource().equals(delete)) {
 
                     cache.remove(cache.getCells(true, true, true, true), true, true);
-                    vquery.clear();
+                    isRoot = true;
+                    vquery.reset();
                 }
             }
         });
@@ -483,6 +483,13 @@ public class VGraph implements DropTargetListener {
         pop.add(amount);
 
         return measureButton;
+
+    }
+
+    public void undoCells() {
+
+        cache.remove(cellList.toArray(), true, true);
+
 
     }
 
