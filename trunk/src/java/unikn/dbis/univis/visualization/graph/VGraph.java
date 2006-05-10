@@ -374,11 +374,12 @@ public class VGraph implements DropTargetListener {
         checkBoxMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(checkBoxMenuItem))
+                if (e.getSource().equals(checkBoxMenuItem)) {
 
                     vquery.setCubeAttribute(measureName);
-                vquery.setCubeName(cube);
-                xAxis = xAxisName;
+                    vquery.setCubeName(cube);
+                    xAxis = xAxisName;
+                }
             }
         });
     }
@@ -391,6 +392,17 @@ public class VGraph implements DropTargetListener {
     public JButton createDeleteButton() {
 
         final JButton delete = new JButton(VIcons.DELETE);
+
+        delete.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(delete)) {
+
+                    cache.remove(cache.getCells(true, true, true, true), true, true);
+                    vquery.clear();
+                }
+            }
+        });
 
         return delete;
     }
@@ -431,6 +443,12 @@ public class VGraph implements DropTargetListener {
         return chartsButton;
     }
 
+
+    /**
+     * Returns the MeasureButton for selecting the measure.
+     *
+     * @return MeasureButton for selectin the measure.
+     */
     public JButton createMeasureButton() {
         final JButton measureButton = new JButton(VIcons.MEASURE);
 

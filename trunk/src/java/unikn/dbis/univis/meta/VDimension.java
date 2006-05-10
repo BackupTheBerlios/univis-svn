@@ -46,6 +46,7 @@ public interface VDimension extends VDataReference {
      */
     public Boolean isParentable();
 
+
     /**
      * Sets whether the dimension contains data for parentable
      * usage or not.
@@ -54,6 +55,20 @@ public interface VDimension extends VDataReference {
      *                   data or not.
      */
     public void setParentable(Boolean parentable);
+
+    /**
+     * Returns whether the dimension is visible or unvisible.
+     *
+     * @return Whether the dimension is visible or unvisible.
+     */
+    public Boolean isVisible();
+
+    /**
+     * Sets whether the dimension is visible or unvisible.
+     *
+     * @param visible Whether the dimension is visible or unvisible.
+     */
+    public void setVisible(Boolean visible);
 
     /**
      * Returns the cubes that supports this dimension.
@@ -90,7 +105,7 @@ public interface VDimension extends VDataReference {
      * or not.
      *
      * @return Whether the selection of the dimension was changed
-     * or not.
+     *         or not.
      */
     public boolean isSelectionChanged();
 
@@ -99,7 +114,7 @@ public interface VDimension extends VDataReference {
      * or not.
      *
      * @param selectionChanged Whether the selection of the dimension
-     * was changed or not.
+     *                         was changed or not.
      */
     public void setSelectionChanged(boolean selectionChanged);
 }

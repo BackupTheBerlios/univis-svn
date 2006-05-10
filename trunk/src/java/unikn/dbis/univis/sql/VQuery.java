@@ -99,4 +99,14 @@ public class VQuery {
         System.out.println(sql.toString());
         return sql.toString();
     }
+
+    public void clear() {
+        root = true;
+        from = new StringBuilder(" FROM ");
+        where = new StringBuilder(" WHERE ");
+        group = new StringBuilder(" GROUP BY ");
+        order = new StringBuilder(" ORDER BY ");
+        select = new StringBuilder("SELECT " + cubeAttribute);
+        concatenation = new StringBuilder();
+    }
 }

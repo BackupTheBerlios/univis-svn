@@ -35,6 +35,9 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     // Whether the dimension contains parentable data or not.
     private Boolean parentable;
 
+    // Whether the dimension is visible or unvisible.
+    private Boolean visible;
+
     // The identifiers of the selected values.
     private Set<Object> selections;
 
@@ -43,6 +46,7 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
 
     // The cubes that supports this dimension.
     private Set<VCube> supportedCubes;
+
 
     /**
      * Whether the dimension is a summable dimension which
@@ -88,6 +92,24 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
      */
     public void setParentable(Boolean parentable) {
         this.parentable = parentable;
+    }
+
+    /**
+     * Returns whether the dimension is visible or unvisible.
+     *
+     * @return Whether the dimension is visible or unvisible.
+     */
+    public Boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * Sets whether the dimension is visible or unvisible.
+     *
+     * @param visible Whether the dimension is visible or unvisible.
+     */
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
     }
 
     /**

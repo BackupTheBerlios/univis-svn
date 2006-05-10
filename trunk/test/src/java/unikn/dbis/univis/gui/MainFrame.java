@@ -1,5 +1,7 @@
 package unikn.dbis.univis.gui;
 
+import org.jgraph.JGraph;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -31,7 +33,7 @@ public class MainFrame extends JFrame {
     private JLabel facts = new JLabel("FACTS");
     private JLabel measures = new JLabel("MEASURES");
     private Font tahoma = new Font("Tahoma", Font.BOLD, 11);
-    private GuiGraph guiGraph = new GuiGraph();
+    private JGraph guiGraph = new GuiGraph().getGraph();
 
     public Transferable tr;
 
@@ -85,16 +87,13 @@ public class MainFrame extends JFrame {
         Font measureFont = new Font("Serif", Font.ITALIC, 11);
         JLabel measure = new JLabel("Define new measure", new NewMeasureIcon(), 0);
         measure.setFont(measureFont);
-        measure.addMouseListener( new MouseAdapter() {
-          public void mouseClicked( MouseEvent e ) {
-            if ( e.getClickCount() >= 1 )
-                JOptionPane.showMessageDialog(rightPanel, "Definiere nun eine neue Measure", "Neue Measure", JOptionPane.YES_NO_CANCEL_OPTION);
-          }
-        } );
+        measure.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 1)
+                    JOptionPane.showMessageDialog(rightPanel, "Definiere nun eine neue Measure", "Neue Measure", JOptionPane.YES_NO_CANCEL_OPTION);
+            }
+        });
         leftPanel.add(measure, leftConstraints);
-
-
-
 
         treeScroll.setViewportView(leftPanel);
 
@@ -107,7 +106,7 @@ public class MainFrame extends JFrame {
         this.getContentPane().add(overviewSplit);
     }
 
-      /**
+    /**
      * Zentriert das <code>MainFrame</code> im sichtbaren Bereich des Bildschirms.
      */
     private void center() {
@@ -128,20 +127,21 @@ public class MainFrame extends JFrame {
     }
 
     /**
-    * @param args the command line arguments
-    */
-   public static void main(String args[]) {
-       java.awt.EventQueue.invokeLater(new Runnable() {
-           public void run() {
-               try {
-                   UIManager.setLookAndFeel(new com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
-                   new MainFrame().setVisible(true);
-               } catch (Exception e) {
-                   e.printStackTrace();
-               }
-           }
-       });
-   }
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel(new com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
+                    new MainFrame().setVisible(true);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 
 }

@@ -1,6 +1,9 @@
 package unikn.dbis.univis.gui;
 
 import org.jgraph.JGraph;
+import org.jgraph.layout.OrderedTreeLayoutAlgorithm;
+import org.jgraph.layout.TreeLayoutSettings;
+import org.jgraph.layout.TreeLayoutAlgorithm;
 import org.jgraph.graph.*;
 
 import javax.swing.*;
@@ -25,41 +28,43 @@ import unikn.dbis.univis.visualization.graph.MyCellViewFactory;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class GuiGraph extends JGraph implements DropTargetListener {
+public class GuiGraph implements DropTargetListener {
 
 // Construct Model and Graph
     GraphModel model = new DefaultGraphModel();
-    GraphLayoutCache cache = new GraphLayoutCache(model, new MyCellViewFactory());
+    //GraphLayoutCache cache = new GraphLayoutCache(model, );
     // Insert all three cells in one call, so we need an array to store them
     private DefaultGraphCell[] cells = new DefaultGraphCell[5];
-
+    private JGraph graph = new JGraph();
     private int arrow = GraphConstants.ARROW_CLASSIC;
     private int x = 200;
+    private TreeLayoutAlgorithm moen = new TreeLayoutAlgorithm();
 
     public GuiGraph() {
-        
-        new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
-
-        setModel(model);
-        setGraphLayoutCache(cache);
 
 
+        new DropTarget(graph, DnDConstants.ACTION_COPY_OR_MOVE, this);
+        graph.setModel(model);
+        //setGraphLayoutCache(cache);
         // Control-drag should clone selection
         //this.setCloneable(true);
         // Enable edit without final RETURN keystroke
-        this.setInvokesStopCellEditing(true);
+        //this.setInvokesStopCellEditing(true);
 
         // When over a cell, jump to its default port (we only have one, anyway)
-        this.setJumpToDefaultPort(true);
-
+        //this.setJumpToDefaultPort(true);
+        moen.setNodeDistance(30);
+        moen.setLevelDistance(20);
+        moen.setOrientation(SwingConstants.TOP);
+        moen.setAlignment(SwingConstants.NORTH);
         // Create Alle Länder Vertex
-        cells[0] = createVertex("Alle Länder", 20, 220, 100, 100, Color.GREEN, false);
-
+        cells[0] = createVertex("Alle Länder", 100, 100, 100, 100, Color.GREEN, false);
+        cells[0].isRoot();
         // Create Deutschland Vertex
-        cells[1] = createVertex("Deutschland", 120, 20, 100, 100, Color.ORANGE, true);
+        cells[1] = createVertex("Deutschland", 0, 0, 100, 100, Color.ORANGE, true);
 
         // Create Ausland Vertex
-        cells[2] = createVertex("Ausland", 120, 420, 100, 100, Color.ORANGE, true);
+        cells[2] = createVertex("Ausland", 0, 0, 100, 100, Color.ORANGE, true);
 
         // Create Edge
         DefaultEdge edge1 = new DefaultEdge();
@@ -72,7 +77,6 @@ public class GuiGraph extends JGraph implements DropTargetListener {
 
         GraphConstants.setLineEnd(edge1.getAttributes(), arrow);
         GraphConstants.setEndFill(edge1.getAttributes(), true);
-
         // Create Edge
         DefaultEdge edge2 = new DefaultEdge();
         // Fetch the ports from the new vertices, and connect them with the edge
@@ -85,8 +89,8 @@ public class GuiGraph extends JGraph implements DropTargetListener {
         GraphConstants.setEndFill(edge2.getAttributes(), true);
 
         // Insert the cells via the cache, so they get selected
-
-        this.getGraphLayoutCache().insert(cells);
+        graph.getGraphLayoutCache().insert(cells);
+        moen.run(graph, cells);
     }
 
     public static DefaultGraphCell createVertex(String name, double x,
@@ -134,19 +138,25 @@ public class GuiGraph extends JGraph implements DropTargetListener {
     public void dragExit(DropTargetEvent dte) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
-        public void drop (DropTargetDropEvent dtde) {
-        DefaultGraphCell danke = createVertex("Danke für das Objekt", x, x, 200, 200, Color.BLUE, true);
+
+    public void drop(DropTargetDropEvent dtde) {
+        DefaultGraphCell danke = createVertex("Danke für das Objekt", 20, 20, 200, 200, Color.BLUE, true);
         // Create Edge
         DefaultEdge edge3 = new DefaultEdge();
         // Fetch the ports from the new vertices, and connect them with the edge
         edge3.setSource(cells[0].getChildAt(0));
         edge3.setTarget(danke.getChildAt(0));
-        this.getGraphLayoutCache().insert(edge3);
+        graph.getGraphLayoutCache().insert(edge3);
         //Set Arrow Style for edge
         GraphConstants.setLineEnd(edge3.getAttributes(), arrow);
         GraphConstants.setEndFill(edge3.getAttributes(), true);
 
-        this.getGraphLayoutCache().insert(danke);
-        x = x + 100;
+        graph.getGraphLayoutCache().insert(danke);
+        // x = x + 100;
+        moen.run(graph, cells);
     }
+
+    public JGraph getGraph() {
+        return graph;
     }
+}
