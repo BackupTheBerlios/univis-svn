@@ -349,35 +349,6 @@ public class VGraph implements DropTargetListener {
     }
 
     /**
-     * @param visualization : JMenu which is created.
-     */
-    public void createVisualizationSetts(JMenu visualization) {
-
-
-        JMenu measuresMenu = new JMenu("Measures");
-        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe", VIcons.USERK);
-        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle", VIcons.USERF);
-        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag", VIcons.EURO);
-
-        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe", "Studenten");
-        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
-        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Beträge");
-
-        ButtonGroup measuresGroup = new ButtonGroup();
-        heads.setState(true);
-        cases.setState(false);
-        amount.setState(false);
-        measuresGroup.add(heads);
-        measuresGroup.add(cases);
-        measuresGroup.add(amount);
-        measuresMenu.add(heads);
-        measuresMenu.add(cases);
-        measuresMenu.add(amount);
-        //visualization.add(chartsMenu);
-        visualization.add(measuresMenu);
-    }
-
-    /**
      * @param checkBoxMenuItem : Item which gets the Listener.
      * @param chartName        : String which is need to set.
      */
@@ -412,16 +383,26 @@ public class VGraph implements DropTargetListener {
         });
     }
 
-    public JButton makeDeleteButton() {
+    /**
+     * Returns the DeleteButton for deleting the whole graph.
+     *
+     * @return The DeleteButton.
+     */
+    public JButton createDeleteButton() {
 
         final JButton delete = new JButton(VIcons.DELETE);
-
 
         return delete;
     }
 
-    public JButton makeChartsButton() {
-        final JButton chartsButton = new JButton();
+
+    /**
+     * Returns the Chartsbutton for choosing the sort of the chart.
+     *
+     * @return The ChartsButton.
+     */
+    public JButton createChartsButton() {
+        final JButton chartsButton = new JButton(VIcons.CHART);
 
         final JPopupMenu pop = new JPopupMenu();
 
@@ -436,16 +417,12 @@ public class VGraph implements DropTargetListener {
         charts.add(barChart);
         charts.add(pieChart);
 
-        JMenu chartsMenu = new JMenu("Charts");
-        chartsMenu.add(barChart);
-        chartsMenu.add(pieChart);
-
-        pop.add(chartsMenu);
+        pop.add(barChart);
+        pop.add(pieChart);
 
         chartsButton.addMouseListener(new MouseAdapter() {
 
             public void mouseClicked(MouseEvent evt) {
-                Point bl = chartsButton.getLocationOnScreen();
                 pop.show(chartsButton, 0, chartsButton.getHeight());
             }
 
@@ -454,6 +431,48 @@ public class VGraph implements DropTargetListener {
         return chartsButton;
     }
 
+    public JButton createMeasureButton() {
+        final JButton measureButton = new JButton(VIcons.MEASURE);
+
+        final JPopupMenu pop = new JPopupMenu();
+
+        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe", VIcons.USERK);
+        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle", VIcons.USERF);
+        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag", VIcons.EURO);
+
+        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe", "Studenten");
+        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
+        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Beträge");
+
+        ButtonGroup measuresGroup = new ButtonGroup();
+        heads.setState(true);
+        cases.setState(false);
+        amount.setState(false);
+        measuresGroup.add(heads);
+        measuresGroup.add(cases);
+        measuresGroup.add(amount);
+
+        measureButton.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent evt) {
+                pop.show(measureButton, 0, measureButton.getHeight());
+            }
+
+        });
+
+        pop.add(heads);
+        pop.add(cases);
+        pop.add(amount);
+
+        return measureButton;
+
+    }
+
+    /**
+     * Returns the complete JGraph.
+     *
+     * @return The complete JGraph.
+     */
     public JGraph getGraph() {
         return graph;
     }
