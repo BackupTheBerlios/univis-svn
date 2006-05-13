@@ -24,7 +24,7 @@ public class HibernateUtil {
 
     // The logger to log info, error and other occuring messages
     // or exceptions.
-    public static final Log LOG = LogFactory.getLog(HibernateUtil.class);
+    public static final transient Log LOG = LogFactory.getLog(HibernateUtil.class);
 
     public static final SessionFactory sessionFactory;
 

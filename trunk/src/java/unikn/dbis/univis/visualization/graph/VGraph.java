@@ -8,6 +8,8 @@ import org.jfree.data.general.AbstractDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.category.CategoryDataset;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
@@ -52,6 +54,10 @@ import com.jgraph.layout.tree.JGraphTreeLayout;
  */
 public class VGraph implements DropTargetListener {
 
+    // The logger to log info, error and other occuring messages
+    // or exceptions.
+    public static final transient Log LOG = LogFactory.getLog(VGraph.class);
+
     // Different Objects for the graph.
     private JGraph graph = new JGraph();
     private GraphModel model = new DefaultGraphModel();
@@ -62,9 +68,6 @@ public class VGraph implements DropTargetListener {
     private List<VGraphCell> cellList = new ArrayList<VGraphCell>();
 
     private List<VGraphCell> tempCellList = null;
-
-    // Object Transferable for Drag & Drop.
-    private Transferable tr;
 
     // Datasets for creating Charts.
     private AbstractDataset dataset;
@@ -224,7 +227,7 @@ public class VGraph implements DropTargetListener {
 
                     String currentValue = result.getString(bufferPos);
 
-                    System.out.println(result.getString(2));
+                    LOG.info(result.getString(2));
 
                     if (!buffer.equals(currentValue)) {
                         dataset = new DefaultPieDataset();
@@ -473,14 +476,11 @@ public class VGraph implements DropTargetListener {
         pop.add(amount);
 
         return measureButton;
-
     }
 
     public void undoCells() {
-
         cache.remove(cellList.toArray(), true, true);
-
-
+        query.historyBack();
     }
 
     /**
