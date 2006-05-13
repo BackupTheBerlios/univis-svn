@@ -17,8 +17,8 @@ SET search_path = public, pg_catalog;
 --
 
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1, NULL, NULL, NULL);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1001, 1001, 1000, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1000, 1000, 1, 0);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1001, 1001, 1000, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1004, 1004, 1000, 1);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1007, 1007, 1000, 2);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1011, 1011, 1000, 3);
@@ -47,15 +47,17 @@ INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUE
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2006, 2006, 2000, 2);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2007, 1018, 2000, 3);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2008, 2007, 2007, 0);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2015, 2012, 2000, 4);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2020, 1013, 2015, 1);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2009, 2008, 2020, 0);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2011, 2010, 2009, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2012, 2011, 2011, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2013, 1019, 2007, 1);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2014, 1020, 2013, 0);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2015, 2012, 2000, 4);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2016, 2013, 2015, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2017, 2014, 2016, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2018, 2015, 2017, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2019, 2016, 2018, 0);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2020, 1013, 2015, 1);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2021, 1014, 2020, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2022, 2017, 2021, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2023, 1015, 2021, 1);
@@ -63,9 +65,7 @@ INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUE
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2025, 1017, 2023, 1);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2026, 2018, 2020, 1);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2027, 2019, 2015, 2);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2009, 2008, 2020, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2010, 2009, 2008, 0);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2011, 2010, 2009, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1021, 1021, 1010, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1022, 1022, 1006, 0);
 
