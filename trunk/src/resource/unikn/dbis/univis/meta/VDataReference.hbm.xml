@@ -20,7 +20,7 @@
         </id>
 
         <property name="i18nKey" type="string">
-            <column name="I18N_KEY" not-null="true"/>
+            <column name="I18N_KEY" not-null="false"/>
         </property>
 
         <property name="joinable" type="string">
