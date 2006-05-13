@@ -118,7 +118,7 @@ public class TreePopupTest extends JFrame {
         panel.setBorder(BorderFactory.createRaisedBevelBorder());
         panel.add(new JLabel("Measure Auswahl"));
         panel.add(new JCheckBox("Information Engineering"));
-        panel.add(new JCheckBox("Wirtschaftspädagogik"));
+        panel.add(new JCheckBox("Wirtschaftspaedagogik"));
         panel.add(button);
 
         tree.addMouseListener(new MouseAdapter() {

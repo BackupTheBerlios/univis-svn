@@ -52,10 +52,8 @@ import com.jgraph.layout.tree.JGraphTreeLayout;
  */
 public class VGraph implements DropTargetListener {
 
-    /*
-     * Different Objects for the graph.
-     */
-    public JGraph graph = new JGraph();
+    // Different Objects for the graph.
+    private JGraph graph = new JGraph();
     private GraphModel model = new DefaultGraphModel();
     private GraphLayoutCache cache = new GraphLayoutCache(model, new VCellViewFactory());
     private JGraphTreeLayout layout = new JGraphTreeLayout();
@@ -65,33 +63,24 @@ public class VGraph implements DropTargetListener {
 
     private List<VGraphCell> tempCellList = null;
 
-    /*
-     * Object Transferable for Drag & Drop.
-     */
-    public Transferable tr;
+    // Object Transferable for Drag & Drop.
+    private Transferable tr;
 
-    /*
-     * Datasets for creating Charts.
-     */
+    // Datasets for creating Charts.
     private AbstractDataset dataset;
 
-    /*
-     * Strings for different topics.
-     */
+    // Strings for different topics.
     private String chartCheck = "barChart";
     private String rootHeadLine = "";
     private String xAxis = "Studenten";
     private boolean isRoot = true;
 
-    /*
-     * Int values for different topics.
-     */
+    // Int values for different topics.
     private int cellsize = 300;
 
-    /*
-     *  VQuery
-     */
-    private VQuery vquery = new VQuery();
+    // The <code>VQuery</code> to get the sql statements to perform
+    // exploring.
+    private VQuery query = new VQuery();
 
     /**
      * Standard Constructor
@@ -269,7 +258,7 @@ public class VGraph implements DropTargetListener {
 
         VDimension bluep = searchBluep(vDim);
 
-        ResultSet result = stmt.executeQuery(vquery.createChartQuery(vDim, bluep));
+        ResultSet result = stmt.executeQuery(query.createChartQuery(vDim, bluep));
         rootHeadLine = vDim.getI18nKey();
         fillChartData(result);
         connection.close();
@@ -318,9 +307,10 @@ public class VGraph implements DropTargetListener {
     }
 
     /**
-     * Action when a VDimension is dropt into the graph.
+     * Action when a <code>VDimension<code> is dropped into the
+     * graph.
      *
-     * @param dtde
+     * @param dtde The drop target event.
      */
     public void drop(DropTargetDropEvent dtde) {
         Object o = null;
@@ -348,8 +338,8 @@ public class VGraph implements DropTargetListener {
     }
 
     /**
-     * @param checkBoxMenuItem : Item which gets the Listener.
-     * @param chartName        : String which is need to set.
+     * @param checkBoxMenuItem Item which gets the Listener.
+     * @param chartName        String which is need to set.
      */
     public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final String chartName) {
 
@@ -364,9 +354,9 @@ public class VGraph implements DropTargetListener {
     }
 
     /**
-     * @param checkBoxMenuItem : Item which gets the Listener.
-     * @param cube             : String which is need to set.
-     * @param measureName      : String which is need to set.
+     * @param checkBoxMenuItem Item which gets the Listener.
+     * @param cube             String which is need to set.
+     * @param measureName      String which is need to set.
      */
     public void makeActionListenerMeasures(final JCheckBoxMenuItem checkBoxMenuItem, final String cube, final String measureName, final String xAxisName) {
 
@@ -375,8 +365,8 @@ public class VGraph implements DropTargetListener {
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource().equals(checkBoxMenuItem)) {
 
-                    vquery.setCubeAttribute(measureName);
-                    vquery.setCubeName(cube);
+                    query.setCubeAttribute(measureName);
+                    query.setCubeName(cube);
                     xAxis = xAxisName;
                 }
             }
@@ -399,7 +389,7 @@ public class VGraph implements DropTargetListener {
 
                     cache.remove(cache.getCells(true, true, true, true), true, true);
                     isRoot = true;
-                    vquery.reset();
+                    query.reset();
                 }
             }
         });
@@ -454,13 +444,13 @@ public class VGraph implements DropTargetListener {
 
         final JPopupMenu pop = new JPopupMenu();
 
-        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("StudentenKöpfe", VIcons.USERK);
-        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("StudentenFälle", VIcons.USERF);
-        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("KostenBetrag", VIcons.EURO);
+        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("Koepfe (Studenten)", VIcons.USERK);
+        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("Faelle (Studenten)", VIcons.USERF);
+        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("Betrag (Kosten)", VIcons.EURO);
 
-        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe", "Studenten");
+        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe)", "Studenten");
         makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
-        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Beträge");
+        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Betraege");
 
         ButtonGroup measuresGroup = new ButtonGroup();
         heads.setState(true);

@@ -3,9 +3,8 @@ package unikn.dbis.univis.util;
 import java.awt.*;
 
 /**
- * TODO: document me!!!
- * <p/>
- * <code>ComponentUtilities</code>.
+ * The <code>ComponentUtilities</code> contains a series of
+ * helpful methods to interact/style components.
  * <p/>
  * User: raedler, weiler
  * Date: 11.04.2006
@@ -19,19 +18,19 @@ import java.awt.*;
 public class ComponentUtilities {
 
     /**
-     * TODO: document me!!!
+     * Centers a component on screen.
      *
-     * @param c
+     * @param c The component that will be centered.
      */
     public static void centerComponentOnScreen(Component c) {
 
-        // Größe der eingestellten Bildschirmauflösung.
+        // Size of the screen.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
 
-        // Größe des <code>JFrame</code>.
+        // Size of the component.
         Dimension size = c.getSize();
 
         width -= size.getWidth();
