@@ -1,6 +1,8 @@
 package unikn.dbis.univis.visualization.graph;
 
 import org.jgraph.JGraph;
+import org.jgraph.event.GraphSelectionListener;
+import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.graph.*;
 
 import org.jfree.data.general.DefaultPieDataset;
@@ -14,12 +16,10 @@ import org.apache.commons.logging.LogFactory;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 import java.awt.event.*;
-import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
+import java.awt.*;
 import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.sql.*;
 
@@ -65,9 +65,7 @@ public class VGraph implements DropTargetListener {
     private JGraphTreeLayout layout = new JGraphTreeLayout();
     private VGraphCell root = null;
 
-    private List<VGraphCell> cellList = new ArrayList<VGraphCell>();
-
-    private List<VGraphCell> tempCellList = null;
+    private VHistoryList<VGraphCell> cellHistory = new VHistoryList<VGraphCell>();
 
     // Datasets for creating Charts.
     private AbstractDataset dataset;
@@ -83,7 +81,7 @@ public class VGraph implements DropTargetListener {
 
     // The <code>VQuery</code> to get the sql statements to perform
     // exploring.
-    private VQuery query = new VQuery();
+    private VQuery queryHistory = new VQuery();
 
     /**
      * Standard Constructor
@@ -144,7 +142,7 @@ public class VGraph implements DropTargetListener {
         }
 
         VGraphCell source = root;
-        for (VGraphCell cell : tempCellList) {
+        for (VGraphCell cell : cellHistory.getLastOfHistory()) {
             if (sourceId.equals(cell.getCellId())) {
                 source = cell;
                 break;
@@ -176,8 +174,7 @@ public class VGraph implements DropTargetListener {
         int bufferPos = namePos - 1;
 
         if (isRoot) {
-            tempCellList = new ArrayList<VGraphCell>(cellList);
-            cellList.clear();
+            cellHistory.historize();
 
             if (chartCheck.equals("barChart")) {
                 dataset = new DefaultCategoryDataset();
@@ -196,17 +193,17 @@ public class VGraph implements DropTargetListener {
 
             root = createVertex(rootHeadLine, "");
             cache.insert(root);
-            cellList.add(root);
+            cellHistory.add(root);
             isRoot = false;
         }
         else {
-            tempCellList = new ArrayList<VGraphCell>(cellList);
-            cellList.clear();
+            cellHistory.historize();
+
             String buffer = "";
             if (chartCheck.equals("barChart")) {
                 while (result.next()) {
 
-                    String currentValue = result.getString(bufferPos);
+                    String currentValue = result.getString(idPos);
 
                     if (!buffer.equals(currentValue)) {
                         dataset = new DefaultCategoryDataset();
@@ -214,7 +211,7 @@ public class VGraph implements DropTargetListener {
                         VGraphCell nextCell = createVertex(result.getString(bufferPos), result.getString(idPos));
                         createEdges(nextCell, result.getString(idPos));
                         cache.insert(nextCell);
-                        cellList.add(nextCell);
+                        cellHistory.add(nextCell);
                     }
 
                     ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(namePos), "");
@@ -225,7 +222,7 @@ public class VGraph implements DropTargetListener {
             else {
                 while (result.next()) {
 
-                    String currentValue = result.getString(bufferPos);
+                    String currentValue = result.getString(idPos);
 
                     LOG.info(result.getString(2));
 
@@ -235,7 +232,7 @@ public class VGraph implements DropTargetListener {
                         VGraphCell nextCell = createVertex(result.getString(bufferPos), result.getString(idPos));
                         createEdges(nextCell, result.getString(idPos));
                         cache.insert(nextCell);
-                        cellList.add(nextCell);
+                        cellHistory.add(nextCell);
                     }
 
                     ((DefaultPieDataset) dataset).setValue(result.getString(namePos), result.getInt(1));
@@ -261,14 +258,14 @@ public class VGraph implements DropTargetListener {
 
         VDimension bluep = searchBluep(vDim);
 
-        ResultSet result = stmt.executeQuery(query.createChartQuery(vDim, bluep));
+        ResultSet result = stmt.executeQuery(queryHistory.createChartQuery(vDim, bluep));
         rootHeadLine = vDim.getI18nKey();
         fillChartData(result);
         connection.close();
     }
 
     /**
-     * @param vDim : VDimension from the drag & drop.
+     * @param vDim VDimension from the drag & drop.
      * @return VDimension which is the bluep of the Dimension
      */
     public VDimension searchBluep(VDimension vDim) {
@@ -289,24 +286,28 @@ public class VGraph implements DropTargetListener {
      * @param dtde
      */
     public void dragEnter(DropTargetDragEvent dtde) {
+
     }
 
     /**
      * @param dtde
      */
     public void dragOver(DropTargetDragEvent dtde) {
+
     }
 
     /**
      * @param dtde
      */
     public void dropActionChanged(DropTargetDragEvent dtde) {
+
     }
 
     /**
      * @param dte
      */
     public void dragExit(DropTargetEvent dte) {
+
     }
 
     /**
@@ -317,15 +318,20 @@ public class VGraph implements DropTargetListener {
      */
     public void drop(DropTargetDropEvent dtde) {
         Object o = null;
-
         try {
             o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
         }
-        catch (UnsupportedFlavorException e) {
-            e.printStackTrace();
+        catch (UnsupportedFlavorException ufe) {
+            dtde.rejectDrop();
+            if (LOG.isErrorEnabled()) {
+                LOG.error(ufe.getMessage(), ufe);
+            }
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        catch (IOException ioe) {
+            dtde.rejectDrop();
+            if (LOG.isErrorEnabled()) {
+                LOG.error(ioe.getMessage(), ioe);
+            }
         }
         if (o instanceof VDimension) {
             VDimension vDim = (VDimension) o;
@@ -333,10 +339,14 @@ public class VGraph implements DropTargetListener {
             try {
                 connection(vDim);
             }
-            catch (SQLException e) {
-                e.printStackTrace();
+            catch (SQLException sqle) {
+                dtde.rejectDrop();
+                if (LOG.isErrorEnabled()) {
+                    LOG.error(sqle.getMessage(), sqle);
+                }
             }
         }
+
         dtde.dropComplete(true);
     }
 
@@ -349,9 +359,9 @@ public class VGraph implements DropTargetListener {
         checkBoxMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(checkBoxMenuItem))
-
+                if (e.getSource().equals(checkBoxMenuItem)) {
                     chartCheck = chartName;
+                }
             }
         });
     }
@@ -368,8 +378,8 @@ public class VGraph implements DropTargetListener {
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource().equals(checkBoxMenuItem)) {
 
-                    query.setCubeAttribute(measureName);
-                    query.setCubeName(cube);
+                    queryHistory.setCubeAttribute(measureName);
+                    queryHistory.setCubeName(cube);
                     xAxis = xAxisName;
                 }
             }
@@ -392,7 +402,7 @@ public class VGraph implements DropTargetListener {
 
                     cache.remove(cache.getCells(true, true, true, true), true, true);
                     isRoot = true;
-                    query.reset();
+                    queryHistory.reset();
                 }
             }
         });
@@ -479,8 +489,23 @@ public class VGraph implements DropTargetListener {
     }
 
     public void undoCells() {
-        cache.remove(cellList.toArray(), true, true);
-        query.historyBack();
+        cache.remove(cellHistory.getCurrent().toArray(), true, true);
+        cellHistory.historyBack();
+        queryHistory.historyBack();
+
+        if (queryHistory.isEmpty()) {
+            isRoot = true;
+        }
+    }
+
+    private double zoomScale = 1.0;
+
+    public void zoomIn() {
+        graph.setScale(zoomScale += 0.05);
+    }
+
+    public void zoomOut() {
+        graph.setScale(zoomScale -= 0.05);
     }
 
     /**

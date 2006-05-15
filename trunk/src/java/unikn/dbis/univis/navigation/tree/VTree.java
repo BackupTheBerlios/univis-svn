@@ -41,7 +41,7 @@ import org.hibernate.mapping.Join;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VTree extends JTree implements DragGestureListener, DragSourceListener {
+public class VTree extends JTree implements DragGestureListener {
 
     /**
      * Returns a <code>JTree</code> with a sample model.
@@ -240,9 +240,7 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
      */
 
     public void dragGestureRecognized(DragGestureEvent dge) {
-        System.out.println("VTree.dragGestureRecognized");
-
-        dge.startDrag(DragSource.DefaultCopyDrop, new Transferable() {
+        dge.startDrag(DragSource.DefaultMoveDrop, new Transferable() {
             /**
              * Returns an array of DataFlavor objects indicating the flavors the data
              * can be provided in.  The array should be ordered according to preference
@@ -263,7 +261,7 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
              */
             public boolean isDataFlavorSupported(DataFlavor flavor) {
                 for (DataFlavor dataFlavor : getTransferDataFlavors()) {
-                    if (dataFlavor.equals(flavor)) {
+                    if (dataFlavor.match(flavor)) {
                         return true;
                     }
                 }
@@ -284,7 +282,7 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
              */
             public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
 
-                if (VDataReferenceFlavor.DIMENSION_FLAVOR.equals(flavor)) {
+                if (VDataReferenceFlavor.DIMENSION_FLAVOR.match(flavor)) {
                     Object o = getLastSelectedPathComponent();
 
                     if (o instanceof DefaultMutableTreeNode) {
@@ -301,91 +299,5 @@ public class VTree extends JTree implements DragGestureListener, DragSourceListe
                 throw new UnsupportedFlavorException(flavor);
             }
         });
-    }
-
-    /**
-     * Called as the cursor's hotspot enters a platform-dependent drop site.
-     * This method is invoked when all the following conditions are true:
-     * <UL>
-     * <LI>The cursor's hotspot enters the operable part of a platform-
-     * dependent drop site.
-     * <LI>The drop site is active.
-     * <LI>The drop site accepts the drag.
-     * </UL>
-     *
-     * @param dsde the <code>DragSourceDragEvent</code>
-     */
-    public void dragEnter(DragSourceDragEvent dsde) {
-        System.out.println("VTree.dragEnter");
-    }
-
-    /**
-     * Called as the cursor's hotspot moves over a platform-dependent drop site.
-     * This method is invoked when all the following conditions are true:
-     * <UL>
-     * <LI>The cursor's hotspot has moved, but still intersects the
-     * operable part of the drop site associated with the previous
-     * dragEnter() invocation.
-     * <LI>The drop site is still active.
-     * <LI>The drop site accepts the drag.
-     * </UL>
-     *
-     * @param dsde the <code>DragSourceDragEvent</code>
-     */
-    public void dragOver(DragSourceDragEvent dsde) {
-        System.out.println("VTree.dragOver");
-    }
-
-    /**
-     * Called when the user has modified the drop gesture.
-     * This method is invoked when the state of the input
-     * device(s) that the user is interacting with changes.
-     * Such devices are typically the mouse buttons or keyboard
-     * modifiers that the user is interacting with.
-     *
-     * @param dsde the <code>DragSourceDragEvent</code>
-     */
-    public void dropActionChanged(DragSourceDragEvent dsde) {
-        System.out.println("VTree.dropActionChanged");
-    }
-
-    /**
-     * Called as the cursor's hotspot exits a platform-dependent drop site.
-     * This method is invoked when any of the following conditions are true:
-     * <UL>
-     * <LI>The cursor's hotspot no longer intersects the operable part
-     * of the drop site associated with the previous dragEnter() invocation.
-     * </UL>
-     * OR
-     * <UL>
-     * <LI>The drop site associated with the previous dragEnter() invocation
-     * is no longer active.
-     * </UL>
-     * OR
-     * <UL>
-     * <LI> The drop site associated with the previous dragEnter() invocation
-     * has rejected the drag.
-     * </UL>
-     *
-     * @param dse the <code>DragSourceEvent</code>
-     */
-    public void dragExit(DragSourceEvent dse) {
-        System.out.println("VTree.dragExit");
-    }
-
-    /**
-     * This method is invoked to signify that the Drag and Drop
-     * operation is complete. The getDropSuccess() method of
-     * the <code>DragSourceDropEvent</code> can be used to
-     * determine the termination state. The getDropAction() method
-     * returns the operation that the drop site selected
-     * to apply to the Drop operation. Once this method is complete, the
-     * current <code>DragSourceContext</code> and
-     * associated resources become invalid.
-     *
-     * @param dsde the <code>DragSourceDropEvent</code>
-     */
-    public void dragDropEnd(DragSourceDropEvent dsde) {
-        System.out.println("VTree.dragDropEnd");
     }
 }

@@ -13,10 +13,7 @@ import unikn.dbis.univis.visualization.VVisualization;
 import unikn.dbis.univis.visualization.graph.VGraph;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.*;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DnDConstants;
@@ -91,6 +88,11 @@ public class VExplorer extends JFrame {
     private VTree tree;
 
     private VGraph graph = new VGraph();
+    private JScrollPane graphScrollPane;
+
+    private Point startSelection;
+    private Point endSelection;
+    private Rectangle selection;
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -106,7 +108,7 @@ public class VExplorer extends JFrame {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public VExplorer() throws HeadlessException {
-        super("UniVis Explorer 0.1 - (c) 2005 a.d. - DBIS, University of Konstanz");
+        super("UniVis Explorer 0.1 - (c) 2005-2006 a.d. - DBIS, University of Konstanz");
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(800, 600));
@@ -141,6 +143,31 @@ public class VExplorer extends JFrame {
                         sqle.printStackTrace();
                     }
                 }
+            }
+        });
+
+        graph.getGraph().addMouseListener(new MouseAdapter() {
+
+            public void mousePressed(MouseEvent e) {
+                System.out.println("VExplorer.mousePressed");
+                startSelection = e.getPoint();
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                System.out.println("VExplorer.mouseReleased");
+                endSelection = e.getPoint();
+
+                selection = new Rectangle((int) startSelection.getX(), (int) startSelection.getY(), (int) (endSelection.getX() - startSelection.getX()), (int) (endSelection.getY() - startSelection.getY()));
+
+                graphScrollPane.scrollRectToVisible(selection);
+                graph.getGraph().scrollRectToVisible(selection);
+
+                graphScrollPane.revalidate();
+
+                //graph.getGraph().setScale(selection.getWidth() / graphScrollPane.getViewport().getSize().getWidth());
+
+                System.out.println("SIZE: "+ graphScrollPane.getViewport().getSize());
+                System.out.println("selection = " + selection);
             }
         });
     }
@@ -192,6 +219,20 @@ public class VExplorer extends JFrame {
         JButton chartsButton = graph.createChartsButton();
         JButton measureButton = graph.createMeasureButton();
         JButton exit = new JButton(VIcons.EXIT);
+        JButton zoomIn = new JButton("ZOOM_IN");
+        JButton zoomOut = new JButton("ZOOM_OUT");
+
+        zoomIn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                graph.zoomIn();
+            }
+        });
+
+        zoomOut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                graph.zoomOut();
+            }
+        });
 
         exit.addActionListener(new ActionListener() {
             /**
@@ -220,6 +261,8 @@ public class VExplorer extends JFrame {
         toolbar.add(chartsButton);
         toolbar.add(measureButton);
         toolbar.add(exit);
+        toolbar.add(zoomIn);
+        toolbar.add(zoomOut);
     }
 
     private void initNavigation() {
@@ -251,15 +294,17 @@ public class VExplorer extends JFrame {
 
     private void initVisualization() {
 
+        graphScrollPane = new JScrollPane(graph.getGraph());
+
         visualization.setBackground(Color.WHITE);
-        visualization.add(new JScrollPane(graph.getGraph()), BorderLayout.CENTER);
+        visualization.add(graphScrollPane, BorderLayout.CENTER);
 
         split.setRightComponent(visualization);
     }
 
     private void initDragAndDrop() {
         DragSource dragSource = DragSource.getDefaultDragSource();
-        dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY_OR_MOVE, tree);
+        dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY, tree);
 
         visualization.setDropTarget(new DropTarget(visualization, visualization));
     }

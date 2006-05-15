@@ -56,6 +56,8 @@ public class VQuery {
         else {
             // Create a new statement for history and querying.
             statement = new VQueryStatement(history.peek());
+
+            System.out.println("STATEMENT: " + history.peek());
         }
 
         // Push the new statement onto the stack.
@@ -90,9 +92,22 @@ public class VQuery {
         history.pop();
     }
 
+    /**
+     * Returns whether the query history is empty
+     * or not.
+     *
+     * @return Whether the query history is empty
+     *         or not.
+     */
+    public boolean isEmpty() {
+        return history.isEmpty();
+    }
+
     private final class VQueryStatement {
 
         private VQueryStatement parent;
+
+        StringBuilder sql = new StringBuilder();
 
         private StringBuilder select;
         private StringBuilder from;
@@ -103,56 +118,59 @@ public class VQuery {
         private String lastTableName;
 
         private VQueryStatement() {
-            from = new StringBuilder(" FROM ");
-            where = new StringBuilder(" WHERE ");
-            group = new StringBuilder(" GROUP BY ");
-            order = new StringBuilder(" ORDER BY ");
-            select = new StringBuilder("SELECT " + cubeAttribute);
-            concatenation = new StringBuilder();
+            this.from = new StringBuilder(" FROM ");
+            this.where = new StringBuilder(" WHERE ");
+            this.group = new StringBuilder(" GROUP BY ");
+            this.order = new StringBuilder(" ORDER BY ");
+            this.select = new StringBuilder("SELECT " + cubeAttribute);
+            this.concatenation = new StringBuilder();
         }
 
         private VQueryStatement(VQueryStatement parent) {
+
+            System.out.println("PARENT: " + parent);
+
             this.parent = parent;
 
-            select = parent.select;
-            from = parent.from;
-            where = parent.where;
-            group = parent.group;
-            order = parent.order;
-            concatenation = parent.concatenation;
-            lastTableName = parent.lastTableName;
+            this.select = new StringBuilder(parent.select);
+            this.from = new StringBuilder(parent.from);
+            this.where = new StringBuilder(parent.where);
+            this.group = new StringBuilder(parent.group);
+            this.order = new StringBuilder(parent.order);
+            this.concatenation = new StringBuilder(parent.concatenation);
+            this.lastTableName = parent.lastTableName;
         }
 
         /**
-         * @param vDim
-         * @param bluep
+         * @param dimension
+         * @param blueprint
          * @return
          */
-        public String createChartQuery(VDimension vDim, VDimension bluep) {
+        public String createChartQuery(VDimension dimension, VDimension blueprint) {
 
-            String bluepName = bluep.getTableName();
-            String tableName = vDim.getTableName();
+            String bluepName = blueprint.getTableName();
+            String tableName = dimension.getTableName();
 
             if (history.size() <= 1) {
 
-                if (!vDim.equals(bluep)) {
+                if (!dimension.equals(blueprint)) {
 
                     from.append(cubeName).append(", ").append(tableName).append(", ").append(bluepName);
-                    where.append(tableName).append(".id = ").append(bluepName).append(".").append(vDim.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(bluep.getJoinable());
+                    where.append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getJoinable());
                 }
                 else {
                     from.append(cubeName).append(", ").append(tableName);
-                    where.append(tableName).append(".id = ").append(cubeName).append(".").append(vDim.getJoinable());
+                    where.append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getJoinable());
                 }
             }
             else {
-                if (!vDim.equals(bluep)) {
+                if (!dimension.equals(blueprint)) {
                     from.append(", ").append(bluepName).append(", ").append(tableName);
-                    where.append(" AND ").append(tableName).append(".id = ").append(bluepName).append(".").append(vDim.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(bluep.getJoinable());
+                    where.append(" AND ").append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getJoinable());
                 }
                 else {
                     from.append(", ").append(tableName);
-                    where.append(" AND ").append(tableName).append(".id = ").append(cubeName).append(".").append(vDim.getJoinable());
+                    where.append(" AND ").append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getJoinable());
                 }
                 group.append(", ");
                 order.append(", ");
@@ -173,7 +191,6 @@ public class VQuery {
 
             select.append(", ").append(tableName).append(".name");
 
-            StringBuilder sql = new StringBuilder();
             sql.append(select);
 
             if (concatenation.length() > 0) {
@@ -186,6 +203,10 @@ public class VQuery {
                 LOG.debug(sql.toString());
             }
 
+            return sql.toString();
+        }
+
+        public String toString() {
             return sql.toString();
         }
     }
