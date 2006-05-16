@@ -506,13 +506,4 @@ public class VGraph extends JGraph implements DropTargetListener {
     public void zoomOut() {
         this.setScale(zoomScale -= 0.05);
     }
-
-    /**
-     * Returns the complete JGraph.
-     *
-     * @return The complete JGraph.
-     */
-    public JGraph getGraph() {
-        return this;
-    }
 }
