@@ -146,7 +146,7 @@ public class VExplorer extends JFrame {
             }
         });
 
-        graph.getGraph().addMouseListener(new MouseAdapter() {
+        graph.addMouseListener(new MouseAdapter() {
 
             public void mousePressed(MouseEvent e) {
                 System.out.println("VExplorer.mousePressed");
@@ -160,13 +160,13 @@ public class VExplorer extends JFrame {
                 selection = new Rectangle((int) startSelection.getX(), (int) startSelection.getY(), (int) (endSelection.getX() - startSelection.getX()), (int) (endSelection.getY() - startSelection.getY()));
 
                 graphScrollPane.scrollRectToVisible(selection);
-                graph.getGraph().scrollRectToVisible(selection);
+                graph.scrollRectToVisible(selection);
 
                 graphScrollPane.revalidate();
 
                 //graph.getGraph().setScale(selection.getWidth() / graphScrollPane.getViewport().getSize().getWidth());
 
-                System.out.println("SIZE: "+ graphScrollPane.getViewport().getSize());
+                System.out.println("SIZE: " + graphScrollPane.getViewport().getSize());
                 System.out.println("selection = " + selection);
             }
         });
@@ -294,7 +294,7 @@ public class VExplorer extends JFrame {
 
     private void initVisualization() {
 
-        graphScrollPane = new JScrollPane(graph.getGraph());
+        graphScrollPane = new JScrollPane(graph);
 
         visualization.setBackground(Color.WHITE);
         visualization.add(graphScrollPane, BorderLayout.CENTER);
