@@ -2,6 +2,7 @@ package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VCube;
+import unikn.dbis.univis.meta.VDataReference;
 import unikn.dbis.univis.icon.VIconComponent;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.icon.VCubeFlagIcon;
@@ -54,6 +55,11 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
         if (value instanceof DefaultMutableTreeNode) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
             Object o = node.getUserObject();
+
+            if (o instanceof VDataReference) {
+                VDataReference dataReference = (VDataReference) o;
+                label.setEnabled(dataReference.isEnabled());
+            }
 
             if (o instanceof VDimension) {
                 VDimension dimension = (VDimension) o;

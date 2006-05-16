@@ -95,4 +95,22 @@ public interface VDataReference {
      * @param children
      */
     public void setChildren(Set<VDataReference> children);
+
+    /**
+     * Returns whether the data reference is enabled
+     * or not.
+     *
+     * @return Whether the data reference is enabled
+     * or not.
+     */
+    public boolean isEnabled();
+
+    /**
+     * Sets whether the data reference is enabled
+     * or not.
+     *
+     * @param enabled Whether the data reference is enabled
+     * or not.
+     */
+    public void setEnabled(boolean enabled);
 }

@@ -61,6 +61,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     // Different Objects for the graph.
     private GraphModel model = new DefaultGraphModel();
     private GraphLayoutCache cache = new GraphLayoutCache(model, new VCellViewFactory());
+    private JGraphFacade facade = new JGraphFacade(cache);
     private JGraphTreeLayout layout = new JGraphTreeLayout();
     private VGraphCell root = null;
 
@@ -91,6 +92,7 @@ public class VGraph extends JGraph implements DropTargetListener {
         new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
         this.setEditable(false);
         this.setMoveable(false);
+        layout.setOrientation(SwingConstants.NORTH);
     }
 
     /**
@@ -116,6 +118,8 @@ public class VGraph extends JGraph implements DropTargetListener {
         // Add a Floating Port
         cell.addPort(new Point2D.Double(500, 0));
         cell.addPort(new Point2D.Double(500, 1000));
+        cell.addPort(new Point2D.Double(0, 500));
+        cell.addPort(new Point2D.Double(1000, 500));
 
         return cell;
     }
@@ -126,8 +130,14 @@ public class VGraph extends JGraph implements DropTargetListener {
      */
     public void createEdges(VGraphCell source, VGraphCell target) {
         DefaultEdge edge = new DefaultEdge();
+        if (layout.getOrientation() == SwingConstants.NORTH) {
         edge.setSource(source.getChildAt(1));
         edge.setTarget(target.getChildAt(0));
+        }
+        else {
+            edge.setSource(source.getChildAt(3));
+            edge.setTarget(target.getChildAt(2));
+        }
         GraphConstants.setLineEnd(edge.getAttributes(), GraphConstants.ARROW_CLASSIC);
         GraphConstants.setEndFill(edge.getAttributes(), true);
         cache.insert(edge);
@@ -165,7 +175,6 @@ public class VGraph extends JGraph implements DropTargetListener {
     public void fillChartData(ResultSet result) throws SQLException {
 
         layout.setAlignment(SwingConstants.CENTER);
-        layout.setOrientation(SwingConstants.NORTH);
 
         ResultSetMetaData data = result.getMetaData();
         int idPos = data.getColumnCount();
@@ -240,7 +249,6 @@ public class VGraph extends JGraph implements DropTargetListener {
                 }
             }
         }
-        JGraphFacade facade = new JGraphFacade(cache);
         layout.run(facade);
         Map nested = facade.createNestedMap(true, true);
         cache.edit(nested);
@@ -253,14 +261,27 @@ public class VGraph extends JGraph implements DropTargetListener {
     public void connection(VDimension vDim) throws SQLException {
 
         Connection connection = VExplorer.getConnection();
+
         Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
         VDimension bluep = searchBluep(vDim);
 
-        ResultSet result = stmt.executeQuery(queryHistory.createChartQuery(vDim, bluep));
-        rootHeadLine = vDim.getI18nKey();
-        fillChartData(result);
-        connection.close();
+        String sql = queryHistory.createChartQuery(vDim, bluep);
+
+        ResultSet result;
+        try {
+            result = stmt.executeQuery(sql);
+
+            rootHeadLine = vDim.getI18nKey();
+            fillChartData(result);
+        }
+        catch (SQLException sqle) {
+            queryHistory.historyBack();
+            VExplorer.publishException(sqle);
+            if (LOG.isErrorEnabled()) {
+                LOG.error(sqle.getMessage(), sqle);
+            }
+        }
     }
 
     /**
@@ -322,12 +343,14 @@ public class VGraph extends JGraph implements DropTargetListener {
         }
         catch (UnsupportedFlavorException ufe) {
             dtde.rejectDrop();
+            dtde.dropComplete(false);
             if (LOG.isErrorEnabled()) {
                 LOG.error(ufe.getMessage(), ufe);
             }
         }
         catch (IOException ioe) {
             dtde.rejectDrop();
+            dtde.dropComplete(false);
             if (LOG.isErrorEnabled()) {
                 LOG.error(ioe.getMessage(), ioe);
             }
@@ -340,12 +363,14 @@ public class VGraph extends JGraph implements DropTargetListener {
             }
             catch (SQLException sqle) {
                 dtde.rejectDrop();
+                dtde.dropComplete(false);
                 if (LOG.isErrorEnabled()) {
                     LOG.error(sqle.getMessage(), sqle);
                 }
             }
         }
 
+        dtde.acceptDrop(dtde.getDropAction());
         dtde.dropComplete(true);
     }
 
@@ -495,6 +520,15 @@ public class VGraph extends JGraph implements DropTargetListener {
         if (queryHistory.isEmpty()) {
             isRoot = true;
         }
+
+        reloadGraph();
+
+    }
+
+    public void reloadGraph() {
+        layout.run(facade);
+        Map nested = facade.createNestedMap(true, true);
+        cache.edit(nested);
     }
 
     private double zoomScale = 1.0;
@@ -505,5 +539,13 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void zoomOut() {
         this.setScale(zoomScale -= 0.05);
+    }
+
+    public void setLayoutOrientation(int orientation) {
+        layout.setOrientation(orientation);
+    }
+
+    public int getLayoutOrientation() {
+        return layout.getOrientation();
     }
 }

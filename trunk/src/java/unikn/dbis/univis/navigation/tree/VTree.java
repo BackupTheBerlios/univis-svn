@@ -6,6 +6,7 @@ import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.dialect.UniVisDialect;
+import unikn.dbis.univis.hibernate.util.HibernateUtil;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -19,13 +20,9 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 
-import org.hibernate.sql.Select;
 import org.hibernate.sql.QuerySelect;
 import org.hibernate.sql.JoinFragment;
-import org.hibernate.dialect.PostgreSQLDialect;
-import org.hibernate.mapping.Join;
 
 /**
  * TODO: document me!!!
@@ -57,7 +54,6 @@ public class VTree extends JTree implements DragGestureListener {
         setCellRenderer(renderer);
         setCellEditor(new VTreeCellEditor(renderer));
         setEditable(true);
-        setDragEnabled(true);
 
         addMouseListener(new MouseAdapter() {
             /**
@@ -74,8 +70,7 @@ public class VTree extends JTree implements DragGestureListener {
 
     public void showPopupMenu(int x, int y) {
 
-        Select select = new Select(new PostgreSQLDialect());
-        QuerySelect querySelect = new QuerySelect(new PostgreSQLDialect());
+        QuerySelect querySelect = new QuerySelect(HibernateUtil.getDialect());
 
         final JPopupMenu popupMenu = new JPopupMenu();
 
@@ -202,7 +197,7 @@ public class VTree extends JTree implements DragGestureListener {
                         else {
                             where.append("(");
                         }
-                        where.append(tableName + ".parent = ").append(selection);
+                        where.append(tableName).append(".parent = ").append(selection);
                     }
 
                     if (appended) {
@@ -238,7 +233,6 @@ public class VTree extends JTree implements DragGestureListener {
      * @param dge the <code>DragGestureEvent</code> describing
      *            the gesture that has just occurred
      */
-
     public void dragGestureRecognized(DragGestureEvent dge) {
         dge.startDrag(DragSource.DefaultMoveDrop, new Transferable() {
             /**
@@ -273,14 +267,12 @@ public class VTree extends JTree implements DragGestureListener {
              * of the object returned is defined by the representation class of the flavor.
              *
              * @param flavor the requested flavor for the data
-             * @throws java.io.IOException if the data is no longer available
-             *                             in the requested flavor.
              * @throws java.awt.datatransfer.UnsupportedFlavorException
              *                             if the requested data flavor is
              *                             not supported.
              * @see java.awt.datatransfer.DataFlavor#getRepresentationClass
              */
-            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
 
                 if (VDataReferenceFlavor.DIMENSION_FLAVOR.match(flavor)) {
                     Object o = getLastSelectedPathComponent();

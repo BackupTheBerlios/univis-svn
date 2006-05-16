@@ -2,6 +2,7 @@ package unikn.dbis.univis.hibernate.util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.HibernateException;
+import org.hibernate.dialect.Dialect;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,12 +27,15 @@ public class HibernateUtil {
     // or exceptions.
     public static final transient Log LOG = LogFactory.getLog(HibernateUtil.class);
 
-    public static final SessionFactory sessionFactory;
+    private static final Configuration cfg;
+
+    private static final SessionFactory sessionFactory;
 
     static {
         // Create the SessionFactory from the hibernate.cfg.xml
         try {
-            sessionFactory = new Configuration().configure().buildSessionFactory();
+            cfg = new Configuration().configure();
+            sessionFactory = cfg.buildSessionFactory();
         }
         catch (HibernateException he) {
 
@@ -40,6 +44,10 @@ public class HibernateUtil {
 
             throw new ExceptionInInitializerError(he);
         }
+    }
+
+    public static Dialect getDialect() {
+        return cfg.buildSettings().getDialect();
     }
 
     public static SessionFactory getSessionFactory() {

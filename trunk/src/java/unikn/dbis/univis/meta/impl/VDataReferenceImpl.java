@@ -47,6 +47,9 @@ public abstract class VDataReferenceImpl implements VDataReference {
     // TODO: document me!!!
     private Set<VDataReference> children;
 
+    // Whether the data reference is enabled or not.
+    private boolean enabled = true;
+
     /**
      * Returns the identifier of the data reference
      * object.
@@ -165,6 +168,28 @@ public abstract class VDataReferenceImpl implements VDataReference {
      */
     public void setChildren(Set<VDataReference> children) {
         this.children = children;
+    }
+
+    /**
+     * Returns whether the data reference is enabled
+     * or not.
+     *
+     * @return Whether the data reference is enabled
+     *         or not.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Sets whether the data reference is enabled
+     * or not.
+     *
+     * @param enabled Whether the data reference is enabled
+     *                or not.
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**

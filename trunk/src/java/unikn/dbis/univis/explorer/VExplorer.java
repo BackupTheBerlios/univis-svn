@@ -59,7 +59,8 @@ public class VExplorer extends JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new VExplorer().setVisible(true);
+                    explorer = new VExplorer();
+                    explorer.setVisible(true);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -68,13 +69,16 @@ public class VExplorer extends JFrame {
         });
     }
 
+    private static VExplorer explorer;
+
     private static Connection connection;
 
-    static {
-        connection = HibernateUtil.getSessionFactory().openSession().connection();
-    }
+    public static Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = HibernateUtil.getSessionFactory().openSession().connection();
+        }
+        connection.commit();
 
-    public static Connection getConnection() {
         return connection;
     }
 
@@ -162,7 +166,8 @@ public class VExplorer extends JFrame {
                 graphScrollPane.scrollRectToVisible(selection);
                 graph.scrollRectToVisible(selection);
 
-                graphScrollPane.revalidate();
+                graphScrollPane.getViewport().setViewPosition(selection.getLocation());
+                graphScrollPane.repaint();
 
                 //graph.getGraph().setScale(selection.getWidth() / graphScrollPane.getViewport().getSize().getWidth());
 
@@ -221,6 +226,7 @@ public class VExplorer extends JFrame {
         JButton exit = new JButton(VIcons.EXIT);
         JButton zoomIn = new JButton("ZOOM_IN");
         JButton zoomOut = new JButton("ZOOM_OUT");
+        JButton layout  = new JButton("Layout");
 
         zoomIn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -231,6 +237,18 @@ public class VExplorer extends JFrame {
         zoomOut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 graph.zoomOut();
+            }
+        });
+
+        layout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (graph.getLayoutOrientation() == SwingConstants.NORTH) {
+                    graph.setLayoutOrientation(SwingConstants.WEST);
+                }
+                else {
+                    graph.setLayoutOrientation(SwingConstants.NORTH);
+                }
+                graph.reloadGraph();
             }
         });
 
@@ -263,6 +281,7 @@ public class VExplorer extends JFrame {
         toolbar.add(exit);
         toolbar.add(zoomIn);
         toolbar.add(zoomOut);
+        toolbar.add(layout);
     }
 
     private void initNavigation() {
@@ -306,6 +325,10 @@ public class VExplorer extends JFrame {
         DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY, tree);
 
-        visualization.setDropTarget(new DropTarget(visualization, visualization));
+        graph.setDropTarget(new DropTarget(graph, graph));
+    }
+
+    public static void publishException(Exception e) {
+        JOptionPane.showMessageDialog(explorer, e.getMessage(), "Exception: " + e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
     }
 }
