@@ -52,14 +52,13 @@ import com.jgraph.layout.tree.JGraphTreeLayout;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VGraph implements DropTargetListener {
+public class VGraph extends JGraph implements DropTargetListener {
 
     // The logger to log info, error and other occuring messages
     // or exceptions.
     public static final transient Log LOG = LogFactory.getLog(VGraph.class);
 
     // Different Objects for the graph.
-    private JGraph graph = new JGraph();
     private GraphModel model = new DefaultGraphModel();
     private GraphLayoutCache cache = new GraphLayoutCache(model, new VCellViewFactory());
     private JGraphTreeLayout layout = new JGraphTreeLayout();
@@ -87,11 +86,11 @@ public class VGraph implements DropTargetListener {
      * Standard Constructor
      */
     public VGraph() {
-        graph.setModel(model);
-        graph.setGraphLayoutCache(cache);
-        new DropTarget(graph, DnDConstants.ACTION_COPY_OR_MOVE, this);
-        graph.setEditable(false);
-        graph.setMoveable(false);
+        this.setModel(model);
+        this.setGraphLayoutCache(cache);
+        new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
+        this.setEditable(false);
+        this.setMoveable(false);
     }
 
     /**
@@ -501,11 +500,11 @@ public class VGraph implements DropTargetListener {
     private double zoomScale = 1.0;
 
     public void zoomIn() {
-        graph.setScale(zoomScale += 0.05);
+        this.setScale(zoomScale += 0.05);
     }
 
     public void zoomOut() {
-        graph.setScale(zoomScale -= 0.05);
+        this.setScale(zoomScale -= 0.05);
     }
 
     /**
@@ -514,6 +513,6 @@ public class VGraph implements DropTargetListener {
      * @return The complete JGraph.
      */
     public JGraph getGraph() {
-        return graph;
+        return this;
     }
 }
