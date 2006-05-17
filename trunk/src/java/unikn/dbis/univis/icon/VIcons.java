@@ -31,4 +31,7 @@ public class VIcons {
     public static final Icon EXIT = new ImageIcon(VIcons.class.getResource("../images/exit.png"));
     public static final Icon CHART = new ImageIcon(VIcons.class.getResource("../images/chart.png"));
     public static final Icon MEASURE = new ImageIcon(VIcons.class.getResource("../images/measure.png"));
+    public static final Icon ZOOM_IN = new ImageIcon(VIcons.class.getResource("../images/zoom_in.png"));
+    public static final Icon ZOOM_OUT = new ImageIcon(VIcons.class.getResource("../images/zoom_out.png"));
+    public static final Icon LAYOUT = new ImageIcon(VIcons.class.getResource("../images/layout.png"));
 }
