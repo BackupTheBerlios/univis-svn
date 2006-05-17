@@ -24,7 +24,6 @@ import java.sql.SQLException;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-import org.hibernate.connection.ConnectionProviderFactory;
 import org.jgraph.graph.GraphLayoutCache;
 
 /**
@@ -101,6 +100,7 @@ public class VExplorer extends JFrame {
 
     private JPopupMenu chartsMenu = new JPopupMenu();
     private JPopupMenu measuresMenu = new JPopupMenu();
+    private JPopupMenu languageMenu = new JPopupMenu();
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -225,8 +225,9 @@ public class VExplorer extends JFrame {
         final JButton undo = new JButton(VIcons.UNDO);
         JButton redo = new JButton(VIcons.REDO);
         JButton delete = new JButton(VIcons.DELETE);
-        final JButton chartsButton = new JButton(VIcons.CHART);
-        final JButton measureButton = new JButton(VIcons.MEASURE);
+        final JButton charts = new JButton(VIcons.CHART);
+        final JButton measure = new JButton(VIcons.MEASURE);
+        final JButton language = new JButton(VIcons.WORLD);
         JButton exit = new JButton(VIcons.EXIT);
         JButton zoomIn = new JButton(VIcons.ZOOM_IN);
         JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
@@ -234,18 +235,26 @@ public class VExplorer extends JFrame {
 
         makeChartsMenu();
         makeMeasuresMenu();
+        makeLanguageMenu();
 
-        chartsButton.addMouseListener(new MouseAdapter() {
+        charts.addMouseListener(new MouseAdapter() {
 
             public void mouseClicked(MouseEvent evt) {
-                chartsMenu.show(chartsButton, 0, chartsButton.getHeight());
+                chartsMenu.show(charts, 0, charts.getHeight());
             }
         });
 
-        measureButton.addMouseListener(new MouseAdapter() {
+        measure.addMouseListener(new MouseAdapter() {
 
             public void mouseClicked(MouseEvent evt) {
-                measuresMenu.show(measureButton, 0, measureButton.getHeight());
+                measuresMenu.show(measure, 0, measure.getHeight());
+            }
+        });
+
+        language.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent evt) {
+                languageMenu.show(language, 0, language.getHeight());
             }
         });
 
@@ -307,28 +316,37 @@ public class VExplorer extends JFrame {
 
         toolbar.add(redo);
         toolbar.add(delete);
-        toolbar.add(chartsButton);
-        toolbar.add(measureButton);
-        toolbar.add(exit);
+        toolbar.addSeparator();
+        toolbar.add(charts);
+        toolbar.add(measure);
+        toolbar.add(language);
+        toolbar.addSeparator();
         toolbar.add(zoomIn);
         toolbar.add(zoomOut);
         toolbar.add(layout);
+        toolbar.addSeparator();
+        toolbar.add(exit);
     }
 
     private void makeChartsMenu() {
 
-        JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
+        JCheckBoxMenuItem barChart1 = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART1);
+        JCheckBoxMenuItem barChart2 = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART2);
         JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
 
-        makeActionListenerCharts(barChart, "barChart");
-        makeActionListenerCharts(pieChart, "pieChart");
+        makeActionListenerCharts(barChart1, "barChart", "Vertical");
+        makeActionListenerCharts(barChart2, "barChart", "Horizontal");
+        makeActionListenerCharts(pieChart, "pieChart", "");
         ButtonGroup charts = new ButtonGroup();
-        barChart.setState(true);
+        barChart1.setState(true);
+        barChart2.setState(false);
         pieChart.setState(false);
-        charts.add(barChart);
+        charts.add(barChart1);
+        charts.add(barChart2);
         charts.add(pieChart);
 
-        chartsMenu.add(barChart);
+        chartsMenu.add(barChart1);
+        chartsMenu.add(barChart2);
         chartsMenu.add(pieChart);
     }
 
@@ -355,6 +373,33 @@ public class VExplorer extends JFrame {
         measuresMenu.add(amount);
     }
 
+    private void makeLanguageMenu() {
+
+        JCheckBoxMenuItem german = new JCheckBoxMenuItem("German", VIcons.GERMAN);
+        JCheckBoxMenuItem english = new JCheckBoxMenuItem("English", VIcons.ENGLISH);
+
+        german.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO: Sprache ändern
+            }
+        });
+
+        english.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO: Sprache ändern
+            }
+        });
+
+        ButtonGroup languageGroup = new ButtonGroup();
+        german.setState(true);
+        english.setState(false);
+        languageGroup.add(german);
+        languageGroup.add(english);
+
+        languageMenu.add(german);
+        languageMenu.add(english);
+    }
+
     private void initNavigation() {
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -372,12 +417,8 @@ public class VExplorer extends JFrame {
 
         session.close();
 
-        JPanel measures = new JPanel(/*new GridLayout(?, ?)*/);
-        measures.add(new JLabel("MEASURES not yet defined"));
-
         navigation.add(facts, BorderLayout.NORTH);
         navigation.add(new JScrollPane(tree), BorderLayout.CENTER);
-        navigation.add(measures, BorderLayout.SOUTH);
 
         split.setLeftComponent(navigation);
     }
@@ -427,11 +468,12 @@ public class VExplorer extends JFrame {
      * @param checkBoxMenuItem Item which gets the Listener.
      * @param chartName        String which is need to set.
      */
-    public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final String chartName) {
+    public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final String chartName, final String barChartOrientation) {
 
         checkBoxMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 graph.setChartCheck(chartName);
+                graph.setBarChartOrientation(barChartOrientation);
             }
         });
     }

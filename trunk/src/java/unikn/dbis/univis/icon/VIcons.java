@@ -37,4 +37,5 @@ public class VIcons {
     public static final Icon LAYOUT = new ImageIcon(VIcons.class.getResource("../images/layout.png"));
     public static final Icon GERMAN = new ImageIcon(VIcons.class.getResource("../images/ger.png"));
     public static final Icon ENGLISH = new ImageIcon(VIcons.class.getResource("../images/uk.png"));
+    public static final Icon WORLD = new ImageIcon(VIcons.class.getResource("../images/world.png"));
 }

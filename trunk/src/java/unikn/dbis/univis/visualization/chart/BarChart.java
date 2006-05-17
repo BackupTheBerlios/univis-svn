@@ -28,6 +28,9 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
     // Description of the xAxis.
     private String xAxis;
 
+    // Orientation of the BarChart.
+    private String barChartOrientation;
+
     // Total amount of the chart.
     private Integer total;
 
@@ -38,16 +41,23 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
      * @param chartName Headline of the chart.
      * @param dataset   Dataset of the Chart.
      */
-    public BarChart(String chartName, CategoryDataset dataset, String xAxis) {
+    public BarChart(String chartName, CategoryDataset dataset, String xAxis, String barChartOrientation) {
         super(chartName, dataset);
         this.xAxis = xAxis;
+        this.barChartOrientation = barChartOrientation;
     }
 
     /**
      * @return JFreeChart as BarChart3D.
      */
     protected JFreeChart createChart() {
-        return ChartFactory.createBarChart3D(getChartName(), "", xAxis, getDataset(), PlotOrientation.HORIZONTAL, true, false, false);
+        if (barChartOrientation.equals("Horizontal")) {
+
+            return ChartFactory.createBarChart3D(getChartName(), "", xAxis, getDataset(), PlotOrientation.HORIZONTAL, true, false, false);
+        }
+        else {
+            return ChartFactory.createBarChart3D(getChartName(), "", xAxis, getDataset(), PlotOrientation.VERTICAL, true, false, false);
+        }
     }
 
     /**

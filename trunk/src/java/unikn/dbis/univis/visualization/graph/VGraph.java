@@ -74,6 +74,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     private String chartCheck = "barChart";
     private String rootHeadLine = "";
     private String xAxis = "Studenten";
+    private String barChartOrientation = "Vertical";
     private boolean isRoot = true;
 
     // Int values for different topics.
@@ -104,7 +105,7 @@ public class VGraph extends JGraph implements DropTargetListener {
 
         AbstractChart chart;
         if (chartCheck.equals("barChart")) {
-            chart = new BarChart(chartName, (CategoryDataset) dataset, xAxis);
+            chart = new BarChart(chartName, (CategoryDataset) dataset, xAxis, barChartOrientation);
         }
         else {
             chart = new PieChart(chartName, (PieDataset) dataset);
@@ -427,5 +428,9 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public void setRoot(boolean root) {
         isRoot = root;
+    }
+
+    public void setBarChartOrientation(String barChartOrientation) {
+        this.barChartOrientation = barChartOrientation;
     }
 }
