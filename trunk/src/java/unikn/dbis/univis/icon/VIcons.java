@@ -23,7 +23,8 @@ public class VIcons {
     public static final Icon REDO = new ImageIcon(VIcons.class.getResource("../images/redo.png"));
     public static final Icon DELETE = new ImageIcon(VIcons.class.getResource("../images/delete.png"));
     public static final Icon FUNNEL = new ImageIcon(VIcons.class.getResource("../images/funnel.png"));
-    public static final Icon BARCHART = new ImageIcon(VIcons.class.getResource("../images/barChart.png"));
+    public static final Icon BARCHART1 = new ImageIcon(VIcons.class.getResource("../images/barChart.png"));
+    public static final Icon BARCHART2 = new ImageIcon(VIcons.class.getResource("../images/barChart2.png"));
     public static final Icon PIECHART = new ImageIcon(VIcons.class.getResource("../images/pieChart.png"));
     public static final Icon USERK = new ImageIcon(VIcons.class.getResource("../images/userf.png"));
     public static final Icon USERF = new ImageIcon(VIcons.class.getResource("../images/userk.png"));
@@ -34,4 +35,6 @@ public class VIcons {
     public static final Icon ZOOM_IN = new ImageIcon(VIcons.class.getResource("../images/zoom_in.png"));
     public static final Icon ZOOM_OUT = new ImageIcon(VIcons.class.getResource("../images/zoom_out.png"));
     public static final Icon LAYOUT = new ImageIcon(VIcons.class.getResource("../images/layout.png"));
+    public static final Icon GERMAN = new ImageIcon(VIcons.class.getResource("../images/ger.png"));
+    public static final Icon ENGLISH = new ImageIcon(VIcons.class.getResource("../images/uk.png"));
 }
