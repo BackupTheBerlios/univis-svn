@@ -83,13 +83,15 @@ public class VGraph extends JGraph implements DropTargetListener {
     // exploring.
     private VQuery queryHistory = new VQuery();
 
+
     /**
      * Standard Constructor
      */
     public VGraph() {
+
+        new DropTarget(this, DnDConstants.ACTION_COPY, this);
         this.setModel(model);
         this.setGraphLayoutCache(cache);
-        new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
         this.setEditable(false);
         this.setMoveable(false);
         layout.setOrientation(SwingConstants.NORTH);
@@ -131,8 +133,8 @@ public class VGraph extends JGraph implements DropTargetListener {
     public void createEdges(VGraphCell source, VGraphCell target) {
         DefaultEdge edge = new DefaultEdge();
         if (layout.getOrientation() == SwingConstants.NORTH) {
-        edge.setSource(source.getChildAt(1));
-        edge.setTarget(target.getChildAt(0));
+            edge.setSource(source.getChildAt(1));
+            edge.setTarget(target.getChildAt(0));
         }
         else {
             edge.setSource(source.getChildAt(3));
@@ -306,28 +308,24 @@ public class VGraph extends JGraph implements DropTargetListener {
      * @param dtde
      */
     public void dragEnter(DropTargetDragEvent dtde) {
-
     }
 
     /**
      * @param dtde
      */
     public void dragOver(DropTargetDragEvent dtde) {
-
     }
 
     /**
      * @param dtde
      */
     public void dropActionChanged(DropTargetDragEvent dtde) {
-
     }
 
     /**
      * @param dte
      */
     public void dragExit(DropTargetEvent dte) {
-
     }
 
     /**
@@ -337,6 +335,7 @@ public class VGraph extends JGraph implements DropTargetListener {
      * @param dtde The drop target event.
      */
     public void drop(DropTargetDropEvent dtde) {
+
         Object o = null;
         try {
             o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
@@ -359,6 +358,7 @@ public class VGraph extends JGraph implements DropTargetListener {
             VDimension vDim = (VDimension) o;
 
             try {
+                dtde.acceptDrop(DnDConstants.ACTION_COPY);
                 connection(vDim);
             }
             catch (SQLException sqle) {
@@ -369,147 +369,7 @@ public class VGraph extends JGraph implements DropTargetListener {
                 }
             }
         }
-
-        dtde.acceptDrop(dtde.getDropAction());
         dtde.dropComplete(true);
-    }
-
-    /**
-     * @param checkBoxMenuItem Item which gets the Listener.
-     * @param chartName        String which is need to set.
-     */
-    public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final String chartName) {
-
-        checkBoxMenuItem.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(checkBoxMenuItem)) {
-                    chartCheck = chartName;
-                }
-            }
-        });
-    }
-
-    /**
-     * @param checkBoxMenuItem Item which gets the Listener.
-     * @param cube             String which is need to set.
-     * @param measureName      String which is need to set.
-     */
-    public void makeActionListenerMeasures(final JCheckBoxMenuItem checkBoxMenuItem, final String cube, final String measureName, final String xAxisName) {
-
-        checkBoxMenuItem.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(checkBoxMenuItem)) {
-
-                    queryHistory.setCubeAttribute(measureName);
-                    queryHistory.setCubeName(cube);
-                    xAxis = xAxisName;
-                }
-            }
-        });
-    }
-
-    /**
-     * Returns the DeleteButton for deleting the whole graph.
-     *
-     * @return The DeleteButton.
-     */
-    public JButton createDeleteButton() {
-
-        final JButton delete = new JButton(VIcons.DELETE);
-
-        delete.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(delete)) {
-
-                    cache.remove(cache.getCells(true, true, true, true), true, true);
-                    isRoot = true;
-                    queryHistory.reset();
-                }
-            }
-        });
-
-        return delete;
-    }
-
-
-    /**
-     * Returns the Chartsbutton for choosing the sort of the chart.
-     *
-     * @return The ChartsButton.
-     */
-    public JButton createChartsButton() {
-        final JButton chartsButton = new JButton(VIcons.CHART);
-
-        final JPopupMenu pop = new JPopupMenu();
-
-        JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
-        JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
-
-        makeActionListenerCharts(barChart, "barChart");
-        makeActionListenerCharts(pieChart, "pieChart");
-        ButtonGroup charts = new ButtonGroup();
-        barChart.setState(true);
-        pieChart.setState(false);
-        charts.add(barChart);
-        charts.add(pieChart);
-
-        pop.add(barChart);
-        pop.add(pieChart);
-
-        chartsButton.addMouseListener(new MouseAdapter() {
-
-            public void mouseClicked(MouseEvent evt) {
-                pop.show(chartsButton, 0, chartsButton.getHeight());
-            }
-
-        });
-
-        return chartsButton;
-    }
-
-
-    /**
-     * Returns the MeasureButton for selecting the measure.
-     *
-     * @return MeasureButton for selectin the measure.
-     */
-    public JButton createMeasureButton() {
-        final JButton measureButton = new JButton(VIcons.MEASURE);
-
-        final JPopupMenu pop = new JPopupMenu();
-
-        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("Koepfe (Studenten)", VIcons.USERK);
-        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("Faelle (Studenten)", VIcons.USERF);
-        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("Betrag (Kosten)", VIcons.EURO);
-
-        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe)", "Studenten");
-        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
-        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Betraege");
-
-        ButtonGroup measuresGroup = new ButtonGroup();
-        heads.setState(true);
-        cases.setState(false);
-        amount.setState(false);
-        measuresGroup.add(heads);
-        measuresGroup.add(cases);
-        measuresGroup.add(amount);
-
-        measureButton.addMouseListener(new MouseAdapter() {
-
-            public void mouseClicked(MouseEvent evt) {
-                pop.show(measureButton, 0, measureButton.getHeight());
-            }
-
-        });
-
-        pop.add(heads);
-        pop.add(cases);
-        pop.add(amount);
-
-        return measureButton;
     }
 
     public void undoCells() {
@@ -547,5 +407,25 @@ public class VGraph extends JGraph implements DropTargetListener {
 
     public int getLayoutOrientation() {
         return layout.getOrientation();
+    }
+
+    public VQuery getQueryHistory() {
+        return queryHistory;
+    }
+
+    public VHistoryList<VGraphCell> getCellHistory() {
+        return cellHistory;
+    }
+
+    public void setxAxis(String xAxis) {
+        this.xAxis = xAxis;
+    }
+
+    public void setChartCheck(String chartCheck) {
+        this.chartCheck = chartCheck;
+    }
+
+    public void setRoot(boolean root) {
+        isRoot = root;
     }
 }
