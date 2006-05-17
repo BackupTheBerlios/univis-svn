@@ -51,4 +51,9 @@ public class VHistoryList<T> {
     public void historyBack() {
         current = history.remove(history.size() - 1);
     }
+
+    public void reset() {
+        current.clear();
+        history.clear();
+    }
 }
