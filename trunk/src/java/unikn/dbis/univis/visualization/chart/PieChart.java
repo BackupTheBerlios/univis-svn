@@ -77,4 +77,8 @@ public class PieChart extends AbstractChart<PieDataset> implements Renderable {
         plot.setLabelGenerator(null);
         plot.setLegendLabelGenerator(new LabelGenerator(createTotal()));
     }
+
+    protected int numberValues() {
+        return getDataset().getItemCount();
+    }
 }

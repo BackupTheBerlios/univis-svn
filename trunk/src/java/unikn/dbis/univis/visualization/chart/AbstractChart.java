@@ -128,6 +128,10 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
 
         plot();
 
+        if (numberValues() >= 25) {
+            chart.removeLegend();
+        }
+
         return new ChartPanel(chart);
     }
 
@@ -144,6 +148,9 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
      * @return Total amount of the chart.
      */
     protected abstract int createTotal();
+
+
+    protected abstract int numberValues();
 
     /**
      * Makes the plot.

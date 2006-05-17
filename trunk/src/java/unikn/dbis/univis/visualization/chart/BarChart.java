@@ -92,4 +92,8 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
         plot.getDomainAxis().setLabelFont(getLegendFont());
         plot.getRangeAxis().setLabelFont(getLegendFont());
     }
+
+    protected int numberValues() {
+        return getDataset().getRowCount();
+    }
 }
