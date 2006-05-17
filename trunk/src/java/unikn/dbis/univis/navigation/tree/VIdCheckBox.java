@@ -26,7 +26,7 @@ import java.beans.PropertyChangeEvent;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VIdCheckBox extends JCheckBox {
+public class VIdCheckBox extends JCheckBoxMenuItem {
 
     private VDimension dimension;
 

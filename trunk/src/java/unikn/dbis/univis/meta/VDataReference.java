@@ -101,7 +101,7 @@ public interface VDataReference {
      * or not.
      *
      * @return Whether the data reference is enabled
-     * or not.
+     *         or not.
      */
     public boolean isEnabled();
 
@@ -110,7 +110,16 @@ public interface VDataReference {
      * or not.
      *
      * @param enabled Whether the data reference is enabled
-     * or not.
+     *                or not.
      */
     public void setEnabled(boolean enabled);
+
+    /**
+     * Returns the name that will be shown as tree label or
+     * anywhere else on the frontend.
+     *
+     * @return The label that will be displayed on the
+     * frontend.
+     */
+    public String toString();
 }

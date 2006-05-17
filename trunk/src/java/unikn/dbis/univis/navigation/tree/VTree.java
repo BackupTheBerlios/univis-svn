@@ -121,7 +121,7 @@ public class VTree extends JTree implements DragGestureListener {
                         JOptionPane.showMessageDialog(VTree.this.getParent().getParent().getParent(), "No items found.", "Error message", JOptionPane.INFORMATION_MESSAGE);
                     }
                     else {
-                        JButton view = new JButton(VIcons.VIEW);
+                        JMenuItem view = new JMenuItem("Filter", VIcons.VIEW);
                         view.addActionListener(new ActionListener() {
                             /**
                              * Invoked when an action occurs.
@@ -131,7 +131,7 @@ public class VTree extends JTree implements DragGestureListener {
                             }
                         });
 
-                        //popupMenu.add(view);
+                        popupMenu.add(view);
 
                         popupMenu.show(VTree.this, x, y);
                     }

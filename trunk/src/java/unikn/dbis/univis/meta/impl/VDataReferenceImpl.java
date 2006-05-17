@@ -1,6 +1,7 @@
 package unikn.dbis.univis.meta.impl;
 
 import unikn.dbis.univis.meta.VDataReference;
+import unikn.dbis.univis.message.MessageResolver;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -193,18 +194,14 @@ public abstract class VDataReferenceImpl implements VDataReference {
     }
 
     /**
-     * Returns the name that should be shown in the tree
-     * or anything else.
+     * Returns the name that will be shown as tree label or
+     * anywhere else on the frontend.
      *
-     * @return The name that should be shown.
+     * @return The label that will be displayed on the
+     * frontend.
      */
     @Override
     public String toString() {
-
-        if (getI18nKey() == null) {
-            return super.toString();
-        }
-
-        return getI18nKey();
+        return MessageResolver.getMessage(getI18nKey());
     }
 }

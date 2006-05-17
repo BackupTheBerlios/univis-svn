@@ -11,6 +11,7 @@ import unikn.dbis.univis.icon.VCubeIcon;
 import unikn.dbis.univis.util.ComponentUtilities;
 import unikn.dbis.univis.visualization.VVisualization;
 import unikn.dbis.univis.visualization.graph.VGraph;
+import unikn.dbis.univis.message.MessageResolver;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -19,6 +20,7 @@ import java.awt.dnd.DragSource;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.util.List;
+import java.util.Locale;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -380,13 +382,15 @@ public class VExplorer extends JFrame {
 
         german.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: Sprache ändern
+                MessageResolver.setLocale(Locale.GERMAN);
+                ComponentUtilities.repaintComponentTree(VExplorer.this);
             }
         });
 
         english.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: Sprache ändern
+                MessageResolver.setLocale(Locale.ENGLISH);
+                ComponentUtilities.repaintComponentTree(VExplorer.this);
             }
         });
 
