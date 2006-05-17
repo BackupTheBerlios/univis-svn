@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.connection.ConnectionProviderFactory;
+import org.jgraph.graph.GraphLayoutCache;
 
 /**
  * TODO: document me!!!
@@ -97,6 +98,9 @@ public class VExplorer extends JFrame {
     private Point startSelection;
     private Point endSelection;
     private Rectangle selection;
+
+    private JPopupMenu chartsMenu = new JPopupMenu();
+    private JPopupMenu measuresMenu = new JPopupMenu();
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -220,13 +224,40 @@ public class VExplorer extends JFrame {
 
         final JButton undo = new JButton(VIcons.UNDO);
         JButton redo = new JButton(VIcons.REDO);
-        JButton delete = graph.createDeleteButton();
-        JButton chartsButton = graph.createChartsButton();
-        JButton measureButton = graph.createMeasureButton();
+        JButton delete = new JButton(VIcons.DELETE);
+        final JButton chartsButton = new JButton(VIcons.CHART);
+        final JButton measureButton = new JButton(VIcons.MEASURE);
         JButton exit = new JButton(VIcons.EXIT);
-        JButton zoomIn = new JButton("ZOOM_IN");
-        JButton zoomOut = new JButton("ZOOM_OUT");
-        JButton layout  = new JButton("Layout");
+        JButton zoomIn = new JButton(VIcons.ZOOM_IN);
+        JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
+        JButton layout = new JButton(VIcons.LAYOUT);
+
+        makeChartsMenu();
+        makeMeasuresMenu();
+
+        chartsButton.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent evt) {
+                chartsMenu.show(chartsButton, 0, chartsButton.getHeight());
+            }
+        });
+
+        measureButton.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent evt) {
+                measuresMenu.show(measureButton, 0, measureButton.getHeight());
+            }
+        });
+
+        delete.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GraphLayoutCache cache = graph.getGraphLayoutCache();
+                cache.remove(cache.getCells(true, true, true, true), true, true);
+                graph.setRoot(true);
+                graph.getQueryHistory().reset();
+                graph.getCellHistory().reset();
+            }
+        });
 
         zoomIn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -284,6 +315,46 @@ public class VExplorer extends JFrame {
         toolbar.add(layout);
     }
 
+    private void makeChartsMenu() {
+
+        JCheckBoxMenuItem barChart = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART);
+        JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
+
+        makeActionListenerCharts(barChart, "barChart");
+        makeActionListenerCharts(pieChart, "pieChart");
+        ButtonGroup charts = new ButtonGroup();
+        barChart.setState(true);
+        pieChart.setState(false);
+        charts.add(barChart);
+        charts.add(pieChart);
+
+        chartsMenu.add(barChart);
+        chartsMenu.add(pieChart);
+    }
+
+    private void makeMeasuresMenu() {
+
+        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("Koepfe (Studenten)", VIcons.USERK);
+        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("Faelle (Studenten)", VIcons.USERF);
+        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("Betrag (Kosten)", VIcons.EURO);
+
+        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe)", "Studenten");
+        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
+        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Betraege");
+
+        ButtonGroup measuresGroup = new ButtonGroup();
+        heads.setState(true);
+        cases.setState(false);
+        amount.setState(false);
+        measuresGroup.add(heads);
+        measuresGroup.add(cases);
+        measuresGroup.add(amount);
+
+        measuresMenu.add(heads);
+        measuresMenu.add(cases);
+        measuresMenu.add(amount);
+    }
+
     private void initNavigation() {
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -330,5 +401,38 @@ public class VExplorer extends JFrame {
 
     public static void publishException(Exception e) {
         JOptionPane.showMessageDialog(explorer, e.getMessage(), "Exception: " + e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * @param checkBoxMenuItem Item which gets the Listener.
+     * @param cube             String which is need to set.
+     * @param measureName      String which is need to set.
+     */
+    public void makeActionListenerMeasures(final JCheckBoxMenuItem checkBoxMenuItem, final String cube, final String measureName, final String xAxisName) {
+
+        checkBoxMenuItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(checkBoxMenuItem)) {
+
+                    graph.getQueryHistory().setCubeAttribute(measureName);
+                    graph.getQueryHistory().setCubeName(cube);
+                    graph.setxAxis(xAxisName);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param checkBoxMenuItem Item which gets the Listener.
+     * @param chartName        String which is need to set.
+     */
+    public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final String chartName) {
+
+        checkBoxMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                graph.setChartCheck(chartName);
+            }
+        });
     }
 }
