@@ -38,4 +38,6 @@ public class VIcons {
     public static final Icon GERMAN = new ImageIcon(VIcons.class.getResource("../images/ger.png"));
     public static final Icon ENGLISH = new ImageIcon(VIcons.class.getResource("../images/uk.png"));
     public static final Icon WORLD = new ImageIcon(VIcons.class.getResource("../images/world.png"));
+    public static final Icon VERTICAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/verticalLayout.png"));
+    public static final Icon HORIZONTAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/horizontalLayout.png"));
 }
