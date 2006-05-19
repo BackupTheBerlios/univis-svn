@@ -12,6 +12,7 @@ import unikn.dbis.univis.util.ComponentUtilities;
 import unikn.dbis.univis.visualization.VVisualization;
 import unikn.dbis.univis.visualization.graph.VGraph;
 import unikn.dbis.univis.message.MessageResolver;
+import unikn.dbis.univis.system.Constants;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -103,6 +104,30 @@ public class VExplorer extends JFrame {
     private JPopupMenu chartsMenu = new JPopupMenu();
     private JPopupMenu measuresMenu = new JPopupMenu();
     private JPopupMenu languageMenu = new JPopupMenu();
+    private JPopupMenu layoutMenu = new JPopupMenu();
+
+    private JCheckBoxMenuItem german = new JCheckBoxMenuItem(VIcons.GERMAN);
+    private JCheckBoxMenuItem english = new JCheckBoxMenuItem(VIcons.ENGLISH);
+    private JCheckBoxMenuItem barChart1 = new JCheckBoxMenuItem(VIcons.BARCHART1);
+    private JCheckBoxMenuItem barChart2 = new JCheckBoxMenuItem(VIcons.BARCHART2);
+    private JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem(VIcons.PIECHART);
+    private JCheckBoxMenuItem heads = new JCheckBoxMenuItem(VIcons.USERK);
+    private JCheckBoxMenuItem cases = new JCheckBoxMenuItem(VIcons.USERF);
+    private JCheckBoxMenuItem amount = new JCheckBoxMenuItem(VIcons.EURO);
+    private JCheckBoxMenuItem layoutVertical = new JCheckBoxMenuItem(VIcons.VERTICAL_LAYOUT);
+    private JCheckBoxMenuItem layoutHorizontal = new JCheckBoxMenuItem(VIcons.HORIZONTAL_LAYOUT);
+
+    private JButton refresh = new JButton(VIcons.REFRESH);
+    private JButton undo = new JButton(VIcons.UNDO);
+    private JButton redo = new JButton(VIcons.REDO);
+    private JButton delete = new JButton(VIcons.DELETE);
+    private JButton charts = new JButton(VIcons.CHART);
+    private JButton measures = new JButton(VIcons.MEASURE);
+    private JButton languages = new JButton(VIcons.WORLD);
+    private JButton exit = new JButton(VIcons.EXIT);
+    private JButton zoomIn = new JButton(VIcons.ZOOM_IN);
+    private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
+    private JButton layout = new JButton(VIcons.LAYOUT);
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -119,7 +144,7 @@ public class VExplorer extends JFrame {
      */
     public VExplorer() throws HeadlessException {
         super("UniVis Explorer 0.1 - (c) 2005-2006 a.d. - DBIS, University of Konstanz");
-
+        reinitI18();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(800, 600));
         setSize(new Dimension(800, 600));
@@ -185,7 +210,6 @@ public class VExplorer extends JFrame {
 
     private void initToolbar() {
 
-        JButton refresh = new JButton(VIcons.REFRESH);
         refresh.addActionListener(new ActionListener() {
             /**
              * Invoked when an action occurs.
@@ -224,20 +248,11 @@ public class VExplorer extends JFrame {
             }
         });
 
-        final JButton undo = new JButton(VIcons.UNDO);
-        JButton redo = new JButton(VIcons.REDO);
-        JButton delete = new JButton(VIcons.DELETE);
-        final JButton charts = new JButton(VIcons.CHART);
-        final JButton measure = new JButton(VIcons.MEASURE);
-        final JButton language = new JButton(VIcons.WORLD);
-        JButton exit = new JButton(VIcons.EXIT);
-        JButton zoomIn = new JButton(VIcons.ZOOM_IN);
-        JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
-        JButton layout = new JButton(VIcons.LAYOUT);
 
         makeChartsMenu();
         makeMeasuresMenu();
         makeLanguageMenu();
+        makeLayoutMenu();
 
         charts.addMouseListener(new MouseAdapter() {
 
@@ -246,17 +261,17 @@ public class VExplorer extends JFrame {
             }
         });
 
-        measure.addMouseListener(new MouseAdapter() {
+        measures.addMouseListener(new MouseAdapter() {
 
             public void mouseClicked(MouseEvent evt) {
-                measuresMenu.show(measure, 0, measure.getHeight());
+                measuresMenu.show(measures, 0, measures.getHeight());
             }
         });
 
-        language.addMouseListener(new MouseAdapter() {
+        languages.addMouseListener(new MouseAdapter() {
 
             public void mouseClicked(MouseEvent evt) {
-                languageMenu.show(language, 0, language.getHeight());
+                languageMenu.show(languages, 0, languages.getHeight());
             }
         });
 
@@ -282,15 +297,10 @@ public class VExplorer extends JFrame {
             }
         });
 
-        layout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (graph.getLayoutOrientation() == SwingConstants.NORTH) {
-                    graph.setLayoutOrientation(SwingConstants.WEST);
-                }
-                else {
-                    graph.setLayoutOrientation(SwingConstants.NORTH);
-                }
-                graph.reloadGraph();
+        layout.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent evt) {
+                layoutMenu.show(layout, 0, layout.getHeight());
             }
         });
 
@@ -320,21 +330,16 @@ public class VExplorer extends JFrame {
         toolbar.add(delete);
         toolbar.addSeparator();
         toolbar.add(charts);
-        toolbar.add(measure);
-        toolbar.add(language);
-        toolbar.addSeparator();
+        toolbar.add(measures);
         toolbar.add(zoomIn);
         toolbar.add(zoomOut);
         toolbar.add(layout);
+        toolbar.add(languages);
         toolbar.addSeparator();
         toolbar.add(exit);
     }
 
     private void makeChartsMenu() {
-
-        JCheckBoxMenuItem barChart1 = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART1);
-        JCheckBoxMenuItem barChart2 = new JCheckBoxMenuItem("BarChart", VIcons.BARCHART2);
-        JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem("PieChart", VIcons.PIECHART);
 
         makeActionListenerCharts(barChart1, "barChart", "Vertical");
         makeActionListenerCharts(barChart2, "barChart", "Horizontal");
@@ -354,9 +359,6 @@ public class VExplorer extends JFrame {
 
     private void makeMeasuresMenu() {
 
-        JCheckBoxMenuItem heads = new JCheckBoxMenuItem("Koepfe (Studenten)", VIcons.USERK);
-        JCheckBoxMenuItem cases = new JCheckBoxMenuItem("Faelle (Studenten)", VIcons.USERF);
-        JCheckBoxMenuItem amount = new JCheckBoxMenuItem("Betrag (Kosten)", VIcons.EURO);
 
         makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe)", "Studenten");
         makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
@@ -377,12 +379,10 @@ public class VExplorer extends JFrame {
 
     private void makeLanguageMenu() {
 
-        JCheckBoxMenuItem german = new JCheckBoxMenuItem("German", VIcons.GERMAN);
-        JCheckBoxMenuItem english = new JCheckBoxMenuItem("English", VIcons.ENGLISH);
-
         german.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MessageResolver.setLocale(Locale.GERMAN);
+                reinitI18();
                 ComponentUtilities.repaintComponentTree(VExplorer.this);
             }
         });
@@ -390,6 +390,7 @@ public class VExplorer extends JFrame {
         english.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MessageResolver.setLocale(Locale.ENGLISH);
+                reinitI18();
                 ComponentUtilities.repaintComponentTree(VExplorer.this);
             }
         });
@@ -402,6 +403,31 @@ public class VExplorer extends JFrame {
 
         languageMenu.add(german);
         languageMenu.add(english);
+    }
+
+    private void makeLayoutMenu() {
+        layoutVertical.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                graph.setLayoutOrientation(SwingConstants.NORTH);
+                graph.reloadGraph();
+            }
+        });
+
+        layoutHorizontal.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                graph.setLayoutOrientation(SwingConstants.WEST);
+                graph.reloadGraph();
+            }
+        });
+
+        ButtonGroup layoutGroup = new ButtonGroup();
+        layoutVertical.setState(true);
+        layoutHorizontal.setState(false);
+        layoutGroup.add(layoutVertical);
+        layoutGroup.add(layoutHorizontal);
+
+        layoutMenu.add(layoutVertical);
+        layoutMenu.add(layoutHorizontal);
     }
 
     private void initNavigation() {
@@ -480,5 +506,32 @@ public class VExplorer extends JFrame {
                 graph.setBarChartOrientation(barChartOrientation);
             }
         });
+    }
+
+    public void reinitI18() {
+        // Sets the text for the MenuItems.
+        german.setText(MessageResolver.getMessage(Constants.GERMAN));
+        english.setText(MessageResolver.getMessage(Constants.ENGLISH));
+        barChart1.setText(MessageResolver.getMessage(Constants.BAR_CHART));
+        barChart2.setText(MessageResolver.getMessage(Constants.BAR_CHART));
+        pieChart.setText(MessageResolver.getMessage(Constants.PIE_CHART));
+        heads.setText(MessageResolver.getMessage(Constants.HEADS));
+        cases.setText(MessageResolver.getMessage(Constants.CASES));
+        amount.setText(MessageResolver.getMessage(Constants.AMOUNT));
+        layoutVertical.setText(MessageResolver.getMessage(Constants.LAYOUT_VERTICAL));
+        layoutHorizontal.setText(MessageResolver.getMessage(Constants.LAYOUT_HORIZONTAL));
+
+        // Sets the tooltip for the Buttons.
+        refresh.setToolTipText(MessageResolver.getMessage(Constants.REFRESH_TOOLTIP));
+        undo.setToolTipText(MessageResolver.getMessage(Constants.UNDO_TOOLTIP));
+        redo.setToolTipText(MessageResolver.getMessage(Constants.REDO_TOOLTIP));
+        delete.setToolTipText(MessageResolver.getMessage(Constants.DELETE_TOOLTIP));
+        charts.setToolTipText(MessageResolver.getMessage(Constants.CHARTS_TOOLTIP));
+        measures.setToolTipText(MessageResolver.getMessage(Constants.MEASURES_TOOLTIP));
+        languages.setToolTipText(MessageResolver.getMessage(Constants.LANGUAGES_TOOLTIP));
+        exit.setToolTipText(MessageResolver.getMessage(Constants.EXIT_TOOLTIP));
+        zoomIn.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_IN_TOOLTIP));
+        zoomOut.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_OUT_TOOLTIP));
+        layout.setToolTipText(MessageResolver.getMessage(Constants.LAYOUT_TOOLTIP));
     }
 }
