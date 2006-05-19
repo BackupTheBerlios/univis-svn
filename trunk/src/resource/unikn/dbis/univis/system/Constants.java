@@ -16,6 +16,27 @@ package unikn.dbis.univis.system;
  */
 public interface Constants {
 
-    public final static String German = "german";
-    public final static String English = "english";
+    // All Strings for the Menu.
+    public final static String GERMAN = "german";
+    public final static String ENGLISH = "english";
+    public final static String BAR_CHART = "barChart";
+    public final static String PIE_CHART = "pieChart";
+    public final static String HEADS = "heads";
+    public final static String CASES = "cases";
+    public final static String AMOUNT = "amount";
+    public final static String LAYOUT_VERTICAL = "layoutVertical";
+    public final static String LAYOUT_HORIZONTAL = "layoutHorizontal";
+
+    // All Strings for the ToolTips of the Buttons.
+    public final static String REFRESH_TOOLTIP = "refreshTooltip";
+    public final static String REDO_TOOLTIP = "redoTooltip";
+    public final static String UNDO_TOOLTIP = "undoTooltip";
+    public final static String DELETE_TOOLTIP = "deleteTooltip";
+    public final static String CHARTS_TOOLTIP = "chartsTooltip";
+    public final static String MEASURES_TOOLTIP = "measuresTooltip";
+    public final static String LANGUAGES_TOOLTIP = "languagesTooltip";
+    public final static String EXIT_TOOLTIP = "exitTooltip";
+    public final static String ZOOM_IN_TOOLTIP = "zoomInTooltip";
+    public final static String ZOOM_OUT_TOOLTIP = "zoomOutTooltip";
+    public final static String LAYOUT_TOOLTIP = "layoutTooltip";
 }
