@@ -71,7 +71,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     private AbstractDataset dataset;
 
     // Strings for different topics.
-    private String chartCheck = "barChart";
+    private String chartCheck = "barchart";
     private String rootHeadLine = "";
     private String xAxis = "Studenten";
     private String barChartOrientation = "Vertical";
@@ -104,7 +104,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     public VGraphCell createVertex(String chartName, String id) {
 
         AbstractChart chart;
-        if (chartCheck.equals("barChart")) {
+        if (chartCheck.equals("barchart")) {
             chart = new BarChart(chartName, (CategoryDataset) dataset, xAxis, barChartOrientation);
         }
         else {
@@ -187,7 +187,7 @@ public class VGraph extends JGraph implements DropTargetListener {
         if (isRoot) {
             cellHistory.historize();
 
-            if (chartCheck.equals("barChart")) {
+            if (chartCheck.equals("barchart")) {
                 dataset = new DefaultCategoryDataset();
 
                 while (result.next()) {
@@ -211,7 +211,7 @@ public class VGraph extends JGraph implements DropTargetListener {
             cellHistory.historize();
 
             String buffer = "";
-            if (chartCheck.equals("barChart")) {
+            if (chartCheck.equals("barchart")) {
                 while (result.next()) {
 
                     String currentValue = result.getString(idPos);
