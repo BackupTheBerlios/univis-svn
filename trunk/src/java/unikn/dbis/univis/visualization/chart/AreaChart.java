@@ -7,6 +7,7 @@ import org.jfree.chart.renderer.category.AreaRenderer;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.DatasetRenderingOrder;
 import unikn.dbis.univis.visualization.Renderable;
 
 /**
@@ -70,6 +71,7 @@ public class AreaChart extends AbstractChart<CategoryDataset> implements Rendera
         CategoryAxis axis = plot.getDomainAxis();
         plot.setForegroundAlpha(0.5f);
         axis.setTickLabelsVisible(false);
+        plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
         AreaRenderer renderer = (AreaRenderer) plot.getRenderer();
         renderer.setLegendItemLabelGenerator(new LabelGenerator(createTotal()));
         plot.setNoDataMessage("No data available");

@@ -7,6 +7,7 @@ import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.DatasetRenderingOrder;
 import unikn.dbis.univis.visualization.Renderable;
 
 /**
@@ -99,5 +100,6 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
         plot.setNoDataMessage("No data available");
         plot.getDomainAxis().setLabelFont(getLegendFont());
         plot.getRangeAxis().setLabelFont(getLegendFont());
+        plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
     }
 }
