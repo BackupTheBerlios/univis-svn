@@ -65,7 +65,7 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                 VDimension dimension = (VDimension) o;
 
                 if (dimension.isSummable()) {
-                    panel.add(new VIconComponent(VIcons.FUNNEL), BorderLayout.EAST);
+                    panel.add(new VIconComponent(VIcons.LIGHTNING), BorderLayout.EAST);
                 }
 
                 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();

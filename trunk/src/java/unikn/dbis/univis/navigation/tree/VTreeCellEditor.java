@@ -121,7 +121,7 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                 VDimension dimension = (VDimension) o;
 
                 if (dimension.isSummable()) {
-                    final VIconComponent icon = new VIconComponent(VIcons.FUNNEL, 8);
+                    final VIconComponent icon = new VIconComponent(VIcons.LIGHTNING, 8);
                     panel.add(icon, BorderLayout.EAST);
                     icon.addMouseListener(new MouseAdapter() {
 

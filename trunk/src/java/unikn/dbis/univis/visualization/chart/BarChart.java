@@ -76,6 +76,14 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
         return total;
     }
 
+    /**
+     * The number of values of the chart.
+     *
+     * @return The number of values of the chart.
+     */
+    protected int countValues() {
+        return getDataset().getRowCount();
+    }
 
     /**
      * starts the Bar3DChart.
@@ -91,9 +99,5 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
         plot.setNoDataMessage("No data available");
         plot.getDomainAxis().setLabelFont(getLegendFont());
         plot.getRangeAxis().setLabelFont(getLegendFont());
-    }
-
-    protected int numberValues() {
-        return getDataset().getRowCount();
     }
 }

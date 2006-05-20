@@ -106,20 +106,20 @@ public class VExplorer extends JFrame {
     private JPopupMenu languageMenu = new JPopupMenu();
     private JPopupMenu layoutMenu = new JPopupMenu();
 
-    private JCheckBoxMenuItem german = new JCheckBoxMenuItem(VIcons.GERMAN);
-    private JCheckBoxMenuItem english = new JCheckBoxMenuItem(VIcons.ENGLISH);
-    private JCheckBoxMenuItem barChart1 = new JCheckBoxMenuItem(VIcons.BARCHART1);
-    private JCheckBoxMenuItem barChart2 = new JCheckBoxMenuItem(VIcons.BARCHART2);
-    private JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem(VIcons.PIECHART);
+    private JCheckBoxMenuItem german = new JCheckBoxMenuItem(VIcons.FLAG_DE);
+    private JCheckBoxMenuItem english = new JCheckBoxMenuItem(VIcons.FLAG_EN);
+    private JCheckBoxMenuItem barChart1 = new JCheckBoxMenuItem(VIcons.CHART_BAR_HORIZONTAL);
+    private JCheckBoxMenuItem barChart2 = new JCheckBoxMenuItem(VIcons.CHART_BAR_VERTICAL);
+    private JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem(VIcons.CHART_PIE);
     private JCheckBoxMenuItem heads = new JCheckBoxMenuItem(VIcons.USERK);
     private JCheckBoxMenuItem cases = new JCheckBoxMenuItem(VIcons.USERF);
     private JCheckBoxMenuItem amount = new JCheckBoxMenuItem(VIcons.EURO);
     private JCheckBoxMenuItem layoutVertical = new JCheckBoxMenuItem(VIcons.VERTICAL_LAYOUT);
     private JCheckBoxMenuItem layoutHorizontal = new JCheckBoxMenuItem(VIcons.HORIZONTAL_LAYOUT);
 
-    private JButton refresh = new JButton(VIcons.REFRESH);
-    private JButton undo = new JButton(VIcons.UNDO);
-    private JButton redo = new JButton(VIcons.REDO);
+    private JButton refresh = new JButton(VIcons.ARROW_REFRESH);
+    private JButton undo = new JButton(VIcons.ARROW_UNDO);
+    private JButton redo = new JButton(VIcons.ARROW_REDO);
     private JButton delete = new JButton(VIcons.DELETE);
     private JButton charts = new JButton(VIcons.CHART);
     private JButton measures = new JButton(VIcons.MEASURE);
@@ -127,7 +127,7 @@ public class VExplorer extends JFrame {
     private JButton exit = new JButton(VIcons.EXIT);
     private JButton zoomIn = new JButton(VIcons.ZOOM_IN);
     private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
-    private JButton layout = new JButton(VIcons.LAYOUT);
+    private JButton layout = new JButton(VIcons.SHAPE_ROTATE_CLOCKWISE);
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -277,11 +277,7 @@ public class VExplorer extends JFrame {
 
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GraphLayoutCache cache = graph.getGraphLayoutCache();
-                cache.remove(cache.getCells(true, true, true, true), true, true);
-                graph.setRoot(true);
-                graph.getQueryHistory().reset();
-                graph.getCellHistory().reset();
+                graph.reset();
             }
         });
 
@@ -466,8 +462,6 @@ public class VExplorer extends JFrame {
     private void initDragAndDrop() {
         DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY, tree);
-
-        graph.setDropTarget(new DropTarget(graph, graph));
     }
 
     public static void publishException(Exception e) {

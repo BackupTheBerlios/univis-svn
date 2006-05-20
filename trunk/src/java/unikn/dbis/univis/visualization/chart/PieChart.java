@@ -66,6 +66,15 @@ public class PieChart extends AbstractChart<PieDataset> implements Renderable {
     }
 
     /**
+     * The number of values of the chart.
+     *
+     * @return The number of values of the chart.
+     */
+    protected int countValues() {
+        return getDataset().getItemCount();
+    }
+
+    /**
      * Makes the plot.
      */
     protected void plot() {
@@ -76,9 +85,5 @@ public class PieChart extends AbstractChart<PieDataset> implements Renderable {
         plot.setNoDataMessage("No data available");
         plot.setLabelGenerator(null);
         plot.setLegendLabelGenerator(new LabelGenerator(createTotal()));
-    }
-
-    protected int numberValues() {
-        return getDataset().getItemCount();
     }
 }

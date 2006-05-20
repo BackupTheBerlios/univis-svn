@@ -40,8 +40,6 @@ public class VTreeHelper {
 
     private static MutableTreeNode createDefaultTree(MutableTreeNode parent, VHierarchy hierarchy, int index) {
 
-        MutableTreeNode node = new DefaultMutableTreeNode();
-
         VDataReference dataReference = hierarchy.getDataReference();
         dataReference.setParent(hierarchy.getParent().getDataReference());
 
@@ -49,15 +47,39 @@ public class VTreeHelper {
             dataReference.getParent().getChildren().add(dataReference);
         }
 
-        node.setUserObject(dataReference);
-
-        parent.insert(node, index);
-
         int i = 0;
-        for (VHierarchy child : hierarchy.getChildren()) {
-            createDefaultTree(node, child, i++);
+        if (dataReference instanceof VDimension) {
+            if (((VDimension) dataReference).isVisible()) {
+
+                MutableTreeNode node = addChildToParent(parent, dataReference, index);
+
+                for (VHierarchy child : hierarchy.getChildren()) {
+                    createDefaultTree(node, child, i++);
+                }
+            }
+            else {
+                for (VHierarchy child : hierarchy.getChildren()) {
+                    createDefaultTree(parent, child, i);
+                }
+            }
+        }
+        else {
+
+            MutableTreeNode node = addChildToParent(parent, dataReference, index);
+
+            for (VHierarchy child : hierarchy.getChildren()) {
+                createDefaultTree(node, child, i++);
+            }
         }
 
         return parent;
+    }
+
+    private static MutableTreeNode addChildToParent(MutableTreeNode parent, VDataReference dataReference, int index) {
+        MutableTreeNode node = new DefaultMutableTreeNode();
+        node.setUserObject(dataReference);
+        parent.insert(node, index);
+
+        return node;
     }
 }

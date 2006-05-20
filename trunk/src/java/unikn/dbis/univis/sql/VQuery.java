@@ -56,8 +56,6 @@ public class VQuery {
         else {
             // Create a new statement for history and querying.
             statement = new VQueryStatement(history.peek());
-
-            System.out.println("STATEMENT: " + history.peek());
         }
 
         // Push the new statement onto the stack.
@@ -127,9 +125,6 @@ public class VQuery {
         }
 
         private VQueryStatement(VQueryStatement parent) {
-
-            System.out.println("PARENT: " + parent);
-
             this.parent = parent;
 
             this.select = new StringBuilder(parent.select);

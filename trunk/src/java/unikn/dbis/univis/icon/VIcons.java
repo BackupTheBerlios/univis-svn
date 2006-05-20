@@ -17,26 +17,26 @@ import javax.swing.*;
  * @since UniVis Explorer 0.1
  */
 public class VIcons {
-    public static final Icon REFRESH = new ImageIcon(VIcons.class.getResource("../images/refresh.png"));
-    public static final Icon VIEW = new ImageIcon(VIcons.class.getResource("../images/view.png"));
-    public static final Icon UNDO = new ImageIcon(VIcons.class.getResource("../images/undo.png"));
-    public static final Icon REDO = new ImageIcon(VIcons.class.getResource("../images/redo.png"));
+    public static final Icon ARROW_REFRESH = new ImageIcon(VIcons.class.getResource("../images/arrow_refresh.png"));
+    public static final Icon ARROW_UNDO = new ImageIcon(VIcons.class.getResource("../images/arrow_undo.png"));
+    public static final Icon ARROW_REDO = new ImageIcon(VIcons.class.getResource("../images/arrow_redo.png"));
+    public static final Icon CHART_BAR_HORIZONTAL = new ImageIcon(VIcons.class.getResource("../images/chart_bar_horizontal.png"));
+    public static final Icon CHART_BAR_VERTICAL = new ImageIcon(VIcons.class.getResource("../images/chart_bar_vertical.png"));
+    public static final Icon CHART_PIE = new ImageIcon(VIcons.class.getResource("../images/chart_pie.png"));
     public static final Icon DELETE = new ImageIcon(VIcons.class.getResource("../images/delete.png"));
-    public static final Icon FUNNEL = new ImageIcon(VIcons.class.getResource("../images/funnel.png"));
-    public static final Icon BARCHART1 = new ImageIcon(VIcons.class.getResource("../images/barChart.png"));
-    public static final Icon BARCHART2 = new ImageIcon(VIcons.class.getResource("../images/barChart2.png"));
-    public static final Icon PIECHART = new ImageIcon(VIcons.class.getResource("../images/pieChart.png"));
+    public static final Icon FLAG_DE = new ImageIcon(VIcons.class.getResource("../images/flag_de.png"));
+    public static final Icon FLAG_EN = new ImageIcon(VIcons.class.getResource("../images/flag_gb.png"));
+    public static final Icon LIGHTNING = new ImageIcon(VIcons.class.getResource("../images/lightning.png"));
+    public static final Icon SHAPE_ROTATE_CLOCKWISE = new ImageIcon(VIcons.class.getResource("../images/shape_rotate_clockwise.png"));
+    public static final Icon ZOOM_IN = new ImageIcon(VIcons.class.getResource("../images/zoom_in.png"));
+    public static final Icon ZOOM_OUT = new ImageIcon(VIcons.class.getResource("../images/zoom_out.png"));
+
     public static final Icon USERK = new ImageIcon(VIcons.class.getResource("../images/userf.png"));
     public static final Icon USERF = new ImageIcon(VIcons.class.getResource("../images/userk.png"));
     public static final Icon EURO = new ImageIcon(VIcons.class.getResource("../images/euro.png"));
     public static final Icon EXIT = new ImageIcon(VIcons.class.getResource("../images/exit.png"));
     public static final Icon CHART = new ImageIcon(VIcons.class.getResource("../images/chart.png"));
     public static final Icon MEASURE = new ImageIcon(VIcons.class.getResource("../images/measure.png"));
-    public static final Icon ZOOM_IN = new ImageIcon(VIcons.class.getResource("../images/zoom_in.png"));
-    public static final Icon ZOOM_OUT = new ImageIcon(VIcons.class.getResource("../images/zoom_out.png"));
-    public static final Icon LAYOUT = new ImageIcon(VIcons.class.getResource("../images/layout.png"));
-    public static final Icon GERMAN = new ImageIcon(VIcons.class.getResource("../images/ger.png"));
-    public static final Icon ENGLISH = new ImageIcon(VIcons.class.getResource("../images/uk.png"));
     public static final Icon WORLD = new ImageIcon(VIcons.class.getResource("../images/world.png"));
     public static final Icon VERTICAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/verticalLayout.png"));
     public static final Icon HORIZONTAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/horizontalLayout.png"));

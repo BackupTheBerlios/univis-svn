@@ -1,8 +1,6 @@
 package unikn.dbis.univis.visualization.graph;
 
 import org.jgraph.JGraph;
-import org.jgraph.event.GraphSelectionListener;
-import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.graph.*;
 
 import org.jfree.data.general.DefaultPieDataset;
@@ -15,10 +13,8 @@ import org.apache.commons.logging.LogFactory;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
-import java.awt.event.*;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
-import java.awt.*;
 import java.util.Map;
 import java.io.IOException;
 import java.sql.*;
@@ -29,7 +25,6 @@ import unikn.dbis.univis.visualization.chart.AbstractChart;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
-import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.VQuery;
 
@@ -52,7 +47,7 @@ import com.jgraph.layout.tree.JGraphTreeLayout;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VGraph extends JGraph implements DropTargetListener {
+public class VGraph extends JGraph {
 
     // The logger to log info, error and other occuring messages
     // or exceptions.
@@ -75,7 +70,6 @@ public class VGraph extends JGraph implements DropTargetListener {
     private String rootHeadLine = "";
     private String xAxis = "Studenten";
     private String barChartOrientation = "Vertical";
-    private boolean isRoot = true;
 
     // Int values for different topics.
     private int cellsize = 300;
@@ -84,17 +78,19 @@ public class VGraph extends JGraph implements DropTargetListener {
     // exploring.
     private VQuery queryHistory = new VQuery();
 
-
     /**
-     * Standard Constructor
+     * Creates a new VGraph with drop target action and a
+     * tree layout cache.
      */
     public VGraph() {
 
-        new DropTarget(this, DnDConstants.ACTION_COPY, this);
-        this.setModel(model);
-        this.setGraphLayoutCache(cache);
-        this.setEditable(false);
-        this.setMoveable(false);
+        setDropTarget(new DropTarget(this, DnDConstants.ACTION_COPY, new VGraphDropTargetListener()));
+
+        setModel(model);
+        setGraphLayoutCache(cache);
+        setEditable(false);
+        setMoveable(false);
+
         layout.setOrientation(SwingConstants.NORTH);
     }
 
@@ -128,8 +124,8 @@ public class VGraph extends JGraph implements DropTargetListener {
     }
 
     /**
-     * @param source : source where the edge is starting.
-     * @param target : target where the edge is ending.
+     * @param source Source where the edge is starting.
+     * @param target Target where the edge is ending.
      */
     public void createEdges(VGraphCell source, VGraphCell target) {
         DefaultEdge edge = new DefaultEdge();
@@ -172,7 +168,7 @@ public class VGraph extends JGraph implements DropTargetListener {
     }
 
     /**
-     * @param result : the given resultset from the sql action.
+     * @param result The given resultset from the sql action.
      * @throws SQLException
      */
     public void fillChartData(ResultSet result) throws SQLException {
@@ -184,7 +180,8 @@ public class VGraph extends JGraph implements DropTargetListener {
         int namePos = idPos - 1;
         int bufferPos = namePos - 1;
 
-        if (isRoot) {
+        if (root == null) {
+
             cellHistory.historize();
 
             if (chartCheck.equals("barChart")) {
@@ -205,7 +202,6 @@ public class VGraph extends JGraph implements DropTargetListener {
             root = createVertex(rootHeadLine, "");
             cache.insert(root);
             cellHistory.add(root);
-            isRoot = false;
         }
         else {
             cellHistory.historize();
@@ -258,24 +254,28 @@ public class VGraph extends JGraph implements DropTargetListener {
     }
 
     /**
-     * @param vDim : the given VDimension from the drag & drop.
-     * @throws SQLException
+     * Adds a <code>VDimension</code> to the visualization of the graph. This
+     * method creates a sql statement to get the data that is needed to display
+     * the cell(s).
+     *
+     * @param dimension The given VDimension from the drag & drop.
+     * @throws SQLException The exception occurs while trying to get the data
+     *                      for displaying on graph.
      */
-    public void connection(VDimension vDim) throws SQLException {
+    public void addDimension(VDimension dimension) throws SQLException {
 
         Connection connection = VExplorer.getConnection();
 
-        Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        Statement statement = connection.createStatement();
 
-        VDimension bluep = searchBluep(vDim);
+        VDimension blueprint = searchBlueprint(dimension);
 
-        String sql = queryHistory.createChartQuery(vDim, bluep);
+        String sql = queryHistory.createChartQuery(dimension, blueprint);
 
-        ResultSet result;
+        ResultSet result = null;
         try {
-            result = stmt.executeQuery(sql);
-
-            rootHeadLine = vDim.getI18nKey();
+            result = statement.executeQuery(sql);
+            rootHeadLine = dimension.getI18nKey();
             fillChartData(result);
         }
         catch (SQLException sqle) {
@@ -285,92 +285,33 @@ public class VGraph extends JGraph implements DropTargetListener {
                 LOG.error(sqle.getMessage(), sqle);
             }
         }
+        finally {
+            if (result != null) {
+                result.close();
+            }
+
+            if (statement != null) {
+                statement.close();
+            }
+        }
     }
 
     /**
-     * @param vDim VDimension from the drag & drop.
+     * @param dimension VDimension from the drag & drop.
      * @return VDimension which is the bluep of the Dimension
      */
-    public VDimension searchBluep(VDimension vDim) {
+    private VDimension searchBlueprint(VDimension dimension) {
 
-        if (vDim.getChildren().size() == 0) {
-            return vDim;
+        if (dimension.getChildren().size() == 0) {
+            return dimension;
         }
 
-        VDimension dimension = null;
-        for (VDataReference vDataReference : vDim.getChildren()) {
-            dimension = searchBluep((VDimension) vDataReference);
+        VDimension blueprint = null;
+        for (VDataReference vDataReference : dimension.getChildren()) {
+            blueprint = searchBlueprint((VDimension) vDataReference);
         }
 
-        return dimension;
-    }
-
-    /**
-     * @param dtde
-     */
-    public void dragEnter(DropTargetDragEvent dtde) {
-    }
-
-    /**
-     * @param dtde
-     */
-    public void dragOver(DropTargetDragEvent dtde) {
-    }
-
-    /**
-     * @param dtde
-     */
-    public void dropActionChanged(DropTargetDragEvent dtde) {
-    }
-
-    /**
-     * @param dte
-     */
-    public void dragExit(DropTargetEvent dte) {
-    }
-
-    /**
-     * Action when a <code>VDimension<code> is dropped into the
-     * graph.
-     *
-     * @param dtde The drop target event.
-     */
-    public void drop(DropTargetDropEvent dtde) {
-
-        Object o = null;
-        try {
-            o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
-        }
-        catch (UnsupportedFlavorException ufe) {
-            dtde.rejectDrop();
-            dtde.dropComplete(false);
-            if (LOG.isErrorEnabled()) {
-                LOG.error(ufe.getMessage(), ufe);
-            }
-        }
-        catch (IOException ioe) {
-            dtde.rejectDrop();
-            dtde.dropComplete(false);
-            if (LOG.isErrorEnabled()) {
-                LOG.error(ioe.getMessage(), ioe);
-            }
-        }
-        if (o instanceof VDimension) {
-            VDimension vDim = (VDimension) o;
-
-            try {
-                dtde.acceptDrop(DnDConstants.ACTION_COPY);
-                connection(vDim);
-            }
-            catch (SQLException sqle) {
-                dtde.rejectDrop();
-                dtde.dropComplete(false);
-                if (LOG.isErrorEnabled()) {
-                    LOG.error(sqle.getMessage(), sqle);
-                }
-            }
-        }
-        dtde.dropComplete(true);
+        return blueprint;
     }
 
     public void undoCells() {
@@ -379,11 +320,26 @@ public class VGraph extends JGraph implements DropTargetListener {
         queryHistory.historyBack();
 
         if (queryHistory.isEmpty()) {
-            isRoot = true;
+            reset();
         }
 
         reloadGraph();
 
+    }
+
+    public void reset() {
+        root = null;
+
+        model = new DefaultGraphModel();
+        cache = new GraphLayoutCache(model, new VCellViewFactory());
+        facade = new JGraphFacade(cache);
+        layout = new JGraphTreeLayout();
+
+        setModel(model);
+        setGraphLayoutCache(cache);
+
+        queryHistory.reset();
+        cellHistory.reset();
     }
 
     public void reloadGraph() {
@@ -426,11 +382,58 @@ public class VGraph extends JGraph implements DropTargetListener {
         this.chartCheck = chartCheck;
     }
 
-    public void setRoot(boolean root) {
-        isRoot = root;
-    }
-
     public void setBarChartOrientation(String barChartOrientation) {
         this.barChartOrientation = barChartOrientation;
+    }
+
+    /**
+     * The drop target listener for the <code>VGraph</code> that allows
+     * to perform dimension agregation action.
+     */
+    public final class VGraphDropTargetListener extends DropTargetAdapter {
+
+        /**
+         * Action when a <code>VDimension<code> is dropped into the
+         * graph.
+         *
+         * @param dtde The drop target event.
+         */
+        public void drop(DropTargetDropEvent dtde) {
+
+            Object o = null;
+            try {
+                o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
+            }
+            catch (UnsupportedFlavorException ufe) {
+                dtde.rejectDrop();
+                dtde.dropComplete(false);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error(ufe.getMessage(), ufe);
+                }
+            }
+            catch (IOException ioe) {
+                dtde.rejectDrop();
+                dtde.dropComplete(false);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error(ioe.getMessage(), ioe);
+                }
+            }
+            if (o instanceof VDimension) {
+                VDimension dimension = (VDimension) o;
+
+                try {
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY);
+                    addDimension(dimension);
+                }
+                catch (SQLException sqle) {
+                    dtde.rejectDrop();
+                    dtde.dropComplete(false);
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error(sqle.getMessage(), sqle);
+                    }
+                }
+            }
+            dtde.dropComplete(true);
+        }
     }
 }

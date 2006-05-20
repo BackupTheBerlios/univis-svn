@@ -6,6 +6,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
+import org.jfree.chart.title.Title;
 import org.jfree.data.general.Dataset;
 
 import java.awt.*;
@@ -41,7 +42,7 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
     private Font legendFont = new Font("Tahoma", Font.PLAIN, 10);
 
     // Arraylist for subtitles.
-    private List subtitleList = new ArrayList();
+    private List<Title> subtitleList = new ArrayList<Title>();
 
     /**
      * The abstract class for an easy chart creation.
@@ -98,8 +99,7 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
      */
     public void setSubtitles(int total, LegendTitle legend) {
 
-        Integer totalHelp = total;
-        String totalName = "Total: " + totalHelp.toString();
+        String totalName = "Total: " + total;
         TextTitle totalTitle = new TextTitle(totalName);
         subtitleList.add(totalTitle);
         subtitleList.add(legend);
@@ -128,11 +128,15 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
 
         plot();
 
-        if (numberValues() >= 25) {
+        if (countValues() >= 25) {
             chart.removeLegend();
         }
 
-        return new ChartPanel(chart);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setBackground(Color.WHITE);
+        chartPanel.setMouseZoomable(true);
+
+        return chartPanel;
     }
 
     /**
@@ -149,8 +153,12 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
      */
     protected abstract int createTotal();
 
-
-    protected abstract int numberValues();
+    /**
+     * The number of values of the chart.
+     *
+     * @return The number of values of the chart.
+     */
+    protected abstract int countValues();
 
     /**
      * Makes the plot.
