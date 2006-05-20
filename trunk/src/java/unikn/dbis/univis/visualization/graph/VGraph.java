@@ -16,6 +16,8 @@ import java.awt.geom.Point2D;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.sql.*;
 
@@ -175,7 +177,7 @@ public class VGraph extends JGraph {
      * @param result The given resultset from the sql action.
      * @throws SQLException
      */
-    public void fillChartData(ResultSet result) throws SQLException {
+    public void fillChartData(ResultSet result, ResultSet testResult) throws SQLException {
 
         layout.setAlignment(SwingConstants.CENTER);
 
@@ -183,6 +185,12 @@ public class VGraph extends JGraph {
         int idPos = data.getColumnCount();
         int namePos = idPos - 1;
         int bufferPos = namePos - 1;
+
+        List testList = new ArrayList();
+
+        while (testResult.next()) {
+            testList.add(testResult.getString(1));
+        }
 
         if (root == null) {
 
@@ -224,6 +232,7 @@ public class VGraph extends JGraph {
                         cache.insert(nextCell);
                         cellHistory.add(nextCell);
                     }
+
 
                     ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(namePos), "");
 
@@ -272,16 +281,20 @@ public class VGraph extends JGraph {
         Connection connection = VExplorer.getConnection();
 
         Statement statement = connection.createStatement();
+        Statement statement2 = connection.createStatement();
 
         VDimension blueprint = searchBlueprint(dimension);
 
         String sql = queryHistory.createChartQuery(dimension, blueprint);
+        String testSql = queryHistory.getTestSql();
 
         ResultSet result = null;
+        ResultSet testResult = null;
         try {
             result = statement.executeQuery(sql);
+            testResult = statement2.executeQuery(testSql);
             rootHeadLine = dimension.getI18nKey();
-            fillChartData(result);
+            fillChartData(result, testResult);
         }
         catch (SQLException sqle) {
             queryHistory.historyBack();
