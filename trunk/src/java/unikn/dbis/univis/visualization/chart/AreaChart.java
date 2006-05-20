@@ -68,6 +68,7 @@ public class AreaChart extends AbstractChart<CategoryDataset> implements Rendera
     protected void plot() {
         CategoryPlot plot = (CategoryPlot) getChart().getPlot();
         CategoryAxis axis = plot.getDomainAxis();
+        plot.setForegroundAlpha(0.5f);
         axis.setTickLabelsVisible(false);
         AreaRenderer renderer = (AreaRenderer) plot.getRenderer();
         renderer.setLegendItemLabelGenerator(new LabelGenerator(createTotal()));
