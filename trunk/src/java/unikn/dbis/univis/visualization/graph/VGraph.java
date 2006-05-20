@@ -186,13 +186,13 @@ public class VGraph extends JGraph {
         int namePos = idPos - 1;
         int bufferPos = namePos - 1;
 
-        List testList = new ArrayList();
+        List<String> testList = new ArrayList<String>();
 
         while (testResult.next()) {
             testList.add(testResult.getString(1));
         }
 
-        List helpList = new ArrayList(testList);
+        List<String> helpList = new ArrayList<String>(testList);
 
         if (root == null) {
 
@@ -227,32 +227,26 @@ public class VGraph extends JGraph {
                     String currentValue = result.getString(idPos);
 
                     if (!buffer.equals(currentValue)) {
-                        dataset = new DefaultCategoryDataset();
-                        if (helpList.isEmpty()) {
 
-                        }
-                        else {
-                            System.out.println("HelpList danach: " + helpList);
-                            for (int i = 0; i < helpList.size(); i++) {
-                                //System.out.println(helpList.get(i));
-                                ((DefaultCategoryDataset) dataset).addValue(0, helpList.get(i).toString(), "");
+                        if (!helpList.isEmpty()) {
+                            for (String missing : helpList) {
+                                ((DefaultCategoryDataset) dataset).addValue(0, missing, "");
                             }
                         }
 
+                        dataset = new DefaultCategoryDataset();
                         VGraphCell nextCell = createVertex(result.getString(bufferPos), result.getString(idPos));
                         createEdges(nextCell, result.getString(idPos));
                         cache.insert(nextCell);
                         cellHistory.add(nextCell);
-                        helpList = new ArrayList(testList);
-                        System.out.println("HelpList: " + helpList);
+                        helpList = new ArrayList<String>(testList);
                     }
 
-                    for (int i = 0; i < testList.size(); i++) {
-                        if (result.getString(namePos).equals(testList.get(i))) {
-                            helpList.remove(testList.get(i));
+                    for (String available : testList) {
+                        if (result.getString(namePos).equals(available)) {
+                            helpList.remove(available);
                         }
                     }
-
 
                     ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(namePos), "");
                     buffer = currentValue;
@@ -267,12 +261,25 @@ public class VGraph extends JGraph {
                     LOG.info(result.getString(2));
 
                     if (!buffer.equals(currentValue)) {
+
+                        if (!helpList.isEmpty()) {
+                            for (String missing : helpList) {
+                                ((DefaultPieDataset) dataset).setValue(missing, 0);
+                            }
+                        }
+
                         dataset = new DefaultPieDataset();
 
                         VGraphCell nextCell = createVertex(result.getString(bufferPos), result.getString(idPos));
                         createEdges(nextCell, result.getString(idPos));
                         cache.insert(nextCell);
                         cellHistory.add(nextCell);
+                    }
+
+                    for (String available : testList) {
+                        if (result.getString(namePos).equals(available)) {
+                            helpList.remove(available);
+                        }
                     }
 
                     ((DefaultPieDataset) dataset).setValue(result.getString(namePos), result.getInt(1));
