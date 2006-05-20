@@ -129,7 +129,7 @@ public class VExplorer extends JFrame {
     private JButton zoomIn = new JButton(VIcons.ZOOM_IN);
     private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
     private JButton layout = new JButton(VIcons.SHAPE_ROTATE_CLOCKWISE);
-    private JButton newMeasure = new JButton(VIcons.NEW_MEASURE);
+    private JMenuItem newMeasure = new JMenuItem(VIcons.NEW_MEASURE);
 
     /**
      * Constructs a new frame that is initially invisible.
