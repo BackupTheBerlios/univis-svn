@@ -53,5 +53,6 @@ public class GraphTest {
         frame.getContentPane().add(new JScrollPane(graph));
         frame.pack();
         frame.setVisible(true);
+        System.out.println(Color.RED.getRGB());
     }
 }

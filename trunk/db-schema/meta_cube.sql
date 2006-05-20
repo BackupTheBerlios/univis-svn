@@ -16,8 +16,8 @@ SET search_path = public, pg_catalog;
 -- Data for Name: meta_cube; Type: TABLE DATA; Schema: public; Owner: univis
 --
 
-INSERT INTO meta_cube (data_reference_id, color_rgb, hierarchy_id) VALUES (1000, -65000, 1000);
-INSERT INTO meta_cube (data_reference_id, color_rgb, hierarchy_id) VALUES (2000, -126000, 2000);
+INSERT INTO meta_cube (data_reference_id, color_rgb, hierarchy_id) VALUES (1000, -16776961, 1000);
+INSERT INTO meta_cube (data_reference_id, color_rgb, hierarchy_id) VALUES (2000, -65536, 2000);
 
 
 -- Completed on 2006-05-10 17:24:37 Westeuropäische Normalzeit
