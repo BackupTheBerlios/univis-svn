@@ -38,6 +38,7 @@ public class VIcons {
     public static final Icon EXIT = new ImageIcon(VIcons.class.getResource("../images/exit.png"));
     public static final Icon CHART = new ImageIcon(VIcons.class.getResource("../images/chart.png"));
     public static final Icon MEASURE = new ImageIcon(VIcons.class.getResource("../images/measure.png"));
+    public static final Icon NEW_MEASURE = new ImageIcon(VIcons.class.getResource("../images/new_measure.png"));
     public static final Icon WORLD = new ImageIcon(VIcons.class.getResource("../images/world.png"));
     public static final Icon VERTICAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/verticalLayout.png"));
     public static final Icon HORIZONTAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/horizontalLayout.png"));
