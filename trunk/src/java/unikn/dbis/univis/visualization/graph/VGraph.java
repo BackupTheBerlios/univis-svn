@@ -253,6 +253,7 @@ public class VGraph extends JGraph {
             }
         }
         layout.run(facade);
+        facade.setOrdered(true);
         Map nested = facade.createNestedMap(true, true);
         cache.edit(nested);
     }
@@ -342,12 +343,15 @@ public class VGraph extends JGraph {
         setModel(model);
         setGraphLayoutCache(cache);
 
+        facade.setOrdered(true);
+
         queryHistory.reset();
         cellHistory.reset();
     }
 
     public void reloadGraph() {
         layout.run(facade);
+        facade.setOrdered(true);
         Map nested = facade.createNestedMap(true, true);
         cache.edit(nested);
     }
