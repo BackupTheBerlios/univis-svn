@@ -40,4 +40,7 @@ public interface Constants {
     public final static String ZOOM_IN_TOOLTIP = "zoomInTooltip";
     public final static String ZOOM_OUT_TOOLTIP = "zoomOutTooltip";
     public final static String LAYOUT_TOOLTIP = "layoutTooltip";
+
+    public final static String NEW_MEASURE = "newMeasure";
+    public final static String NEW_MEASURE_TOOLTIP = "newMeasureToolTip";
 }
