@@ -128,10 +128,6 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
 
         plot();
 
-        if (countValues() >= 25) {
-            chart.removeLegend();
-        }
-
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBackground(Color.WHITE);
         chartPanel.setMouseZoomable(true);
@@ -152,13 +148,6 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
      * @return Total amount of the chart.
      */
     protected abstract int createTotal();
-
-    /**
-     * The number of values of the chart.
-     *
-     * @return The number of values of the chart.
-     */
-    protected abstract int countValues();
 
     /**
      * Makes the plot.

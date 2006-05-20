@@ -22,6 +22,7 @@ import java.sql.*;
 import unikn.dbis.univis.visualization.chart.PieChart;
 import unikn.dbis.univis.visualization.chart.BarChart;
 import unikn.dbis.univis.visualization.chart.AbstractChart;
+import unikn.dbis.univis.visualization.chart.AreaChart;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
@@ -102,6 +103,9 @@ public class VGraph extends JGraph {
         AbstractChart chart;
         if (chartCheck.equals("barChart")) {
             chart = new BarChart(chartName, (CategoryDataset) dataset, xAxis, barChartOrientation);
+        }
+        else if (chartCheck.equals("areaChart")) {
+            chart = new AreaChart(chartName, (CategoryDataset) dataset, xAxis);
         }
         else {
             chart = new PieChart(chartName, (PieDataset) dataset);
@@ -184,7 +188,7 @@ public class VGraph extends JGraph {
 
             cellHistory.historize();
 
-            if (chartCheck.equals("barChart")) {
+            if (chartCheck.equals("barChart") || chartCheck.equals("areaChart")) {
                 dataset = new DefaultCategoryDataset();
 
                 while (result.next()) {
@@ -207,7 +211,7 @@ public class VGraph extends JGraph {
             cellHistory.historize();
 
             String buffer = "";
-            if (chartCheck.equals("barChart")) {
+            if (chartCheck.equals("barChart") || chartCheck.equals("areaChart")) {
                 while (result.next()) {
 
                     String currentValue = result.getString(idPos);

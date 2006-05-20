@@ -66,15 +66,6 @@ public class PieChart extends AbstractChart<PieDataset> implements Renderable {
     }
 
     /**
-     * The number of values of the chart.
-     *
-     * @return The number of values of the chart.
-     */
-    protected int countValues() {
-        return getDataset().getItemCount();
-    }
-
-    /**
      * Makes the plot.
      */
     protected void plot() {
