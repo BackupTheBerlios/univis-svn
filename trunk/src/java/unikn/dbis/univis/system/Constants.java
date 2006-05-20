@@ -42,5 +42,5 @@ public interface Constants {
     public final static String LAYOUT_TOOLTIP = "layoutTooltip";
 
     public final static String NEW_MEASURE = "newMeasure";
-    public final static String NEW_MEASURE_TOOLTIP = "newMeasureToolTip";
+    public final static String NEW_MEASURE_TOOLTIP = "newMeasureTooltip";
 }
