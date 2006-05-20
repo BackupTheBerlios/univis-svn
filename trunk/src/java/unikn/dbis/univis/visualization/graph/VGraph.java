@@ -192,7 +192,7 @@ public class VGraph extends JGraph {
             testList.add(testResult.getString(1));
         }
 
-        List helpList = testList;
+        List helpList = new ArrayList(testList);
 
         if (root == null) {
 
@@ -229,9 +229,12 @@ public class VGraph extends JGraph {
                     if (!buffer.equals(currentValue)) {
                         dataset = new DefaultCategoryDataset();
                         if (helpList.isEmpty()) {
+
                         }
                         else {
+                            System.out.println("HelpList danach: " + helpList);
                             for (int i = 0; i < helpList.size(); i++) {
+                                //System.out.println(helpList.get(i));
                                 ((DefaultCategoryDataset) dataset).addValue(0, helpList.get(i).toString(), "");
                             }
                         }
@@ -240,7 +243,8 @@ public class VGraph extends JGraph {
                         createEdges(nextCell, result.getString(idPos));
                         cache.insert(nextCell);
                         cellHistory.add(nextCell);
-                        helpList = testList;
+                        helpList = new ArrayList(testList);
+                        System.out.println("HelpList: " + helpList);
                     }
 
                     for (int i = 0; i < testList.size(); i++) {
@@ -248,6 +252,7 @@ public class VGraph extends JGraph {
                             helpList.remove(testList.get(i));
                         }
                     }
+
 
                     ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(namePos), "");
                     buffer = currentValue;

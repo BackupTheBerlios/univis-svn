@@ -30,6 +30,7 @@ public class VQuery {
 
     private String cubeName = "sos_cube";
     private String cubeAttribute = "SUM(koepfe)";
+    private String testSql;
 
     /**
      *
@@ -197,12 +198,23 @@ public class VQuery {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(sql.toString());
             }
-
+            testSql = createTestSql();
             return sql.toString();
+
         }
 
         public String toString() {
             return sql.toString();
         }
+
+        public String createTestSql() {
+            String sql = "SELECT DISTINCT " + lastTableName + ".name FROM " + lastTableName;
+            System.out.println("SQL: " + sql);
+            return sql;
+        }
+    }
+
+    public String getTestSql() {
+        return testSql;
     }
 }
