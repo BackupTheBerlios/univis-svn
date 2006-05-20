@@ -111,6 +111,7 @@ public class VExplorer extends JFrame {
     private JCheckBoxMenuItem barChart1 = new JCheckBoxMenuItem(VIcons.CHART_BAR_HORIZONTAL);
     private JCheckBoxMenuItem barChart2 = new JCheckBoxMenuItem(VIcons.CHART_BAR_VERTICAL);
     private JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem(VIcons.CHART_PIE);
+    private JCheckBoxMenuItem areaChart = new JCheckBoxMenuItem(VIcons.CHART_AREA);
     private JCheckBoxMenuItem heads = new JCheckBoxMenuItem(VIcons.USERK);
     private JCheckBoxMenuItem cases = new JCheckBoxMenuItem(VIcons.USERF);
     private JCheckBoxMenuItem amount = new JCheckBoxMenuItem(VIcons.EURO);
@@ -181,7 +182,7 @@ public class VExplorer extends JFrame {
             }
         });
 
-        graph.addMouseListener(new MouseAdapter() {
+        /*graph.addMouseListener(new MouseAdapter() {
 
             public void mousePressed(MouseEvent e) {
                 System.out.println("VExplorer.mousePressed");
@@ -205,7 +206,7 @@ public class VExplorer extends JFrame {
                 System.out.println("SIZE: " + graphScrollPane.getViewport().getSize());
                 System.out.println("selection = " + selection);
             }
-        });
+        });*/
     }
 
     private void initToolbar() {
@@ -340,17 +341,21 @@ public class VExplorer extends JFrame {
         makeActionListenerCharts(barChart1, "barChart", "Vertical");
         makeActionListenerCharts(barChart2, "barChart", "Horizontal");
         makeActionListenerCharts(pieChart, "pieChart", "");
+        makeActionListenerCharts(areaChart, "areaChart", "");
         ButtonGroup charts = new ButtonGroup();
         barChart1.setState(true);
         barChart2.setState(false);
         pieChart.setState(false);
+        areaChart.setState(false);
         charts.add(barChart1);
         charts.add(barChart2);
         charts.add(pieChart);
+        charts.add(areaChart);
 
         chartsMenu.add(barChart1);
         chartsMenu.add(barChart2);
         chartsMenu.add(pieChart);
+        chartsMenu.add(areaChart);
     }
 
     private void makeMeasuresMenu() {
@@ -509,6 +514,7 @@ public class VExplorer extends JFrame {
         barChart1.setText(MessageResolver.getMessage(Constants.BAR_CHART));
         barChart2.setText(MessageResolver.getMessage(Constants.BAR_CHART));
         pieChart.setText(MessageResolver.getMessage(Constants.PIE_CHART));
+        areaChart.setText(MessageResolver.getMessage(Constants.AREA_CHART));
         heads.setText(MessageResolver.getMessage(Constants.HEADS));
         cases.setText(MessageResolver.getMessage(Constants.CASES));
         amount.setText(MessageResolver.getMessage(Constants.AMOUNT));
