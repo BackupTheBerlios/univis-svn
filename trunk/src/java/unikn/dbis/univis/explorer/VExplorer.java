@@ -129,6 +129,7 @@ public class VExplorer extends JFrame {
     private JButton zoomIn = new JButton(VIcons.ZOOM_IN);
     private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
     private JButton layout = new JButton(VIcons.SHAPE_ROTATE_CLOCKWISE);
+    private JButton newMeasure = new JButton(VIcons.NEW_MEASURE);
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -376,6 +377,7 @@ public class VExplorer extends JFrame {
         measuresMenu.add(heads);
         measuresMenu.add(cases);
         measuresMenu.add(amount);
+        measuresMenu.add(newMeasure);
     }
 
     private void makeLanguageMenu() {
@@ -528,6 +530,8 @@ public class VExplorer extends JFrame {
         delete.setToolTipText(MessageResolver.getMessage(Constants.DELETE_TOOLTIP));
         charts.setToolTipText(MessageResolver.getMessage(Constants.CHARTS_TOOLTIP));
         measures.setToolTipText(MessageResolver.getMessage(Constants.MEASURES_TOOLTIP));
+        newMeasure.setText(MessageResolver.getMessage(Constants.NEW_MEASURE));
+        newMeasure.setToolTipText(MessageResolver.getMessage(Constants.NEW_MEASURE_TOOLTIP));
         languages.setToolTipText(MessageResolver.getMessage(Constants.LANGUAGES_TOOLTIP));
         exit.setToolTipText(MessageResolver.getMessage(Constants.EXIT_TOOLTIP));
         zoomIn.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_IN_TOOLTIP));
