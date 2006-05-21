@@ -11,6 +11,7 @@ import unikn.dbis.univis.icon.VCubeIcon;
 import unikn.dbis.univis.util.ComponentUtilities;
 import unikn.dbis.univis.visualization.VVisualization;
 import unikn.dbis.univis.visualization.graph.VGraph;
+import unikn.dbis.univis.visualization.graph.VGraphCell;
 import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.Internationalizable;
 import unikn.dbis.univis.system.Constants;
@@ -30,6 +31,9 @@ import java.sql.SQLException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.jgraph.graph.GraphLayoutCache;
+import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.DefaultGraphCell;
 
 /**
  * TODO: document me!!!
@@ -411,17 +415,54 @@ public class VExplorer extends JFrame implements Internationalizable {
     }
 
     private void makeLayoutMenu() {
+
         layoutVertical.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 graph.setLayoutOrientation(SwingConstants.NORTH);
+
+                GraphLayoutCache cache = graph.getGraphLayoutCache();
+                Object cells[] = cache.getCells(false, true, false, false);
+                Object edges[] = cache.getCells(false, false, false, true);
+
                 graph.reloadGraph();
+
+                cache.remove(edges);
+
+                for (int i = 0; i < cells.length; i++) {
+
+                    VGraphCell cell = (VGraphCell) cells[i];
+                    if (cell.toString().equals("root")) {
+
+                    }
+                    else {
+                        graph.createEdges(cell, cell.getCellId());
+                    }
+                }
             }
         });
 
         layoutHorizontal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 graph.setLayoutOrientation(SwingConstants.WEST);
+
+                GraphLayoutCache cache = graph.getGraphLayoutCache();
+                Object cells[] = cache.getCells(false, true, false, false);
+                Object edges[] = cache.getCells(false, false, false, true);
+
                 graph.reloadGraph();
+
+                cache.remove(edges);
+
+                for (int i = 0; i < cells.length; i++) {
+
+                    VGraphCell cell = (VGraphCell) cells[i];
+                    if (cell.toString().equals("root")) {
+
+                    }
+                    else {
+                        graph.createEdges(cell, cell.getCellId());
+                    }
+                }
             }
         });
 
