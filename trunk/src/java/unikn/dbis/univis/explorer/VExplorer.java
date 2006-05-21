@@ -118,6 +118,7 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JCheckBoxMenuItem barChart2 = new JCheckBoxMenuItem(VIcons.CHART_BAR_VERTICAL);
     private JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem(VIcons.CHART_PIE);
     private JCheckBoxMenuItem areaChart = new JCheckBoxMenuItem(VIcons.CHART_AREA);
+    private JCheckBoxMenuItem ringChart = new JCheckBoxMenuItem(VIcons.CHART_RING);
     private JCheckBoxMenuItem heads = new JCheckBoxMenuItem(VIcons.USERK);
     private JCheckBoxMenuItem cases = new JCheckBoxMenuItem(VIcons.USERF);
     private JCheckBoxMenuItem amount = new JCheckBoxMenuItem(VIcons.EURO);
@@ -351,20 +352,24 @@ public class VExplorer extends JFrame implements Internationalizable {
         makeActionListenerCharts(barChart2, "barChart", "Horizontal");
         makeActionListenerCharts(pieChart, "pieChart", "");
         makeActionListenerCharts(areaChart, "areaChart", "");
+        makeActionListenerCharts(ringChart, "ringChart", "");
         ButtonGroup charts = new ButtonGroup();
         barChart1.setState(true);
         barChart2.setState(false);
         pieChart.setState(false);
         areaChart.setState(false);
+        ringChart.setState(false);
         charts.add(barChart1);
         charts.add(barChart2);
         charts.add(pieChart);
         charts.add(areaChart);
+        charts.add(ringChart);
 
         chartsMenu.add(barChart1);
         chartsMenu.add(barChart2);
         chartsMenu.add(pieChart);
         chartsMenu.add(areaChart);
+        chartsMenu.add(ringChart);
     }
 
     private void makeMeasuresMenu() {
@@ -558,6 +563,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         barChart2.setText(MessageResolver.getMessage(Constants.BAR_CHART));
         pieChart.setText(MessageResolver.getMessage(Constants.PIE_CHART));
         areaChart.setText(MessageResolver.getMessage(Constants.AREA_CHART));
+        ringChart.setText(MessageResolver.getMessage(Constants.RING_CHART));
         heads.setText(MessageResolver.getMessage(Constants.HEADS));
         cases.setText(MessageResolver.getMessage(Constants.CASES));
         amount.setText(MessageResolver.getMessage(Constants.AMOUNT));
