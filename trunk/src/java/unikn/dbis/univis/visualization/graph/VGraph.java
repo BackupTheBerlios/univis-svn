@@ -214,6 +214,7 @@ public class VGraph extends JGraph {
             }
 
             root = createVertex(rootHeadLine, "");
+            root.setCellId("root");
             cache.insert(root);
             cellHistory.add(root);
         }
