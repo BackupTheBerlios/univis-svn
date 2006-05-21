@@ -263,24 +263,12 @@ public class VGraph extends JGraph {
 
                     if (!buffer.equals(currentValue)) {
 
-                        if (!helpList.isEmpty()) {
-                            for (String missing : helpList) {
-                                ((DefaultPieDataset) dataset).setValue(missing, 0);
-                            }
-                        }
-
                         dataset = new DefaultPieDataset();
 
                         VGraphCell nextCell = createVertex(result.getString(bufferPos), result.getString(idPos));
                         createEdges(nextCell, result.getString(idPos));
                         cache.insert(nextCell);
                         cellHistory.add(nextCell);
-                    }
-
-                    for (String available : testList) {
-                        if (result.getString(namePos).equals(available)) {
-                            helpList.remove(available);
-                        }
                     }
 
                     ((DefaultPieDataset) dataset).setValue(result.getString(namePos), result.getInt(1));
