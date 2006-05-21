@@ -425,7 +425,6 @@ public class VExplorer extends JFrame implements Internationalizable {
                 Object edges[] = cache.getCells(false, false, false, true);
 
                 graph.reloadGraph();
-
                 cache.remove(edges);
 
                 for (int i = 0; i < cells.length; i++) {
@@ -450,7 +449,6 @@ public class VExplorer extends JFrame implements Internationalizable {
                 Object edges[] = cache.getCells(false, false, false, true);
 
                 graph.reloadGraph();
-
                 cache.remove(edges);
 
                 for (int i = 0; i < cells.length; i++) {
