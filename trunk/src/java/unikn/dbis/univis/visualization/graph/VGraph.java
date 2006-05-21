@@ -148,7 +148,7 @@ public class VGraph extends JGraph {
         cache.insert(edge);
     }
 
-    private void createEdges(VGraphCell target, String targetId) {
+    public void createEdges(VGraphCell target, String targetId) {
 
         String sourceId = "";
         if (targetId.lastIndexOf("_") != -1) {
