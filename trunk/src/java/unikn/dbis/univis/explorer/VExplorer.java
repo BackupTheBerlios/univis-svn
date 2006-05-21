@@ -12,7 +12,9 @@ import unikn.dbis.univis.util.ComponentUtilities;
 import unikn.dbis.univis.visualization.VVisualization;
 import unikn.dbis.univis.visualization.graph.VGraph;
 import unikn.dbis.univis.message.MessageResolver;
+import unikn.dbis.univis.message.Internationalizable;
 import unikn.dbis.univis.system.Constants;
+import unikn.dbis.univis.exception.VExceptionDialog;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -43,7 +45,7 @@ import org.jgraph.graph.GraphLayoutCache;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VExplorer extends JFrame {
+public class VExplorer extends JFrame implements Internationalizable {
 
     /**
      * Starting the univis explorer.
@@ -146,13 +148,14 @@ public class VExplorer extends JFrame {
      */
     public VExplorer() throws HeadlessException {
         super("UniVis Explorer 0.1 - (c) 2005-2006 a.d. - DBIS, University of Konstanz");
-        reinitI18();
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(800, 600));
         setSize(new Dimension(800, 600));
         ComponentUtilities.centerComponentOnScreen(this);
 
         split.setDividerLocation(300);
+        split.setOneTouchExpandable(true);
 
         initToolbar();
         initNavigation();
@@ -208,6 +211,8 @@ public class VExplorer extends JFrame {
                 System.out.println("selection = " + selection);
             }
         });*/
+
+        ComponentUtilities.repaintComponentTree(this);
     }
 
     private void initToolbar() {
@@ -318,7 +323,6 @@ public class VExplorer extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource().equals(undo)) {
-
                     graph.undoCells();
                 }
             }
@@ -385,7 +389,6 @@ public class VExplorer extends JFrame {
         german.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MessageResolver.setLocale(Locale.GERMAN);
-                reinitI18();
                 ComponentUtilities.repaintComponentTree(VExplorer.this);
             }
         });
@@ -393,7 +396,6 @@ public class VExplorer extends JFrame {
         english.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MessageResolver.setLocale(Locale.ENGLISH);
-                reinitI18();
                 ComponentUtilities.repaintComponentTree(VExplorer.this);
             }
         });
@@ -472,7 +474,7 @@ public class VExplorer extends JFrame {
     }
 
     public static void publishException(Exception e) {
-        JOptionPane.showMessageDialog(explorer, e.getMessage(), "Exception: " + e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        new VExceptionDialog(explorer, e);
     }
 
     /**
@@ -509,7 +511,7 @@ public class VExplorer extends JFrame {
         });
     }
 
-    public void reinitI18() {
+    public void internationalize() {
         // Sets the text for the MenuItems.
         german.setText(MessageResolver.getMessage(Constants.GERMAN));
         english.setText(MessageResolver.getMessage(Constants.ENGLISH));

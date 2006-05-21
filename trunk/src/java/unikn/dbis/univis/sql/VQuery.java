@@ -3,6 +3,7 @@ package unikn.dbis.univis.sql;
 import unikn.dbis.univis.meta.VDimension;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.pretty.DDLFormatter;
 
 import java.util.Stack;
 
