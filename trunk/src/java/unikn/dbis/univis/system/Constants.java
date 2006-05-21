@@ -44,4 +44,5 @@ public interface Constants {
 
     public final static String NEW_MEASURE = "newMeasure";
     public final static String NEW_MEASURE_TOOLTIP = "newMeasureTooltip";
+    public final static String MEASURE_MESSAGE = "measureMessage";
 }
