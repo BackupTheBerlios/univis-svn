@@ -21,10 +21,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.sql.*;
 
-import unikn.dbis.univis.visualization.chart.PieChart;
-import unikn.dbis.univis.visualization.chart.BarChart;
-import unikn.dbis.univis.visualization.chart.AbstractChart;
-import unikn.dbis.univis.visualization.chart.AreaChart;
+import unikn.dbis.univis.visualization.chart.*;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
@@ -108,6 +105,9 @@ public class VGraph extends JGraph {
         }
         else if (chartCheck.equals("areaChart")) {
             chart = new AreaChart(chartName, (CategoryDataset) dataset, xAxis);
+        }
+        else if (chartCheck.equals("ringChart")) {
+            chart = new RingChart(chartName, (PieDataset) dataset);
         }
         else {
             chart = new PieChart(chartName, (PieDataset) dataset);
