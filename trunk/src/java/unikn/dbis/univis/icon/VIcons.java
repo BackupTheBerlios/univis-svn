@@ -33,15 +33,15 @@ public class VIcons {
     public static final Icon ZOOM_IN = new ImageIcon(VIcons.class.getResource("../images/zoom_in.png"));
     public static final Icon ZOOM_OUT = new ImageIcon(VIcons.class.getResource("../images/zoom_out.png"));
 
-    public static final Icon USERK = new ImageIcon(VIcons.class.getResource("../images/userf.png"));
-    public static final Icon USERF = new ImageIcon(VIcons.class.getResource("../images/userk.png"));
+    public static final Icon USERK = new ImageIcon(VIcons.class.getResource("../images/students_cases.png"));
+    public static final Icon USERF = new ImageIcon(VIcons.class.getResource("../images/students_heads.png"));
     public static final Icon EURO = new ImageIcon(VIcons.class.getResource("../images/euro.png"));
     public static final Icon EXIT = new ImageIcon(VIcons.class.getResource("../images/exit.png"));
     public static final Icon CHART = new ImageIcon(VIcons.class.getResource("../images/chart.png"));
     public static final Icon MEASURE = new ImageIcon(VIcons.class.getResource("../images/measure.png"));
     public static final Icon NEW_MEASURE = new ImageIcon(VIcons.class.getResource("../images/new_measure.png"));
-    public static final Icon WORLD = new ImageIcon(VIcons.class.getResource("../images/world.png"));
-    public static final Icon NEW_WORLD = new ImageIcon(VIcons.class.getResource("../images/world_add.png"));
-    public static final Icon VERTICAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/verticalLayout.png"));
-    public static final Icon HORIZONTAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/horizontalLayout.png"));
+    public static final Icon WORLD = new ImageIcon(VIcons.class.getResource("../images/language.png"));
+    public static final Icon NEW_WORLD = new ImageIcon(VIcons.class.getResource("../images/new_language.png"));
+    public static final Icon VERTICAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/vertical_layout.png"));
+    public static final Icon HORIZONTAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/horizontal_layout.png"));
 }
