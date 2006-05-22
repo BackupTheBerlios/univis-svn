@@ -133,9 +133,12 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
     private JButton layout = new JButton(VIcons.SHAPE_ROTATE_CLOCKWISE);
     private JMenuItem newMeasure = new JMenuItem(VIcons.NEW_MEASURE);
+    private JMenuItem newLanguage = new JMenuItem(VIcons.NEW_WORLD);
 
     private String measureMessage;
     private String measureTitle;
+    private String languageMessage;
+    private String languageTitle;
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -414,6 +417,12 @@ public class VExplorer extends JFrame implements Internationalizable {
             }
         });
 
+        newLanguage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(VExplorer.this.getContentPane(), languageMessage, languageTitle, 1);
+            }
+        });
+
         ButtonGroup languageGroup = new ButtonGroup();
         german.setState(true);
         english.setState(false);
@@ -422,6 +431,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         languageMenu.add(german);
         languageMenu.add(english);
+        languageMenu.add(newLanguage);
     }
 
     private void makeLayoutMenu() {
@@ -584,6 +594,8 @@ public class VExplorer extends JFrame implements Internationalizable {
         measures.setToolTipText(MessageResolver.getMessage(Constants.MEASURES_TOOLTIP));
         newMeasure.setText(MessageResolver.getMessage(Constants.NEW_MEASURE));
         newMeasure.setToolTipText(MessageResolver.getMessage(Constants.NEW_MEASURE_TOOLTIP));
+        newLanguage.setText(MessageResolver.getMessage(Constants.NEW_LANGUAGE));
+        newLanguage.setToolTipText(MessageResolver.getMessage(Constants.NEW_LANGUAGE));
         languages.setToolTipText(MessageResolver.getMessage(Constants.LANGUAGES_TOOLTIP));
         exit.setToolTipText(MessageResolver.getMessage(Constants.EXIT_TOOLTIP));
         zoomIn.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_IN_TOOLTIP));
@@ -592,5 +604,8 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         measureMessage = MessageResolver.getMessage(Constants.MEASURE_MESSAGE);
         measureTitle = MessageResolver.getMessage(Constants.NEW_MEASURE);
+        languageMessage = MessageResolver.getMessage(Constants.NEW_LANGUAGE_MESSAGE);
+        languageTitle = MessageResolver.getMessage(Constants.NEW_LANGUAGE);
+
     }
 }
