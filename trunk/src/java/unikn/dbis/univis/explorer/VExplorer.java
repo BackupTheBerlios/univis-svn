@@ -22,7 +22,6 @@ import java.awt.event.*;
 import java.awt.*;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
 import java.util.List;
 import java.util.Locale;
 import java.sql.Connection;
@@ -31,9 +30,6 @@ import java.sql.SQLException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.jgraph.graph.GraphLayoutCache;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.DefaultGraphCell;
 
 /**
  * TODO: document me!!!
@@ -137,6 +133,9 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
     private JButton layout = new JButton(VIcons.SHAPE_ROTATE_CLOCKWISE);
     private JMenuItem newMeasure = new JMenuItem(VIcons.NEW_MEASURE);
+
+    private String measureMessage;
+    private String measureTitle;
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -379,6 +378,12 @@ public class VExplorer extends JFrame implements Internationalizable {
         makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
         makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Betraege");
 
+        newMeasure.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(VExplorer.this.getContentPane(), measureMessage, measureTitle, 1);
+            }
+        });
+
         ButtonGroup measuresGroup = new ButtonGroup();
         heads.setState(true);
         cases.setState(false);
@@ -584,5 +589,8 @@ public class VExplorer extends JFrame implements Internationalizable {
         zoomIn.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_IN_TOOLTIP));
         zoomOut.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_OUT_TOOLTIP));
         layout.setToolTipText(MessageResolver.getMessage(Constants.LAYOUT_TOOLTIP));
+
+        measureMessage = MessageResolver.getMessage(Constants.MEASURE_MESSAGE);
+        measureTitle = MessageResolver.getMessage(Constants.NEW_MEASURE);
     }
 }
