@@ -43,6 +43,4 @@ public class VIcons {
     public static final Icon NEW_MEASURE = new ImageIcon(VIcons.class.getResource("../images/new_measure.png"));
     public static final Icon WORLD = new ImageIcon(VIcons.class.getResource("../images/language.png"));
     public static final Icon NEW_WORLD = new ImageIcon(VIcons.class.getResource("../images/new_language.png"));
-    public static final Icon VERTICAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/vertical_layout.png"));
-    public static final Icon HORIZONTAL_LAYOUT = new ImageIcon(VIcons.class.getResource("../images/horizontal_layout.png"));
 }
