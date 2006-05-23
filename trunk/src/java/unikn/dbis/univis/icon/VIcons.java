@@ -33,8 +33,8 @@ public class VIcons {
     public static final Icon ZOOM_IN = new ImageIcon(VIcons.class.getResource("../images/zoom_in.png"));
     public static final Icon ZOOM_OUT = new ImageIcon(VIcons.class.getResource("../images/zoom_out.png"));
 
-    public static final Icon USERK = new ImageIcon(VIcons.class.getResource("../images/students_cases.png"));
-    public static final Icon USERF = new ImageIcon(VIcons.class.getResource("../images/students_heads.png"));
+    public static final Icon STUDENTS_HEADS = new ImageIcon(VIcons.class.getResource("../images/students_cases.png"));
+    public static final Icon STUDENTS_CASES = new ImageIcon(VIcons.class.getResource("../images/students_heads.png"));
     public static final Icon EURO = new ImageIcon(VIcons.class.getResource("../images/euro.png"));
     public static final Icon EXIT = new ImageIcon(VIcons.class.getResource("../images/exit.png"));
     public static final Icon CHART = new ImageIcon(VIcons.class.getResource("../images/chart.png"));

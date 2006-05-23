@@ -115,8 +115,8 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JCheckBoxMenuItem pieChart = new JCheckBoxMenuItem(VIcons.CHART_PIE);
     private JCheckBoxMenuItem areaChart = new JCheckBoxMenuItem(VIcons.CHART_AREA);
     private JCheckBoxMenuItem ringChart = new JCheckBoxMenuItem(VIcons.CHART_RING);
-    private JCheckBoxMenuItem heads = new JCheckBoxMenuItem(VIcons.USERK);
-    private JCheckBoxMenuItem cases = new JCheckBoxMenuItem(VIcons.USERF);
+    private JCheckBoxMenuItem heads = new JCheckBoxMenuItem(VIcons.STUDENTS_CASES);
+    private JCheckBoxMenuItem cases = new JCheckBoxMenuItem(VIcons.STUDENTS_HEADS);
     private JCheckBoxMenuItem amount = new JCheckBoxMenuItem(VIcons.EURO);
     private JCheckBoxMenuItem layoutVertical = new JCheckBoxMenuItem(VIcons.VERTICAL_LAYOUT);
     private JCheckBoxMenuItem layoutHorizontal = new JCheckBoxMenuItem(VIcons.HORIZONTAL_LAYOUT);
@@ -447,13 +447,10 @@ public class VExplorer extends JFrame implements Internationalizable {
                 graph.reloadGraph();
                 cache.remove(edges);
 
-                for (int i = 0; i < cells.length; i++) {
+                for (Object cell1 : cells) {
 
-                    VGraphCell cell = (VGraphCell) cells[i];
-                    if (cell.toString().equals("root")) {
-
-                    }
-                    else {
+                    VGraphCell cell = (VGraphCell) cell1;
+                    if (!cell.toString().equals("root")) {
                         graph.createEdges(cell, cell.getCellId());
                     }
                 }
@@ -471,13 +468,10 @@ public class VExplorer extends JFrame implements Internationalizable {
                 graph.reloadGraph();
                 cache.remove(edges);
 
-                for (int i = 0; i < cells.length; i++) {
+                for (Object cell1 : cells) {
 
-                    VGraphCell cell = (VGraphCell) cells[i];
-                    if (cell.toString().equals("root")) {
-
-                    }
-                    else {
+                    VGraphCell cell = (VGraphCell) cell1;
+                    if (!"root".equals(cell.toString())) {
                         graph.createEdges(cell, cell.getCellId());
                     }
                 }

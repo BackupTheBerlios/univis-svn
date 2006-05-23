@@ -4,12 +4,16 @@ import unikn.dbis.univis.visualization.AbstractRenderer;
 import unikn.dbis.univis.visualization.Renderable;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartMouseListener;
+import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.title.Title;
 import org.jfree.data.general.Dataset;
 
 import java.awt.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 

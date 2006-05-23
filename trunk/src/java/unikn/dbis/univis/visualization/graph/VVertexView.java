@@ -71,9 +71,6 @@ public class VVertexView extends VertexView {
          */
         public Component getRendererComponent(JGraph graph, CellView view, boolean sel, boolean focus, boolean preview) {
 
-            JPanel panel = new JPanel(new BorderLayout());
-            panel.setBackground(Color.WHITE);
-
             Component c = null;
             if (view.getCell() instanceof DefaultGraphCell) {
                 Object o = ((DefaultGraphCell) view.getCell()).getUserObject();
@@ -84,13 +81,14 @@ public class VVertexView extends VertexView {
             }
 
             if (c != null) {
-                panel.add(c, BorderLayout.CENTER);
+                return c;
             }
             else {
+                JPanel panel = new JPanel(new BorderLayout());
                 panel.add(new JLabel("n/a @see VVertexView"), BorderLayout.CENTER);
-            }
 
-            return panel;
+                return panel;
+            }
         }
     }
 }

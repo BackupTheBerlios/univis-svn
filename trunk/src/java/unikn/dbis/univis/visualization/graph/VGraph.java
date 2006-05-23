@@ -15,6 +15,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.sql.*;
 
 import unikn.dbis.univis.visualization.chart.*;
+import unikn.dbis.univis.visualization.graph.plaf.VGraphUI;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
@@ -83,13 +86,15 @@ public class VGraph extends JGraph {
      * tree layout cache.
      */
     public VGraph() {
-
+        setUI(new VGraphUI());
+        
         setDropTarget(new DropTarget(this, DnDConstants.ACTION_COPY, new VGraphDropTargetListener()));
 
         setModel(model);
         setGraphLayoutCache(cache);
         setEditable(false);
         setMoveable(false);
+        setSelectionEnabled(false);
 
         layout.setOrientation(SwingConstants.NORTH);
     }
