@@ -3,6 +3,7 @@ package unikn.dbis.univis.meta.impl;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VCube;
 import unikn.dbis.univis.meta.VDataReference;
+import unikn.dbis.univis.meta.Filterable;
 
 import java.util.*;
 
@@ -22,7 +23,7 @@ import java.util.*;
 public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VDataReference {
 
     public VDimensionImpl() {
-        selections = new HashSet<Object>();
+        selections = new HashSet<Filterable>();
     }
 
     // ##############################################################################
@@ -39,7 +40,7 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     private Boolean visible;
 
     // The identifiers of the selected values.
-    private Set<Object> selections;
+    private Set<Filterable> selections;
 
     // Whether the selection of the dimension was changed or not.
     private boolean selectionChanged;
@@ -117,7 +118,7 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
      *
      * @return The identifiers of the selected values.
      */
-    public Set<Object> getSelections() {
+    public Set<Filterable> getSelections() {
         return selections;
     }
 
@@ -127,7 +128,7 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
      * @param selections The identifiers of the selected
      *                   values.
      */
-    public void setSelections(Set<Object> selections) {
+    public void setSelections(Set<Filterable> selections) {
         this.selections = selections;
     }
 

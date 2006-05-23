@@ -2,6 +2,7 @@ package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
+import unikn.dbis.univis.meta.Filterable;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -9,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 import java.util.Set;
 import java.util.HashSet;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 /**
  * TODO: document me!!!
@@ -52,10 +51,10 @@ public class VIdCheckBox extends JCheckBoxMenuItem {
              */
             public void actionPerformed(ActionEvent e) {
                 if (isSelected()) {
-                    dimension.getSelections().add(new Parentor(id, parentId));
+                    dimension.getSelections().add(new VIdCheckBoxFilter(id, parentId));
                 }
                 else {
-                    dimension.getSelections().remove(new Parentor(id, parentId));
+                    dimension.getSelections().remove(new VIdCheckBoxFilter(id, parentId));
 
                     for (VDataReference dataReference : dimension.getChildren()) {
                         if (dataReference instanceof VDimension) {
@@ -87,10 +86,10 @@ public class VIdCheckBox extends JCheckBoxMenuItem {
              */
             public void actionPerformed(ActionEvent e) {
                 if (isSelected()) {
-                    dimension.getSelections().add(new Parentor(id, parentId));
+                    dimension.getSelections().add(new VIdCheckBoxFilter(id, parentId));
                 }
                 else {
-                    dimension.getSelections().remove(new Parentor(id, parentId));
+                    dimension.getSelections().remove(new VIdCheckBoxFilter(id, parentId));
 
                     for (VDataReference dataReference : dimension.getChildren()) {
                         if (dataReference instanceof VDimension) {
@@ -102,12 +101,12 @@ public class VIdCheckBox extends JCheckBoxMenuItem {
         });
     }
 
-    public class Parentor {
+    public class VIdCheckBoxFilter implements Filterable {
 
         private Long id;
         private Long parentId;
 
-        public Parentor(Long id, Long parentId) {
+        public VIdCheckBoxFilter(Long id, Long parentId) {
             this.id = id;
             this.parentId = parentId;
         }
@@ -132,10 +131,10 @@ public class VIdCheckBox extends JCheckBoxMenuItem {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            final Parentor parentor = (Parentor) o;
+            final VIdCheckBoxFilter filter = (VIdCheckBoxFilter) o;
 
-            if (id != null ? !id.equals(parentor.id) : parentor.id != null) return false;
-            return !(parentId != null ? !parentId.equals(parentor.parentId) : parentor.parentId != null);
+            if (id != null ? !id.equals(filter.id) : filter.id != null) return false;
+            return !(parentId != null ? !parentId.equals(filter.parentId) : filter.parentId != null);
         }
 
         public int hashCode() {
@@ -148,14 +147,14 @@ public class VIdCheckBox extends JCheckBoxMenuItem {
 
     public void test(VDimension dimension, Long id) {
 
-        Set<Object> selections = dimension.getSelections();
+        Set<Filterable> selections = dimension.getSelections();
 
         // !!! Fixes the concurrent modification exception.
         Set<Object> removables = new HashSet<Object>();
 
         for (Object o : selections) {
-            if (o instanceof Parentor) {
-                Parentor parentor = (Parentor) o;
+            if (o instanceof VIdCheckBoxFilter) {
+                VIdCheckBoxFilter parentor = (VIdCheckBoxFilter) o;
 
                 if (id.equals(parentor.getParentId())) {
                     removables.add(parentor);
@@ -176,10 +175,10 @@ public class VIdCheckBox extends JCheckBoxMenuItem {
     protected void paintComponent(Graphics g) {
 
         for (Object o : dimension.getSelections()) {
-            if (o instanceof Parentor) {
-                Parentor parentor = (Parentor) o;
+            if (o instanceof Filterable) {
+                Filterable filterable = (Filterable) o;
 
-                if (parentor.getId().equals(id)) {
+                if (filterable.getId().equals(id)) {
                     setSelected(true);
                     break;
                 }

@@ -99,7 +99,7 @@ public class VTree extends JTree implements DragGestureListener {
 
                     String sql = "SELECT " + dimension.getTableName() + ".id, " + (dimension.isParentable() ? dimension.getTableName() + ".parent, " : "") + dimension.getTableName() + ".name " + getWhere(node);
 
-                    System.out.println("SQL: " + sql);
+                    //System.out.println("SQL: " + sql);
 
                     ResultSet result = stmt.executeQuery(sql);
 
@@ -150,7 +150,7 @@ public class VTree extends JTree implements DragGestureListener {
                 }
             }
 
-            System.out.println("querySelect = " + querySelect.toQueryString());
+            //System.out.println("querySelect = " + querySelect.toQueryString());
         }
     }
 
@@ -185,8 +185,8 @@ public class VTree extends JTree implements DragGestureListener {
                         if (o3 instanceof Long) {
                             selection = (Long) o3;
                         }
-                        else if (o3 instanceof VIdCheckBox.Parentor) {
-                            selection = ((VIdCheckBox.Parentor) o3).getId();
+                        else if (o3 instanceof VIdCheckBox.VIdCheckBoxFilter) {
+                            selection = ((VIdCheckBox.VIdCheckBoxFilter) o3).getId();
                         }
 
                         appended = true;

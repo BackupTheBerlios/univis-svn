@@ -90,7 +90,7 @@ public interface VDimension extends VDataReference {
      *
      * @return The identifiers of the selected values.
      */
-    public Set<Object> getSelections();
+    public Set<Filterable> getSelections();
 
     /**
      * Sets the identifiers of the selected values.
@@ -98,7 +98,7 @@ public interface VDimension extends VDataReference {
      * @param selections The identifiers of the selected
      *                   values.
      */
-    public void setSelections(Set<Object> selections);
+    public void setSelections(Set<Filterable> selections);
 
     /**
      * Returns whether the selection of the dimension was changed

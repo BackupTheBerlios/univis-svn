@@ -1,9 +1,9 @@
 package unikn.dbis.univis.sql;
 
 import unikn.dbis.univis.meta.VDimension;
+import unikn.dbis.univis.meta.Filterable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.pretty.DDLFormatter;
 
 import java.util.Stack;
 
@@ -151,23 +151,80 @@ public class VQuery {
             if (history.size() <= 1) {
 
                 if (!dimension.equals(blueprint)) {
-
                     from.append(cubeName).append(", ").append(tableName).append(", ").append(bluepName);
                     where.append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getJoinable());
+
+                    String filter = getFilterWhereClause(blueprint);
+                    if (filter.length() > 0) {
+                        where.append(" ").append(filter);
+                    }
+
+                    /*
+                    if (blueprint.getSelections() != null && blueprint.getSelections().size() > 0) {
+
+                        where.append(" AND (");
+
+                        int size = blueprint.getSelections().size();
+                        for (Filterable filter : blueprint.getSelections()) {
+                            where.append(cubeName + "." + blueprint.getJoinable() + " = " + filter.getId());
+
+                            if (size > 1) {
+                                where.append(" OR ");
+                                size--;
+                            }
+                        }
+                        where.append(")");
+                    }
+                    */
                 }
                 else {
                     from.append(cubeName).append(", ").append(tableName);
                     where.append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getJoinable());
+
+                    if (blueprint.getSelections() != null && blueprint.getSelections().size() > 0) {
+                        where.append(" AND (");
+
+                        int size = blueprint.getSelections().size();
+                        for (Filterable filter : blueprint.getSelections()) {
+                            where.append(cubeName + "." + blueprint.getJoinable() + " = " + filter.getId());
+
+                            if (size > 1) {
+                                where.append(" OR ");
+                                size--;
+                            }
+                        }
+                        where.append(")");
+                    }
                 }
             }
             else {
                 if (!dimension.equals(blueprint)) {
                     from.append(", ").append(bluepName).append(", ").append(tableName);
                     where.append(" AND ").append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getJoinable());
+
+                    String filter = getFilterWhereClause(blueprint);
+                    if (filter.length() > 0) {
+                        where.append(" ").append(filter);
+                    }
                 }
                 else {
                     from.append(", ").append(tableName);
                     where.append(" AND ").append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getJoinable());
+
+                    if (blueprint.getSelections() != null && blueprint.getSelections().size() > 0) {
+                        where.append(" AND (");
+
+                        int size = blueprint.getSelections().size();
+                        for (Filterable filter : blueprint.getSelections()) {
+                            where.append(cubeName + "." + blueprint.getJoinable() + " = " + filter.getId());
+
+                            if (size > 1) {
+                                where.append(" OR ");
+                                size--;
+                            }
+                        }
+                        where.append(")");
+                    }
                 }
                 group.append(", ");
                 order.append(", ");
@@ -210,12 +267,67 @@ public class VQuery {
 
         public String createTestSql() {
             String sql = "SELECT DISTINCT " + lastTableName + ".name FROM " + lastTableName;
-            System.out.println("SQL: " + sql);
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(sql);
+            }
+
             return sql;
         }
     }
 
     public String getTestSql() {
         return testSql;
+    }
+
+    public String getFilterWhereClause(VDimension dimension) {
+
+        String tableName = dimension.getTableName();
+
+        //StringBuffer from = new StringBuffer("FROM " + tableName + " AS " + tableName);
+        StringBuffer where = new StringBuffer();
+
+        VDimension oldDimension = dimension;
+
+        boolean filtered = true;
+        while (dimension.isParentable() && filtered) {
+
+            dimension = (VDimension) dimension.getParent();
+
+            boolean appended = false;
+
+            for (Filterable filter : dimension.getSelections()) {
+
+                Long selection = (Long) filter.getId();
+
+                appended = true;
+                filtered = false;
+
+                if (where.length() > 0) {
+                    where.append(" OR ");
+                }
+                else {
+                    where.append("(");
+                }
+
+                if (oldDimension.isVisible()) {
+                    where.append(tableName).append(".parent = ").append(selection);
+                }
+                else {
+                    where.append(tableName).append("." + dimension.getJoinable() + " = ").append(selection);
+                }
+            }
+
+            if (appended) {
+                where.append(")");
+            }
+        }
+
+        if (where.length() > 0) {
+            where.insert(0, " AND ");
+        }
+
+        //return from.toString() + where.toString();
+        return where.toString();
     }
 }
