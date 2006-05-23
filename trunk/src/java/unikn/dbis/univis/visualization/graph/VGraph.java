@@ -30,6 +30,7 @@ import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
 import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.VQuery;
+import unikn.dbis.univis.message.MessageResolver;
 
 import javax.swing.*;
 
@@ -323,7 +324,7 @@ public class VGraph extends JGraph {
         try {
             result = statement.executeQuery(sql);
             testResult = statement2.executeQuery(testSql);
-            rootHeadLine = dimension.getI18nKey();
+            rootHeadLine = MessageResolver.getMessage(dimension.getI18nKey());
             fillChartData(result, testResult);
         }
         catch (SQLException sqle) {
@@ -340,6 +341,14 @@ public class VGraph extends JGraph {
 
             if (statement != null) {
                 statement.close();
+            }
+
+            if (testResult != null) {
+                testResult.close();
+            }
+
+            if (statement2 != null) {
+                statement2.close();
             }
         }
     }
