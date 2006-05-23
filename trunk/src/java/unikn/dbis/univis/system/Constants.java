@@ -26,8 +26,6 @@ public interface Constants {
     public final static String HEADS = "heads";
     public final static String CASES = "cases";
     public final static String AMOUNT = "amount";
-    public final static String LAYOUT_VERTICAL = "layoutVertical";
-    public final static String LAYOUT_HORIZONTAL = "layoutHorizontal";
 
     // All Strings for the ToolTips of the Buttons.
     public final static String REFRESH_TOOLTIP = "refreshTooltip";
@@ -40,7 +38,8 @@ public interface Constants {
     public final static String EXIT_TOOLTIP = "exitTooltip";
     public final static String ZOOM_IN_TOOLTIP = "zoomInTooltip";
     public final static String ZOOM_OUT_TOOLTIP = "zoomOutTooltip";
-    public final static String LAYOUT_TOOLTIP = "layoutTooltip";
+    public final static String ROTATE_CLOCKWISE_TOOLTIP = "rotateClockwiseTooltip";
+    public final static String ROTATE_ANTICLOCKWISE_TOOLTIP = "rotateAnticlockwiseTooltip";
 
     public final static String NEW_MEASURE = "newMeasure";
     public final static String NEW_MEASURE_TOOLTIP = "newMeasureTooltip";

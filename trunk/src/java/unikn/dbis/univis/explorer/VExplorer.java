@@ -118,8 +118,6 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JCheckBoxMenuItem heads = new JCheckBoxMenuItem(VIcons.STUDENTS_CASES);
     private JCheckBoxMenuItem cases = new JCheckBoxMenuItem(VIcons.STUDENTS_HEADS);
     private JCheckBoxMenuItem amount = new JCheckBoxMenuItem(VIcons.EURO);
-    private JCheckBoxMenuItem layoutVertical = new JCheckBoxMenuItem(VIcons.VERTICAL_LAYOUT);
-    private JCheckBoxMenuItem layoutHorizontal = new JCheckBoxMenuItem(VIcons.HORIZONTAL_LAYOUT);
 
     private JButton refresh = new JButton(VIcons.ARROW_REFRESH);
     private JButton undo = new JButton(VIcons.ARROW_UNDO);
@@ -131,7 +129,8 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JButton exit = new JButton(VIcons.EXIT);
     private JButton zoomIn = new JButton(VIcons.ZOOM_IN);
     private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
-    private JButton layout = new JButton(VIcons.SHAPE_ROTATE_CLOCKWISE);
+    private JButton rotateClockwise = new JButton(VIcons.SHAPE_ROTATE_CLOCKWISE);
+    private JButton rotateAnticlockwise = new JButton(VIcons.SHAPE_ROTATE_ANTICLOCKWISE);
     private JMenuItem newMeasure = new JMenuItem(VIcons.NEW_MEASURE);
     private JMenuItem newLanguage = new JMenuItem(VIcons.NEW_WORLD);
 
@@ -266,7 +265,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         makeChartsMenu();
         makeMeasuresMenu();
         makeLanguageMenu();
-        makeLayoutMenu();
 
         charts.addMouseListener(new MouseAdapter() {
 
@@ -307,10 +305,47 @@ public class VExplorer extends JFrame implements Internationalizable {
             }
         });
 
-        layout.addMouseListener(new MouseAdapter() {
+        rotateClockwise.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                if ((SwingConstants.NORTH) == graph.getLayoutOrientation()) {
+                    graph.setLayoutOrientation(SwingConstants.EAST);
+                }
+                else if ((SwingConstants.EAST) == graph.getLayoutOrientation()) {
+                    graph.setLayoutOrientation(SwingConstants.SOUTH);
+                }
+                else if ((SwingConstants.SOUTH) == graph.getLayoutOrientation()) {
+                    graph.setLayoutOrientation(SwingConstants.WEST);
+                }
+                else if ((SwingConstants.WEST) == graph.getLayoutOrientation()) {
+                    graph.setLayoutOrientation(SwingConstants.NORTH);
+                }
 
-            public void mouseClicked(MouseEvent evt) {
-                layoutMenu.show(layout, 0, layout.getHeight());
+                rotateGraph();
+            }
+        });
+
+        rotateAnticlockwise.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                if ((SwingConstants.NORTH) == graph.getLayoutOrientation()) {
+                    graph.setLayoutOrientation(SwingConstants.WEST);
+                }
+                else if ((SwingConstants.WEST) == graph.getLayoutOrientation()) {
+                    graph.setLayoutOrientation(SwingConstants.SOUTH);
+                }
+                else if ((SwingConstants.SOUTH) == graph.getLayoutOrientation()) {
+                    graph.setLayoutOrientation(SwingConstants.EAST);
+                }
+                else if ((SwingConstants.EAST) == graph.getLayoutOrientation()) {
+                    graph.setLayoutOrientation(SwingConstants.NORTH);
+                }
+
+                rotateGraph();
             }
         });
 
@@ -342,7 +377,8 @@ public class VExplorer extends JFrame implements Internationalizable {
         toolbar.add(measures);
         toolbar.add(zoomIn);
         toolbar.add(zoomOut);
-        toolbar.add(layout);
+        toolbar.add(rotateClockwise);
+        toolbar.add(rotateAnticlockwise);
         toolbar.add(languages);
         toolbar.addSeparator();
         toolbar.add(exit);
@@ -434,60 +470,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         languageMenu.add(newLanguage);
     }
 
-    private void makeLayoutMenu() {
-
-        layoutVertical.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                graph.setLayoutOrientation(SwingConstants.NORTH);
-
-                GraphLayoutCache cache = graph.getGraphLayoutCache();
-                Object cells[] = cache.getCells(false, true, false, false);
-                Object edges[] = cache.getCells(false, false, false, true);
-
-                graph.reloadGraph();
-                cache.remove(edges);
-
-                for (Object cell1 : cells) {
-
-                    VGraphCell cell = (VGraphCell) cell1;
-                    if (!cell.toString().equals("root")) {
-                        graph.createEdges(cell, cell.getCellId());
-                    }
-                }
-            }
-        });
-
-        layoutHorizontal.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                graph.setLayoutOrientation(SwingConstants.WEST);
-
-                GraphLayoutCache cache = graph.getGraphLayoutCache();
-                Object cells[] = cache.getCells(false, true, false, false);
-                Object edges[] = cache.getCells(false, false, false, true);
-
-                graph.reloadGraph();
-                cache.remove(edges);
-
-                for (Object cell1 : cells) {
-
-                    VGraphCell cell = (VGraphCell) cell1;
-                    if (!"root".equals(cell.toString())) {
-                        graph.createEdges(cell, cell.getCellId());
-                    }
-                }
-            }
-        });
-
-        ButtonGroup layoutGroup = new ButtonGroup();
-        layoutVertical.setState(true);
-        layoutHorizontal.setState(false);
-        layoutGroup.add(layoutVertical);
-        layoutGroup.add(layoutHorizontal);
-
-        layoutMenu.add(layoutVertical);
-        layoutMenu.add(layoutHorizontal);
-    }
-
     private void initNavigation() {
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -564,6 +546,23 @@ public class VExplorer extends JFrame implements Internationalizable {
         });
     }
 
+    public void rotateGraph() {
+        GraphLayoutCache cache = graph.getGraphLayoutCache();
+        Object cells[] = cache.getCells(false, true, false, false);
+        Object edges[] = cache.getCells(false, false, false, true);
+
+        graph.reloadGraph();
+        cache.remove(edges);
+
+        for (Object cell1 : cells) {
+
+            VGraphCell cell = (VGraphCell) cell1;
+            if (!cell.toString().equals("root")) {
+                graph.createEdges(cell, cell.getCellId());
+            }
+        }
+    }
+
     public void internationalize() {
         // Sets the text for the MenuItems.
         german.setText(MessageResolver.getMessage(Constants.GERMAN));
@@ -576,8 +575,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         heads.setText(MessageResolver.getMessage(Constants.HEADS));
         cases.setText(MessageResolver.getMessage(Constants.CASES));
         amount.setText(MessageResolver.getMessage(Constants.AMOUNT));
-        layoutVertical.setText(MessageResolver.getMessage(Constants.LAYOUT_VERTICAL));
-        layoutHorizontal.setText(MessageResolver.getMessage(Constants.LAYOUT_HORIZONTAL));
 
         // Sets the tooltip for the Buttons.
         refresh.setToolTipText(MessageResolver.getMessage(Constants.REFRESH_TOOLTIP));
@@ -594,8 +591,8 @@ public class VExplorer extends JFrame implements Internationalizable {
         exit.setToolTipText(MessageResolver.getMessage(Constants.EXIT_TOOLTIP));
         zoomIn.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_IN_TOOLTIP));
         zoomOut.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_OUT_TOOLTIP));
-        layout.setToolTipText(MessageResolver.getMessage(Constants.LAYOUT_TOOLTIP));
-
+        rotateClockwise.setToolTipText(MessageResolver.getMessage(Constants.ROTATE_CLOCKWISE_TOOLTIP));
+        rotateAnticlockwise.setToolTipText(MessageResolver.getMessage(Constants.ROTATE_ANTICLOCKWISE_TOOLTIP));
         measureMessage = MessageResolver.getMessage(Constants.MEASURE_MESSAGE);
         measureTitle = MessageResolver.getMessage(Constants.NEW_MEASURE);
         languageMessage = MessageResolver.getMessage(Constants.NEW_LANGUAGE_MESSAGE);

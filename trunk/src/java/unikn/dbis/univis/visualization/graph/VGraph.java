@@ -87,7 +87,7 @@ public class VGraph extends JGraph {
      */
     public VGraph() {
         setUI(new VGraphUI());
-        
+
         setDropTarget(new DropTarget(this, DnDConstants.ACTION_COPY, new VGraphDropTargetListener()));
 
         setModel(model);
@@ -144,9 +144,18 @@ public class VGraph extends JGraph {
             edge.setSource(source.getChildAt(1));
             edge.setTarget(target.getChildAt(0));
         }
-        else {
+        else if (layout.getOrientation() == SwingConstants.WEST) {
             edge.setSource(source.getChildAt(3));
             edge.setTarget(target.getChildAt(2));
+        }
+        else if (layout.getOrientation() == SwingConstants.SOUTH) {
+            edge.setSource(source.getChildAt(0));
+            edge.setTarget(target.getChildAt(1));
+
+        }
+        else if (layout.getOrientation() == SwingConstants.EAST) {
+            edge.setSource(source.getChildAt(2));
+            edge.setTarget(target.getChildAt(3));
         }
         GraphConstants.setLineEnd(edge.getAttributes(), GraphConstants.ARROW_CLASSIC);
         GraphConstants.setEndFill(edge.getAttributes(), true);
