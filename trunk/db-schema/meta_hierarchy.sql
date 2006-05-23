@@ -2,17 +2,17 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2006-05-10 17:26:14 Westeuropäische Normalzeit
+-- Started on 2006-05-23 18:37:50 Westeuropäische Normalzeit
 
-SET client_encoding = 'SQL_ASCII';
+SET client_encoding = 'UTF8';
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 1631 (class 0 OID 143490)
--- Dependencies: 1298
+-- TOC entry 1632 (class 0 OID 113732)
+-- Dependencies: 1302
 -- Data for Name: meta_hierarchy; Type: TABLE DATA; Schema: public; Owner: univis
 --
 
@@ -35,7 +35,6 @@ INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUE
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1014, 1014, 1013, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1015, 1015, 1014, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1016, 1016, 1015, 0);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1017, 1017, 1015, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1019, 1019, 1018, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1020, 1020, 1019, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2000, 2000, 1, 1);
@@ -49,8 +48,6 @@ INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUE
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2008, 2007, 2007, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2015, 2012, 2000, 4);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2020, 1013, 2015, 1);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2009, 2008, 2020, 0);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2011, 2010, 2009, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2012, 2011, 2011, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2013, 1019, 2007, 1);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2014, 1020, 2013, 0);
@@ -65,12 +62,16 @@ INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUE
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2025, 1017, 2023, 1);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2026, 2018, 2020, 1);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2027, 2019, 2015, 2);
-INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2010, 2009, 2008, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1021, 1021, 1010, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1022, 1022, 1006, 0);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1017, 1017, 1015, 1);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2028, 2021, 2004, 0);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2010, 2009, 2009, 0);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2011, 2010, 2010, 0);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (2009, 2008, 2008, 0);
 
 
--- Completed on 2006-05-10 17:26:15 Westeuropäische Normalzeit
+-- Completed on 2006-05-23 18:37:51 Westeuropäische Normalzeit
 
 --
 -- PostgreSQL database dump complete
