@@ -15,6 +15,7 @@ import unikn.dbis.univis.visualization.graph.VGraph;
 import unikn.dbis.univis.visualization.graph.VGraphCell;
 import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.Internationalizable;
+import unikn.dbis.univis.message.VLabel;
 import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.exception.VExceptionDialog;
 
@@ -238,7 +239,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
 
-        chartLabel = new JLabel(" Chart: Balkendiagramm");
+        chartLabel = new VLabel(" Chart: Balkendiagramm");
         statePanel.add(chartLabel, gbc);
 
         measureLabel = new JLabel(" Measure: Köpfe (Studenten)");
@@ -527,7 +528,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         JPanel facts = new JPanel(new GridLayout(cubes.size(), 1));
         for (VCube cube : cubes) {
-            facts.add(new JLabel(cube.getI18nKey(), new VCubeIcon(cube.getColor()), JLabel.LEFT));
+            facts.add(new VLabel(cube.getI18nKey(), new VCubeIcon(cube.getColor()), JLabel.LEFT));
         }
 
         session.close();
