@@ -37,9 +37,9 @@ INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (101
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1018, 'period', 'semester', 'bluep_semester');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1019, 'by_year_academic', 'jahr', 'dim_academ_jahr');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1020, 'by_semester', 'semester', 'dim_semester');
-INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2000, 'orders', NULL, 'cob_busa_cube
-
-');
+INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1021, '#bluep_nation#', 'nation', 'bluep_nation');
+INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1022, '#bluep_abschluss#', 'abschluss', 'bluep_abschluss');
+INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2000, 'orders', NULL, 'cob_busa_cube');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2001, 'cost_categories', 'kostenart', 'bluep_kostenart');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2002, 'category', 'kategorie', 'dim_kostenkategorien');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2003, 'sub-category', 'unterkategorie', 'dim_kostenunterkategorien');
@@ -49,6 +49,8 @@ INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (200
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2007, 'by_year', 'jahr', 'bluep_jahr');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2008, 'by_semi-annual', 'halbjahr', 'dim_halbjahre');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2009, 'by_quarter', 'quartal', 'dim_quartale');
+INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2010, 'by_month', 'monat', 'dim_monate');
+INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2011, '#bluep_zeit#', 'zeit', 'bluep_zeit');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2012, 'institution', 'institution', 'bluep_institution');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2013, 'administrative_unit', NULL, 'Adminstrative unit');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2014, 'unit', NULL, 'Unit');
@@ -57,11 +59,7 @@ INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (201
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2017, 'departments_only', NULL, 'Departments only');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2018, 'faculties_only', NULL, 'Faculties only');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2019, 'staff', NULL, 'Staff');
-INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1021, '#bluep_nation#', 'nation', 'bluep_nation');
-INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1022, '#bluep_abschluss#', 'abschluss', 'bluep_abschluss');
-INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2021, '#bluep_kostenart#', 'kostenart', 'bluep_kostenart');
-INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2011, '#bluep_zeit#', 'zeit', 'bluep_zeit');
-INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2010, 'by_month', 'monat', 'dim_monate');
+INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2020, '#bluep_kostenart#', 'kostenart', 'bluep_kostenart');
 
 
 -- Completed on 2006-05-23 18:35:17 Westeuropäische Normalzeit

@@ -32,6 +32,8 @@ import java.sql.SQLException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.jgraph.graph.GraphLayoutCache;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * TODO: document me!!!
@@ -75,6 +77,10 @@ public class VExplorer extends JFrame implements Internationalizable {
             }
         });
     }
+
+    // The logger to log info, error and other occuring messages
+    // or exceptions.
+    public static final transient Log LOG = LogFactory.getLog(VExplorer.class);
 
     private static VExplorer explorer;
 

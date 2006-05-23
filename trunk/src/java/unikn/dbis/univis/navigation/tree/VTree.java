@@ -7,6 +7,7 @@ import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.dialect.UniVisDialect;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
+import unikn.dbis.univis.message.MessageResolver;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -23,6 +24,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 
 import org.hibernate.sql.QuerySelect;
 import org.hibernate.sql.JoinFragment;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * TODO: document me!!!
@@ -39,6 +42,10 @@ import org.hibernate.sql.JoinFragment;
  * @since UniVis Explorer 0.1
  */
 public class VTree extends JTree implements DragGestureListener {
+
+    // The logger to log info, error and other occuring messages
+    // or exceptions.
+    public static final transient Log LOG = LogFactory.getLog(VTree.class);
 
     /**
      * Returns a <code>JTree</code> with a sample model.
@@ -72,7 +79,7 @@ public class VTree extends JTree implements DragGestureListener {
 
         QuerySelect querySelect = new QuerySelect(HibernateUtil.getDialect());
 
-        final JPopupMenu popupMenu = new JPopupMenu();
+        final VPopupMenu popupMenu = new VPopupMenu(x, y);
 
         Object o = getLastSelectedPathComponent();
 
@@ -118,11 +125,12 @@ public class VTree extends JTree implements DragGestureListener {
                     }
 
                     if (hasNoTupel) {
-                        JOptionPane.showMessageDialog(VTree.this.getParent().getParent().getParent(), "No items found.", "Error message", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(VTree.this.getParent().getParent().getParent(), MessageResolver.getMessage("no_items_found"), MessageResolver.getMessage("error_message"), JOptionPane.ERROR_MESSAGE);
                     }
                     else {
-                        JMenuItem view = new JMenuItem("Filter", VIcons.LIGHTNING);
+                        JMenuItem view = new JMenuItem(MessageResolver.getMessage("filtering"), VIcons.LIGHTNING);
                         view.addActionListener(new ActionListener() {
+
                             /**
                              * Invoked when an action occurs.
                              */
@@ -135,18 +143,13 @@ public class VTree extends JTree implements DragGestureListener {
 
                         popupMenu.show(VTree.this, x, y);
                     }
-
-                    /*
-                    System.out.println("DIM1: " + dimension.getSelections());
-
-                    dimension.getSelections().retainAll(selections);
-
-                    System.out.println("DIM2: " + dimension.getSelections());
-                    */
                 }
                 catch (SQLException sqle) {
-                    JOptionPane.showMessageDialog(VTree.this.getParent().getParent().getParent(), sqle.getMessage(), "Error message", JOptionPane.ERROR_MESSAGE);
-                    sqle.printStackTrace();
+                    VExplorer.publishException(sqle);
+
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error(sqle.getMessage(), sqle);
+                    }
                 }
             }
 

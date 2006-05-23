@@ -34,7 +34,9 @@ INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1015, 
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1016, 1000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1017, 1000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1018, 1000);
+INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1018, 2000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1019, 1000);
+INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1019, 2000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1020, 1000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1021, 1000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1022, 1000);
@@ -57,8 +59,6 @@ INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (2016, 
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (2017, 2000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (2018, 2000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (2019, 2000);
-INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1018, 2000);
-INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1019, 2000);
 
 
 -- Completed on 2006-05-23 18:37:24 Westeuropäische Normalzeit

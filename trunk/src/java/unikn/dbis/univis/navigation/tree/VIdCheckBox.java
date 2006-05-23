@@ -43,8 +43,6 @@ public class VIdCheckBox extends JCheckBoxMenuItem {
         this.dimension = dimension;
         this.id = id;
 
-        //setSelected(dimension.getSelections().contains(id));
-
         addActionListener(new ActionListener() {
             /**
              * Invoked when an action occurs.
@@ -61,6 +59,14 @@ public class VIdCheckBox extends JCheckBoxMenuItem {
                             test((VDimension) dataReference, id);
                         }
                     }
+                }
+
+                if (getParent() instanceof VPopupMenu) {
+                    VPopupMenu popupMenu = (VPopupMenu) getParent();
+
+                    Component invoker = popupMenu.getInvoker();
+
+                    popupMenu.show(invoker);
                 }
             }
         });
