@@ -69,7 +69,7 @@ public class VGraph extends JGraph {
     private AbstractDataset dataset;
 
     // Strings for different topics.
-    private String chartCheck = "barChart";
+    private ChartType chartType = ChartType.BAR_CHART;
     private String rootHeadLine = "";
     private String xAxis = "Studenten";
     private String barChartOrientation = "Vertical";
@@ -105,13 +105,13 @@ public class VGraph extends JGraph {
     public VGraphCell createVertex(String chartName, String id) {
 
         AbstractChart chart;
-        if (chartCheck.equals("barChart")) {
+        if (ChartType.BAR_CHART.equals(chartType)) {
             chart = new BarChart(chartName, (CategoryDataset) dataset, xAxis, barChartOrientation);
         }
-        else if (chartCheck.equals("areaChart")) {
+        else if (ChartType.AREA_CHART.equals(chartType)) {
             chart = new AreaChart(chartName, (CategoryDataset) dataset, xAxis);
         }
-        else if (chartCheck.equals("ringChart")) {
+        else if (ChartType.RING_CHART.equals(chartType)) {
             chart = new RingChart(chartName, (PieDataset) dataset);
         }
         else {
@@ -212,7 +212,7 @@ public class VGraph extends JGraph {
 
             cellHistory.historize();
 
-            if (chartCheck.equals("barChart") || chartCheck.equals("areaChart")) {
+            if (ChartType.BAR_CHART.equals(chartType) || ChartType.AREA_CHART.equals(chartType)) {
                 dataset = new DefaultCategoryDataset();
 
                 while (result.next()) {
@@ -236,7 +236,7 @@ public class VGraph extends JGraph {
             cellHistory.historize();
 
             String buffer = "";
-            if (chartCheck.equals("barChart") || chartCheck.equals("areaChart")) {
+            if (ChartType.BAR_CHART.equals(chartType) || ChartType.AREA_CHART.equals(chartType)) {
                 while (result.next()) {
 
                     String currentValue = result.getString(idPos);
@@ -429,8 +429,8 @@ public class VGraph extends JGraph {
         this.xAxis = xAxis;
     }
 
-    public void setChartCheck(String chartCheck) {
-        this.chartCheck = chartCheck;
+    public void setChartCheck(ChartType chartType) {
+        this.chartType = chartType;
     }
 
     public void setBarChartOrientation(String barChartOrientation) {

@@ -10,6 +10,7 @@ import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.icon.VCubeIcon;
 import unikn.dbis.univis.util.ComponentUtilities;
 import unikn.dbis.univis.visualization.VVisualization;
+import unikn.dbis.univis.visualization.chart.ChartType;
 import unikn.dbis.univis.visualization.graph.VGraph;
 import unikn.dbis.univis.visualization.graph.VGraphCell;
 import unikn.dbis.univis.message.MessageResolver;
@@ -386,11 +387,11 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private void makeChartsMenu() {
 
-        makeActionListenerCharts(barChart1, "barChart", "Vertical");
-        makeActionListenerCharts(barChart2, "barChart", "Horizontal");
-        makeActionListenerCharts(pieChart, "pieChart", "");
-        makeActionListenerCharts(areaChart, "areaChart", "");
-        makeActionListenerCharts(ringChart, "ringChart", "");
+        makeActionListenerCharts(barChart1, ChartType.BAR_CHART, "Vertical");
+        makeActionListenerCharts(barChart2, ChartType.BAR_CHART, "Horizontal");
+        makeActionListenerCharts(pieChart, ChartType.PIE_CHART, "");
+        makeActionListenerCharts(areaChart, ChartType.AREA_CHART, "");
+        makeActionListenerCharts(ringChart, ChartType.RING_CHART, "");
         ButtonGroup charts = new ButtonGroup();
         barChart1.setState(true);
         barChart2.setState(false);
@@ -534,13 +535,13 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     /**
      * @param checkBoxMenuItem Item which gets the Listener.
-     * @param chartName        String which is need to set.
+     * @param chartType        The type of the current chart.
      */
-    public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final String chartName, final String barChartOrientation) {
+    public void makeActionListenerCharts(final JCheckBoxMenuItem checkBoxMenuItem, final ChartType chartType, final String barChartOrientation) {
 
         checkBoxMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                graph.setChartCheck(chartName);
+                graph.setChartCheck(chartType);
                 graph.setBarChartOrientation(barChartOrientation);
             }
         });
