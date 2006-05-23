@@ -30,6 +30,7 @@ public class VIcons {
     public static final Icon FLAG_EN = new ImageIcon(VIcons.class.getResource("../images/flag_gb.png"));
     public static final Icon LIGHTNING = new ImageIcon(VIcons.class.getResource("../images/lightning.png"));
     public static final Icon SHAPE_ROTATE_CLOCKWISE = new ImageIcon(VIcons.class.getResource("../images/shape_rotate_clockwise.png"));
+    public static final Icon SHAPE_ROTATE_ANTICLOCKWISE = new ImageIcon(VIcons.class.getResource("../images/shape_rotate_anticlockwise.png"));
     public static final Icon ZOOM_IN = new ImageIcon(VIcons.class.getResource("../images/zoom_in.png"));
     public static final Icon ZOOM_OUT = new ImageIcon(VIcons.class.getResource("../images/zoom_out.png"));
 
