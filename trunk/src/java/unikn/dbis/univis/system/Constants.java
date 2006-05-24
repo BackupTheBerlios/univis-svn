@@ -20,6 +20,8 @@ public interface Constants {
     public final static String GERMAN = "german";
     public final static String ENGLISH = "english";
     public final static String BAR_CHART = "barChart";
+    public final static String BAR_CHART_VERTICAL = "barChartVertical";
+    public final static String BAR_CHART_HORIZONTAL = "barChartHorizontal";
     public final static String PIE_CHART = "pieChart";
     public final static String AREA_CHART = "areaChart";
     public final static String RING_CHART = "ringChart";

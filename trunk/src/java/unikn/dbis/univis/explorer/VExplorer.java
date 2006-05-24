@@ -161,7 +161,7 @@ public class VExplorer extends JFrame implements Internationalizable {
     private VLabel dateLabel;
     private JLabel whatDateLabel;
     private VLabel timeLabel;
-    private JLabel whatTimeLabel;
+    private VClock whatTimeLabel;
     private JPanel complete;
 
     /**
@@ -256,7 +256,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         gbc.anchor = GridBagConstraints.WEST;
 
         chartLabel = new VLabel(Constants.CHART);
-        whatChartLabel = new VLabel(Constants.BAR_CHART);
+        whatChartLabel = new VLabel(Constants.BAR_CHART_VERTICAL);
         complete = new JPanel();
         complete.add(chartLabel);
         complete.add(whatChartLabel);
@@ -280,7 +280,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         statePanel.add(complete, gbc);
 
         timeLabel = new VLabel(Constants.TIME);
-        whatTimeLabel = new JLabel("20:15");
+        whatTimeLabel = new VClock();
         complete = new JPanel();
         complete.add(timeLabel);
         complete.add(whatTimeLabel);
@@ -288,7 +288,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         statePanel.add(complete, gbc);
 
         dateLabel = new VLabel(Constants.DATE);
-        whatDateLabel = new JLabel("20.06.1980");
+        whatDateLabel = new JLabel(whatTimeLabel.getDate());
         complete = new JPanel();
         complete.add(dateLabel);
         complete.add(whatDateLabel);
@@ -296,11 +296,9 @@ public class VExplorer extends JFrame implements Internationalizable {
         statePanel.add(complete, gbc);
 
         TitledBorder border = BorderFactory.createTitledBorder("Status");
-        border.setTitleColor(Color.BLUE);
 
         underStatePanel.setBorder(border);
         underStatePanel.add(statePanel, BorderLayout.WEST);
-
     }
 
     private void initToolbar() {
@@ -467,8 +465,8 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private void makeChartsMenu() {
 
-        makeActionListenerCharts(barChart1, ChartType.BAR_CHART, "Vertical", "barChart");
-        makeActionListenerCharts(barChart2, ChartType.BAR_CHART, "Horizontal", "barChart");
+        makeActionListenerCharts(barChart1, ChartType.BAR_CHART, "Vertical", "barChartVertical");
+        makeActionListenerCharts(barChart2, ChartType.BAR_CHART, "Horizontal", "barChartHorizontal");
         makeActionListenerCharts(pieChart, ChartType.PIE_CHART, "", "pieChart");
         makeActionListenerCharts(areaChart, ChartType.AREA_CHART, "", "areaChart");
         makeActionListenerCharts(ringChart, ChartType.RING_CHART, "", "ringChart");
