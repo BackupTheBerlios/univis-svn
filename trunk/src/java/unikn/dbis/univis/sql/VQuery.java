@@ -27,6 +27,7 @@ public class VQuery {
     // or exceptions.
     public static final transient Log LOG = LogFactory.getLog(VQuery.class);
 
+    // The history of query statements.
     private Stack<VQueryStatement> history;
 
     private String cubeName = "sos_cube";
@@ -158,24 +159,6 @@ public class VQuery {
                     if (filter.length() > 0) {
                         where.append(" ").append(filter);
                     }
-
-                    /*
-                    if (blueprint.getSelections() != null && blueprint.getSelections().size() > 0) {
-
-                        where.append(" AND (");
-
-                        int size = blueprint.getSelections().size();
-                        for (Filterable filter : blueprint.getSelections()) {
-                            where.append(cubeName + "." + blueprint.getJoinable() + " = " + filter.getId());
-
-                            if (size > 1) {
-                                where.append(" OR ");
-                                size--;
-                            }
-                        }
-                        where.append(")");
-                    }
-                    */
                 }
                 else {
                     from.append(cubeName).append(", ").append(tableName);
@@ -186,7 +169,7 @@ public class VQuery {
 
                         int size = blueprint.getSelections().size();
                         for (Filterable filter : blueprint.getSelections()) {
-                            where.append(cubeName + "." + blueprint.getJoinable() + " = " + filter.getId());
+                            where.append(cubeName).append(".").append(blueprint.getJoinable()).append(" = ").append(filter.getId());
 
                             if (size > 1) {
                                 where.append(" OR ");
@@ -216,7 +199,7 @@ public class VQuery {
 
                         int size = blueprint.getSelections().size();
                         for (Filterable filter : blueprint.getSelections()) {
-                            where.append(cubeName + "." + blueprint.getJoinable() + " = " + filter.getId());
+                            where.append(cubeName).append(".").append(blueprint.getJoinable()).append(" = ").append(filter.getId());
 
                             if (size > 1) {
                                 where.append(" OR ");
@@ -256,7 +239,7 @@ public class VQuery {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(sql.toString());
             }
-            testSql = createTestSql();
+            testSql = createTestSql(dimension);
             return sql.toString();
 
         }
@@ -265,8 +248,23 @@ public class VQuery {
             return sql.toString();
         }
 
-        public String createTestSql() {
+        public String createTestSql(VDimension dimension) {
             String sql = "SELECT DISTINCT " + lastTableName + ".name FROM " + lastTableName;
+
+            if (dimension.getSelections() != null && dimension.getSelections().size() > 0) {
+                sql += " WHERE (";
+
+                int size = dimension.getSelections().size();
+                for (Filterable filter : dimension.getSelections()) {
+                    sql += lastTableName + ".id = " + filter.getId();
+
+                    if (size > 1) {
+                        sql += " OR ";
+                        size--;
+                    }
+                }
+                sql += ")";
+            }
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug(sql);
@@ -314,7 +312,7 @@ public class VQuery {
                     where.append(tableName).append(".parent = ").append(selection);
                 }
                 else {
-                    where.append(tableName).append("." + dimension.getJoinable() + " = ").append(selection);
+                    where.append(tableName).append(".").append(dimension.getJoinable()).append(" = ").append(selection);
                 }
             }
 

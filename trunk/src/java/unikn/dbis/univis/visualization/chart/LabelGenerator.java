@@ -31,13 +31,12 @@ public class LabelGenerator implements CategorySeriesLabelGenerator, PieSectionL
     private double full = 100.0;
 
     // Format for the Total.
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     /**
      * @param total
      */
     public LabelGenerator(int total) {
-
         this.total = total;
     }
 
@@ -49,14 +48,11 @@ public class LabelGenerator implements CategorySeriesLabelGenerator, PieSectionL
      * @return String for nice legend.
      */
     public String generateLabel(CategoryDataset dataset, int series) {
-
         Integer value = dataset.getValue(series, 0).intValue();
         Comparable name = dataset.getRowKey(series);
-        Double procent = ((full / total) * value);
+        Double percent = ((full / total) * value);
 
-        String label = name.toString() + " = " + value.toString() + " -> " + df.format(procent) + "%";
-
-        return label;
+        return name.toString() + " = " + value.toString() + " -> " + decimalFormat.format(percent) + "%";
     }
 
     /**
@@ -67,14 +63,11 @@ public class LabelGenerator implements CategorySeriesLabelGenerator, PieSectionL
      * @return The label (possibly <code>null</code>).
      */
     public String generateSectionLabel(PieDataset dataset, Comparable key) {
-
         Integer value = dataset.getValue(key).intValue();
         Comparable name = dataset.getKey(dataset.getIndex(key));
         Double procent = ((full / total) * value);
 
-        String label = name.toString() + " = " + value.toString() + " -> " + df.format(procent) + "%";
-
-        return label;
+        return name.toString() + " = " + value.toString() + " -> " + decimalFormat.format(procent) + "%";
     }
 
     /**

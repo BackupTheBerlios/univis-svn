@@ -18,6 +18,7 @@ import unikn.dbis.univis.message.Internationalizable;
 import unikn.dbis.univis.message.VLabel;
 import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.exception.VExceptionDialog;
+import unikn.dbis.univis.exception.VDialog;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -585,7 +586,7 @@ public class VExplorer extends JFrame implements Internationalizable {
     }
 
     public static void publishException(Exception e) {
-        new VExceptionDialog(explorer, e);
+        new VDialog(explorer, e);
     }
 
     /**

@@ -1,10 +1,16 @@
 package unikn.dbis.univis.visualization.graph.plaf;
 
 import org.jgraph.plaf.basic.BasicGraphUI;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.LegendItemSource;
+import org.jfree.chart.LegendItem;
 
 import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+import java.util.Iterator;
 
 import unikn.dbis.univis.visualization.graph.VGraphCell;
 
@@ -29,7 +35,7 @@ public class VGraphUI extends BasicGraphUI {
      * on mouse events, and to select invidual cells.
      */
     protected MouseListener createMouseListener() {
-        return new MouseListener() {
+        return new MouseAdapter() {
             /**
              * Invoked when the mouse button has been clicked (pressed
              * and released) on a component.
@@ -43,40 +49,23 @@ public class VGraphUI extends BasicGraphUI {
                 if (o instanceof VGraphCell) {
                     VGraphCell cell = (VGraphCell) o;
 
-                    System.out.println("cell.getCellId() = " + cell.getCellId());
-
                     JPopupMenu menu = new JPopupMenu();
-                    menu.add(new JButton(cell.getCellId()));
+
+                    ChartPanel chartPanel = (ChartPanel) cell.getUserObject();
+                    JFreeChart chart = chartPanel.getChart();
+
+                    for (LegendItemSource source : chart.getLegend().getSources()) {
+                        for (Iterator iter = source.getLegendItems().iterator(); iter.hasNext(); ) {
+                            LegendItem item = (LegendItem) iter.next();
+
+                            System.out.println("ITEM: " + item.getLabel());
+
+                            menu.add(item.getLabel());
+                        }
+                    }
+
                     menu.show(graph, e.getX(), e.getY());
                 }
-            }
-
-            /**
-             * Invoked when a mouse button has been pressed on a component.
-             */
-            public void mousePressed(MouseEvent e) {
-                System.out.println("VGraphUI.mousePressed");
-            }
-
-            /**
-             * Invoked when a mouse button has been released on a component.
-             */
-            public void mouseReleased(MouseEvent e) {
-                System.out.println("VGraphUI.mouseReleased");
-            }
-
-            /**
-             * Invoked when the mouse enters a component.
-             */
-            public void mouseEntered(MouseEvent e) {
-                System.out.println("VGraphUI.mouseEntered");
-            }
-
-            /**
-             * Invoked when the mouse exits a component.
-             */
-            public void mouseExited(MouseEvent e) {
-                System.out.println("VGraphUI.mouseExited");
             }
         };
     }

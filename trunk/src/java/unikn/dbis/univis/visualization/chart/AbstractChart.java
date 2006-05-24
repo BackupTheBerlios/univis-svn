@@ -132,9 +132,9 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
 
         plot();
 
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBackground(Color.WHITE);
+        VChartPanel chartPanel = new VChartPanel(chart, true);
         chartPanel.setMouseZoomable(true);
+
 
         return chartPanel;
     }

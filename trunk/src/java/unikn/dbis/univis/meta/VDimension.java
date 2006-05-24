@@ -19,7 +19,7 @@ public interface VDimension extends VDataReference {
 
     /**
      * Whether the dimension is a summable dimension which
-     * couldn't be used for dragging into the visualization
+     * could be used for dragging into the visualization
      * or not.
      *
      * @return Whether the dimension is a summable dimension
@@ -29,7 +29,7 @@ public interface VDimension extends VDataReference {
 
     /**
      * Sets whether the dimension is a summable dimension
-     * which couldn't be used for dragging into the visualization
+     * which could be used for dragging into the visualization
      * or not.
      *
      * @param summable Whether the dimension is a summable

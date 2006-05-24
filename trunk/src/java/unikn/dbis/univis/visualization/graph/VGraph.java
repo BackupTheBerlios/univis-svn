@@ -178,13 +178,6 @@ public class VGraph extends JGraph {
             }
         }
 
-        /*
-        System.out.println("TARGET_ID: " + targetId);
-        System.out.println("SOURCE_ID: " + sourceId);
-        System.out.println("CELL_ID: " + source);
-        System.out.println("TEMP: " + tempCellList);
-        */
-
         createEdges(source, target);
     }
 
@@ -244,9 +237,11 @@ public class VGraph extends JGraph {
 
                     if (!buffer.equals(currentValue)) {
 
-                        if (!helpList.isEmpty()) {
-                            for (String missing : helpList) {
-                                ((DefaultCategoryDataset) dataset).addValue(0, missing, "");
+                        if (!result.isFirst()) {
+                            if (!helpList.isEmpty()) {
+                                for (String missing : helpList) {
+                                    ((DefaultCategoryDataset) dataset).addValue(0, missing, "");
+                                }
                             }
                         }
 
@@ -266,6 +261,14 @@ public class VGraph extends JGraph {
 
                     ((DefaultCategoryDataset) dataset).addValue(result.getInt(1), result.getString(namePos), "");
                     buffer = currentValue;
+
+                    if (result.isLast()) {
+                        if (!helpList.isEmpty()) {
+                            for (String missing : helpList) {
+                                ((DefaultCategoryDataset) dataset).addValue(0, missing, "");
+                            }
+                        }
+                    }
                 }
 
             }

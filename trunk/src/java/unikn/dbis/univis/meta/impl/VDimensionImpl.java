@@ -51,7 +51,7 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
 
     /**
      * Whether the dimension is a summable dimension which
-     * couldn't be used for dragging into the visualization
+     * could be used for dragging into the visualization
      * or not.
      *
      * @return Whether the dimension is a summable dimension
@@ -63,7 +63,7 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
 
     /**
      * Sets whether the dimension is a summable dimension
-     * which couldn't be used for dragging into the visualization
+     * which could be used for dragging into the visualization
      * or not.
      *
      * @param summable Whether the dimension is a summable

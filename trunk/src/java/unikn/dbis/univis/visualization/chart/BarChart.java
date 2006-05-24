@@ -3,12 +3,15 @@ package unikn.dbis.univis.visualization.chart;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.CategoryToolTipGenerator;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.DatasetRenderingOrder;
 import unikn.dbis.univis.visualization.Renderable;
+
+import java.awt.geom.Area;
 
 /**
  * TODO: document me!!!
@@ -90,7 +93,6 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
      * starts the Bar3DChart.
      */
     public void plot() {
-
         CategoryPlot plot = (CategoryPlot) getChart().getPlot();
         CategoryAxis axis = plot.getDomainAxis();
         axis.setTickLabelsVisible(false);

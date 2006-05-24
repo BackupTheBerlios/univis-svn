@@ -8,6 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import org.jdesktop.layout.GroupLayout;
+import org.jdesktop.layout.LayoutStyle;
+
 /**
  * TODO: document me!!!
  * <p/>
@@ -31,7 +34,7 @@ public class VExceptionDialog extends JDialog {
     private JScrollPane scrollPane;
 
     private Exception exception;
-    private boolean opened = false;
+    private boolean opened = true;
 
     /**
      * Creates a non-modal dialog without a title with the
@@ -131,7 +134,7 @@ public class VExceptionDialog extends JDialog {
         close.setText("Schlie\u00dfen");
 
         openDetails.setText(">> Details");
-        
+
         exceptionArea.setColumns(20);
         exceptionArea.setRows(5);
         scrollPane.setViewportView(exceptionArea);
@@ -145,32 +148,32 @@ public class VExceptionDialog extends JDialog {
 
         final JLabel label2 = new JLabel();
 
-        final org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        final GroupLayout layout = new GroupLayout(getContentPane());
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                layout.createParallelGroup(GroupLayout.LEADING)
                         .add(layout.createSequentialGroup()
                         .addContainerGap()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(layout.createParallelGroup(GroupLayout.LEADING)
                                 .add(label)
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                                .add(GroupLayout.TRAILING, layout.createSequentialGroup()
                                         .add(openDetails)
-                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                        .addPreferredGap(LayoutStyle.RELATED)
                                         .add(close))
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, label2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                                .add(GroupLayout.TRAILING, scrollPane, GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
                         .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                layout.createParallelGroup(GroupLayout.LEADING)
                         .add(layout.createSequentialGroup()
                         .addContainerGap()
                         .add(label)
                         .add(44, 44, 44)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(layout.createParallelGroup(GroupLayout.BASELINE)
                                 .add(close)
                                 .add(openDetails))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(label2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                        .add(scrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
                         .addContainerGap())
         );
 
@@ -180,7 +183,7 @@ public class VExceptionDialog extends JDialog {
              */
             public void actionPerformed(ActionEvent e) {
                 if (opened) {
-                    layout.replace(scrollPane, label2);
+                    layout.removeLayoutComponent(scrollPane);
                     opened = false;
 
                     openDetails.setText("<< Details");
