@@ -28,7 +28,7 @@ public class VClock extends JLabel {
     private Date date = new Date();
 
     public VClock() {
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("H:m:s");
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
         Timer timer = new Timer(0, new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 date.setTime(System.currentTimeMillis());
@@ -40,7 +40,7 @@ public class VClock extends JLabel {
     }
 
     public String getDate() {
-        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("E, d.M.y");
-        return simpleDateFormat2.format(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E, dd.MM.yyyy");
+        return simpleDateFormat.format(date);
     }
 }
