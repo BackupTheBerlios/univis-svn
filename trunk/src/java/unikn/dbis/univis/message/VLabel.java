@@ -124,6 +124,7 @@ public class VLabel extends JLabel implements Internationalizable {
      */
     public void setI18NKey(String i18nKey) {
         this.i18nKey = i18nKey;
+        internationalize();
     }
 
     public void internationalize() {

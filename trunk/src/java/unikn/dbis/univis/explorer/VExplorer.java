@@ -20,6 +20,10 @@ import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.exception.VExceptionDialog;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.SoftBevelBorder;
 import java.awt.event.*;
 import java.awt.*;
 import java.awt.dnd.DragSource;
@@ -148,11 +152,17 @@ public class VExplorer extends JFrame implements Internationalizable {
     private String languageMessage;
     private String languageTitle;
 
-    private JLabel measureLabel;
-    private JLabel chartLabel;
-    private JLabel languageLabel;
-    private JLabel dateLabel;
-    private JLabel timeLabel;
+    private VLabel measureLabel;
+    private VLabel whatMeasureLabel;
+    private VLabel chartLabel;
+    private VLabel whatChartLabel;
+    private VLabel languageLabel;
+    private VLabel whatLanguageLabel;
+    private VLabel dateLabel;
+    private JLabel whatDateLabel;
+    private VLabel timeLabel;
+    private JLabel whatTimeLabel;
+    private JPanel complete;
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -245,25 +255,50 @@ public class VExplorer extends JFrame implements Internationalizable {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
 
-        chartLabel = new VLabel(" Chart: Balkendiagramm");
-        statePanel.add(chartLabel, gbc);
+        chartLabel = new VLabel(Constants.CHART);
+        whatChartLabel = new VLabel(Constants.BAR_CHART);
+        complete = new JPanel();
+        complete.add(chartLabel);
+        complete.add(whatChartLabel);
+        statePanel.add(complete, gbc);
 
-        measureLabel = new JLabel(" Measure: Köpfe (Studenten)");
+        measureLabel = new VLabel();
+        measureLabel.setI18NKey(Constants.MEASURE);
+        whatMeasureLabel = new VLabel(Constants.HEADS);
+        complete = new JPanel();
+        complete.add(measureLabel);
+        complete.add(whatMeasureLabel);
         ++gbc.gridy;
-        statePanel.add(measureLabel, gbc);
+        statePanel.add(complete, gbc);
 
-        languageLabel = new JLabel(" Sprache: deutsch");
+        languageLabel = new VLabel(Constants.LANGUAGE);
+        whatLanguageLabel = new VLabel(Constants.GERMAN);
+        complete = new JPanel();
+        complete.add(languageLabel);
+        complete.add(whatLanguageLabel);
         ++gbc.gridy;
-        statePanel.add(languageLabel, gbc);
+        statePanel.add(complete, gbc);
 
-        timeLabel = new JLabel(" Zeit: ");
+        timeLabel = new VLabel(Constants.TIME);
+        whatTimeLabel = new JLabel("20:15");
+        complete = new JPanel();
+        complete.add(timeLabel);
+        complete.add(whatTimeLabel);
         ++gbc.gridy;
-        statePanel.add(timeLabel, gbc);
+        statePanel.add(complete, gbc);
 
-        dateLabel = new JLabel(" Datum: ");
+        dateLabel = new VLabel(Constants.DATE);
+        whatDateLabel = new JLabel("20.06.1980");
+        complete = new JPanel();
+        complete.add(dateLabel);
+        complete.add(whatDateLabel);
         ++gbc.gridy;
-        statePanel.add(dateLabel, gbc);
+        statePanel.add(complete, gbc);
 
+        TitledBorder border = BorderFactory.createTitledBorder("Status");
+        border.setTitleColor(Color.BLUE);
+
+        underStatePanel.setBorder(border);
         underStatePanel.add(statePanel, BorderLayout.WEST);
 
     }
@@ -432,11 +467,11 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private void makeChartsMenu() {
 
-        makeActionListenerCharts(barChart1, ChartType.BAR_CHART, "Vertical");
-        makeActionListenerCharts(barChart2, ChartType.BAR_CHART, "Horizontal");
-        makeActionListenerCharts(pieChart, ChartType.PIE_CHART, "");
-        makeActionListenerCharts(areaChart, ChartType.AREA_CHART, "");
-        makeActionListenerCharts(ringChart, ChartType.RING_CHART, "");
+        makeActionListenerCharts(barChart1, ChartType.BAR_CHART, "Vertical", "barChart");
+        makeActionListenerCharts(barChart2, ChartType.BAR_CHART, "Horizontal", "barChart");
+        makeActionListenerCharts(pieChart, ChartType.PIE_CHART, "", "pieChart");
+        makeActionListenerCharts(areaChart, ChartType.AREA_CHART, "", "areaChart");
+        makeActionListenerCharts(ringChart, ChartType.RING_CHART, "", "ringChart");
         ButtonGroup charts = new ButtonGroup();
         barChart1.setSelected(true);
         charts.add(barChart1);
@@ -455,9 +490,9 @@ public class VExplorer extends JFrame implements Internationalizable {
     private void makeMeasuresMenu() {
 
 
-        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe)", "Studenten");
-        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten");
-        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Betraege");
+        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe)", "Studenten", "heads");
+        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten", "cases");
+        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Betraege", "amount");
 
         newMeasure.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -484,26 +519,16 @@ public class VExplorer extends JFrame implements Internationalizable {
         german.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MessageResolver.setLocale(Locale.GERMAN);
+                whatLanguageLabel.setI18NKey("german");
                 ComponentUtilities.repaintComponentTree(VExplorer.this);
-                languageLabel.setText(" Sprache: " + german.getText());
-                timeLabel.setText(" Zeit:");
-                dateLabel.setText(" Datum:");
-                languageLabel.repaint();
-                timeLabel.repaint();
-                dateLabel.repaint();
             }
         });
 
         english.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MessageResolver.setLocale(Locale.ENGLISH);
+                whatLanguageLabel.setI18NKey("english");
                 ComponentUtilities.repaintComponentTree(VExplorer.this);
-                languageLabel.setText(" Language: " + english.getText());
-                timeLabel.setText(" Time:");
-                dateLabel.setText(" Date:");
-                languageLabel.repaint();
-                timeLabel.repaint();
-                dateLabel.repaint();
             }
         });
 
@@ -570,7 +595,7 @@ public class VExplorer extends JFrame implements Internationalizable {
      * @param cube                String which is need to set.
      * @param measureName         String which is need to set.
      */
-    public void makeActionListenerMeasures(final JRadioButtonMenuItem radioButtonMenuItem, final String cube, final String measureName, final String xAxisName) {
+    public void makeActionListenerMeasures(final JRadioButtonMenuItem radioButtonMenuItem, final String cube, final String measureName, final String xAxisName, final String i18NKey) {
 
         radioButtonMenuItem.addActionListener(new ActionListener() {
 
@@ -580,8 +605,8 @@ public class VExplorer extends JFrame implements Internationalizable {
                     graph.getQueryHistory().setCubeAttribute(measureName);
                     graph.getQueryHistory().setCubeName(cube);
                     graph.setxAxis(xAxisName);
-                    measureLabel.setText(" Measure: " + radioButtonMenuItem.getText());
-                    measureLabel.repaint();
+                    whatMeasureLabel.setI18NKey(i18NKey);
+
                 }
             }
         });
@@ -591,14 +616,13 @@ public class VExplorer extends JFrame implements Internationalizable {
      * @param radioButtonMenuItem Item which gets the Listener.
      * @param chartType           The type of the current chart.
      */
-    public void makeActionListenerCharts(final JRadioButtonMenuItem radioButtonMenuItem, final ChartType chartType, final String barChartOrientation) {
+    public void makeActionListenerCharts(final JRadioButtonMenuItem radioButtonMenuItem, final ChartType chartType, final String barChartOrientation, final String i18NKey) {
 
         radioButtonMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 graph.setChartCheck(chartType);
                 graph.setBarChartOrientation(barChartOrientation);
-                chartLabel.setText(" Chart: " + radioButtonMenuItem.getText());
-                chartLabel.repaint();
+                whatChartLabel.setI18NKey(i18NKey);
             }
         });
     }

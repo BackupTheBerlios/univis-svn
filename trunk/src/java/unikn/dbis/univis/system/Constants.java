@@ -47,4 +47,10 @@ public interface Constants {
 
     public final static String NEW_LANGUAGE = "newLanguage";
     public final static String NEW_LANGUAGE_MESSAGE = "newLanguageMessage";
+
+    public final static String CHART = "chart";
+    public final static String LANGUAGE = "language";
+    public final static String MEASURE = "measure";
+    public final static String TIME = "time";
+    public final static String DATE = "date";
 }
