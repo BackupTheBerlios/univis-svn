@@ -257,7 +257,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         gbc.anchor = GridBagConstraints.WEST;
 
         chartLabel = new VLabel(Constants.CHART);
-        whatChartLabel = new VLabel(Constants.BAR_CHART_VERTICAL);
+        whatChartLabel = new VLabel(Constants.BAR_CHART_HORIZONTAL);
         complete = new JPanel();
         complete.add(chartLabel);
         complete.add(whatChartLabel);
@@ -466,8 +466,8 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private void makeChartsMenu() {
 
-        makeActionListenerCharts(barChart1, ChartType.BAR_CHART, "Vertical", "barChartVertical");
-        makeActionListenerCharts(barChart2, ChartType.BAR_CHART, "Horizontal", "barChartHorizontal");
+        makeActionListenerCharts(barChart1, ChartType.BAR_CHART, "Vertical", "barChartHorizontal");
+        makeActionListenerCharts(barChart2, ChartType.BAR_CHART, "Horizontal", "barChartVertical");
         makeActionListenerCharts(pieChart, ChartType.PIE_CHART, "", "pieChart");
         makeActionListenerCharts(areaChart, ChartType.AREA_CHART, "", "areaChart");
         makeActionListenerCharts(ringChart, ChartType.RING_CHART, "", "ringChart");
