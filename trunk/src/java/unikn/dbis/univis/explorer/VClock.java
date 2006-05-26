@@ -40,7 +40,7 @@ public class VClock extends JLabel {
     }
 
     public String getDate() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E, dd.MM.yyyy");
-        return simpleDateFormat.format(date);
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("EE, dd.MM.yy");
+        return simpleDateFormat2.format(date);
     }
 }
