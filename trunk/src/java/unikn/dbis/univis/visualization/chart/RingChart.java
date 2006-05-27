@@ -76,4 +76,11 @@ public class RingChart extends AbstractChart<PieDataset> implements Renderable {
         plot.setLabelGenerator(null);
         plot.setLegendLabelGenerator(new LabelGenerator(createTotal()));
     }
+
+    /**
+     * Gets the number of Items in the chart.
+     */
+    protected int getItemsCount() {
+        return getDataset().getItemCount();
+    }
 }

@@ -104,4 +104,11 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
         plot.getRangeAxis().setLabelFont(getLegendFont());
         plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
     }
+
+    /**
+     * Gets the number of Items in the chart.
+     */
+    protected int getItemsCount() {
+        return getDataset().getRowCount();
+    }
 }

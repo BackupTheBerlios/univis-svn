@@ -78,4 +78,11 @@ public class AreaChart extends AbstractChart<CategoryDataset> implements Rendera
         plot.getDomainAxis().setLabelFont(getLegendFont());
         plot.getRangeAxis().setLabelFont(getLegendFont());
     }
+
+    /**
+     * Gets the number of Items in the chart.
+     */
+    protected int getItemsCount() {
+        return getDataset().getRowCount();
+    }
 }

@@ -106,7 +106,9 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
         String totalName = "Total: " + total;
         TextTitle totalTitle = new TextTitle(totalName);
         subtitleList.add(totalTitle);
-        subtitleList.add(legend);
+        if (getItemsCount() < 25) {
+            subtitleList.add(legend);
+        }
         chart.setSubtitles(subtitleList);
     }
 
@@ -157,6 +159,11 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
      * Makes the plot.
      */
     protected abstract void plot();
+
+    /**
+     * Gets the number of Items in the chart.
+     */
+    protected abstract int getItemsCount();
 
     /**
      * @return X value of the chart.
