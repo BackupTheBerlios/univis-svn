@@ -106,7 +106,7 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
         String totalName = "Total: " + total;
         TextTitle totalTitle = new TextTitle(totalName);
         subtitleList.add(totalTitle);
-        if (getItemsCount() < 25) {
+        if (getItemsCount() < 15) {
             subtitleList.add(legend);
         }
         chart.setSubtitles(subtitleList);
