@@ -1,16 +1,18 @@
 package unikn.dbis.univis.visualization.graph.plaf;
 
 import org.jgraph.plaf.basic.BasicGraphUI;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.LegendItemSource;
-import org.jfree.chart.LegendItem;
+import org.jfree.chart.*;
+import org.jfree.chart.title.LegendTitle;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.chart.title.Title;
 
 import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 
 import unikn.dbis.univis.visualization.graph.VGraphCell;
 
@@ -54,16 +56,13 @@ public class VGraphUI extends BasicGraphUI {
                     ChartPanel chartPanel = (ChartPanel) cell.getUserObject();
                     JFreeChart chart = chartPanel.getChart();
 
-                    for (LegendItemSource source : chart.getLegend().getSources()) {
-                        for (Iterator iter = source.getLegendItems().iterator(); iter.hasNext(); ) {
-                            LegendItem item = (LegendItem) iter.next();
+                    LegendItemCollection collect = chart.getPlot().getLegendItems();
 
-                            System.out.println("ITEM: " + item.getLabel());
-
-                            menu.add(item.getLabel());
-                        }
+                    for (Iterator iter = collect.iterator(); iter.hasNext();) {
+                        LegendItem item = (LegendItem) iter.next();
+                        menu.add(item.getLabel());
+                        System.out.println(item.getLabel());
                     }
-
                     menu.show(graph, e.getX(), e.getY());
                 }
             }
