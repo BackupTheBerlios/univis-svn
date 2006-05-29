@@ -10,11 +10,13 @@ import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
 import unikn.dbis.univis.visualization.graph.VGraphCell;
+import unikn.dbis.univis.visualization.chart.VChartPanel;
 
 /**
  * TODO: document me!!!
@@ -53,17 +55,28 @@ public class VGraphUI extends BasicGraphUI {
 
                     JPopupMenu menu = new JPopupMenu();
 
-                    ChartPanel chartPanel = (ChartPanel) cell.getUserObject();
-                    JFreeChart chart = chartPanel.getChart();
+                    VChartPanel chartPanel = (VChartPanel) cell.getUserObject();
 
-                    LegendItemCollection collect = chart.getPlot().getLegendItems();
+                    if (chartPanel.isShowPopUp()) {
 
-                    for (Iterator iter = collect.iterator(); iter.hasNext();) {
-                        LegendItem item = (LegendItem) iter.next();
-                        menu.add(item.getLabel());
-                        System.out.println(item.getLabel());
+                        LegendItemCollection collect = chartPanel.getChart().getPlot().getLegendItems();
+                        JMenu first = new JMenu("First");
+                        int checker = 0;
+
+                        for (Iterator iter = collect.iterator(); iter.hasNext();) {
+                            LegendItem item = (LegendItem) iter.next();
+                            checker++;
+                            first.add(new JMenuItem(item.getLabel()));
+                            if ((checker % 40) == 0) {
+                                menu.add(first);
+                                first = new JMenu("Next");
+                            }
+                            if (!iter.hasNext()) {
+                                menu.add(first);
+                            }
+                        }
+                        menu.show(graph, e.getX(), e.getY());
                     }
-                    menu.show(graph, e.getX(), e.getY());
                 }
             }
         };

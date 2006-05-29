@@ -25,6 +25,9 @@ public class VChartPanel extends ChartPanel {
     // The legend items of the chart panel.
     private Collection<LegendItem> legendItems;
 
+    // The boolean value if PopUp is needed.
+    private boolean showPopUp = true;
+
     /**
      * Constructs a panel that displays the specified chart.
      *
@@ -61,5 +64,24 @@ public class VChartPanel extends ChartPanel {
      */
     public void setLegendItems(Collection<LegendItem> legendItems) {
         this.legendItems = legendItems;
+    }
+
+
+    /**
+     * Returns the boolean value if Popup is needed.
+     *
+     * @return boolean Boolean Value if Popup is needed.
+     */
+    public boolean isShowPopUp() {
+        return showPopUp;
+    }
+
+    /**
+     * Sets the boolean value if popup is needed.
+     *
+     * @param showPopUp The Boolean value
+     */
+    public void setShowPopUp(boolean showPopUp) {
+        this.showPopUp = showPopUp;
     }
 }

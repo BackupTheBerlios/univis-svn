@@ -134,7 +134,13 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
 
         plot();
 
+
         VChartPanel chartPanel = new VChartPanel(chart, true);
+
+        if (getItemsCount() < 15) {
+            chartPanel.setShowPopUp(false);
+        }
+
         chartPanel.setMouseZoomable(true);
 
 
