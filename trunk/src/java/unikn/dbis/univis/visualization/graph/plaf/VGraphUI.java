@@ -60,7 +60,7 @@ public class VGraphUI extends BasicGraphUI {
                     if (chartPanel.isShowPopUp()) {
 
                         LegendItemCollection collect = chartPanel.getChart().getPlot().getLegendItems();
-                        JMenu first = new JMenu("First");
+                        JMenu first = new JMenu("Erste");
                         int checker = 0;
 
                         for (Iterator iter = collect.iterator(); iter.hasNext();) {
@@ -69,7 +69,7 @@ public class VGraphUI extends BasicGraphUI {
                             first.add(new JMenuItem(item.getLabel()));
                             if ((checker % 40) == 0) {
                                 menu.add(first);
-                                first = new JMenu("Next");
+                                first = new JMenu("Weitere");
                             }
                             if (!iter.hasNext()) {
                                 menu.add(first);
