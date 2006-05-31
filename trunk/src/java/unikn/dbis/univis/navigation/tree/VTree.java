@@ -8,6 +8,7 @@ import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.dialect.UniVisDialect;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.message.MessageResolver;
+import unikn.dbis.univis.util.ComponentUtilities;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -41,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VTree extends JTree implements DragGestureListener {
+public class VTree extends JTree implements DragSourceListener, DragGestureListener {
 
     // The logger to log info, error and other occuring messages
     // or exceptions.
@@ -271,8 +272,8 @@ public class VTree extends JTree implements DragGestureListener {
              *
              * @param flavor the requested flavor for the data
              * @throws java.awt.datatransfer.UnsupportedFlavorException
-             *                             if the requested data flavor is
-             *                             not supported.
+             *          if the requested data flavor is
+             *          not supported.
              * @see java.awt.datatransfer.DataFlavor#getRepresentationClass
              */
             public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
@@ -294,5 +295,94 @@ public class VTree extends JTree implements DragGestureListener {
                 throw new UnsupportedFlavorException(flavor);
             }
         });
+    }
+
+    /**
+     * This method is invoked to signify that the Drag and Drop
+     * operation is complete. The getDropSuccess() method of
+     * the <code>DragSourceDropEvent</code> can be used to
+     * determine the termination state. The getDropAction() method
+     * returns the operation that the drop site selected
+     * to apply to the Drop operation. Once this method is complete, the
+     * current <code>DragSourceContext</code> and
+     * associated resources become invalid.
+     *
+     * @param dsde the <code>DragSourceDropEvent</code>
+     */
+    public void dragDropEnd(DragSourceDropEvent dsde) {
+        System.out.println("VTree.dragDropEnd");
+        if (dsde.getDropSuccess()) {
+            updateUI();
+        }
+    }
+
+    /**
+     * Called as the cursor's hotspot exits a platform-dependent drop site.
+     * This method is invoked when any of the following conditions are true:
+     * <UL>
+     * <LI>The cursor's hotspot no longer intersects the operable part
+     * of the drop site associated with the previous dragEnter() invocation.
+     * </UL>
+     * OR
+     * <UL>
+     * <LI>The drop site associated with the previous dragEnter() invocation
+     * is no longer active.
+     * </UL>
+     * OR
+     * <UL>
+     * <LI> The drop site associated with the previous dragEnter() invocation
+     * has rejected the drag.
+     * </UL>
+     *
+     * @param dse the <code>DragSourceEvent</code>
+     */
+    public void dragExit(DragSourceEvent dse) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Called when the user has modified the drop gesture.
+     * This method is invoked when the state of the input
+     * device(s) that the user is interacting with changes.
+     * Such devices are typically the mouse buttons or keyboard
+     * modifiers that the user is interacting with.
+     *
+     * @param dsde the <code>DragSourceDragEvent</code>
+     */
+    public void dropActionChanged(DragSourceDragEvent dsde) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Called as the cursor's hotspot moves over a platform-dependent drop site.
+     * This method is invoked when all the following conditions are true:
+     * <UL>
+     * <LI>The cursor's hotspot has moved, but still intersects the
+     * operable part of the drop site associated with the previous
+     * dragEnter() invocation.
+     * <LI>The drop site is still active.
+     * <LI>The drop site accepts the drag.
+     * </UL>
+     *
+     * @param dsde the <code>DragSourceDragEvent</code>
+     */
+    public void dragOver(DragSourceDragEvent dsde) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Called as the cursor's hotspot enters a platform-dependent drop site.
+     * This method is invoked when all the following conditions are true:
+     * <UL>
+     * <LI>The cursor's hotspot enters the operable part of a platform-
+     * dependent drop site.
+     * <LI>The drop site is active.
+     * <LI>The drop site accepts the drag.
+     * </UL>
+     *
+     * @param dsde the <code>DragSourceDragEvent</code>
+     */
+    public void dragEnter(DragSourceDragEvent dsde) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

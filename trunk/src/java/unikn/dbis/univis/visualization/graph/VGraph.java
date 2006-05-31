@@ -15,8 +15,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -81,6 +79,8 @@ public class VGraph extends JGraph {
     // The <code>VQuery</code> to get the sql statements to perform
     // exploring.
     private VQuery queryHistory = new VQuery();
+
+    private List<VDimension> dimensions = new ArrayList<VDimension>();
 
     /**
      * Creates a new VGraph with drop target action and a
@@ -400,6 +400,10 @@ public class VGraph extends JGraph {
 
         facade.setOrdered(true);
 
+        for (VDimension dimension : dimensions) {
+            setAncestorsDropped(dimension, false);
+        }
+
         queryHistory.reset();
         cellHistory.reset();
     }
@@ -487,6 +491,8 @@ public class VGraph extends JGraph {
                 try {
                     dtde.acceptDrop(DnDConstants.ACTION_COPY);
                     addDimension(dimension);
+                    dimensions.add(dimension);
+                    setAncestorsDropped(dimension, true);
                 }
                 catch (SQLException sqle) {
                     dtde.rejectDrop();
@@ -497,6 +503,17 @@ public class VGraph extends JGraph {
                 }
             }
             dtde.dropComplete(true);
+        }
+    }
+
+    private void setAncestorsDropped(VDimension dimension, boolean visibility) {
+
+        dimension.setDropped(visibility);
+
+        VDataReference dataReference = dimension.getParent();
+
+        if (dataReference instanceof VDimension) {
+            setAncestorsDropped((VDimension) dataReference, visibility);
         }
     }
 }

@@ -68,6 +68,10 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                     panel.add(new VIconComponent(VIcons.LIGHTNING), BorderLayout.EAST);
                 }
 
+                if (dimension.isDropped()) {
+                    label.setForeground(Color.LIGHT_GRAY);
+                }
+
                 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
                 Session session = sessionFactory.openSession();
                 session.refresh(dimension);

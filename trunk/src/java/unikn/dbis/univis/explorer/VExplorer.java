@@ -17,14 +17,11 @@ import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.Internationalizable;
 import unikn.dbis.univis.message.VLabel;
 import unikn.dbis.univis.system.Constants;
-import unikn.dbis.univis.exception.VExceptionDialog;
 import unikn.dbis.univis.exception.VDialog;
+import unikn.dbis.univis.images.VImageDummy;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
-import javax.swing.border.SoftBevelBorder;
 import java.awt.event.*;
 import java.awt.*;
 import java.awt.dnd.DragSource;
@@ -33,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.io.IOException;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -70,11 +68,19 @@ public class VExplorer extends JFrame implements Internationalizable {
         }
         */
 
+        try {
+            splashScreen = new VSplashScreen(VImageDummy.class.getResource("splash_screen.png").openStream());
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
                     explorer = new VExplorer();
                     explorer.setVisible(true);
+                    splashScreen.destroy();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -88,6 +94,8 @@ public class VExplorer extends JFrame implements Internationalizable {
     public static final transient Log LOG = LogFactory.getLog(VExplorer.class);
 
     private static VExplorer explorer;
+
+    private static VSplashScreen splashScreen;
 
     private static Connection connection;
 
@@ -371,6 +379,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 graph.reset();
+                tree.updateUI();
             }
         });
 
@@ -582,6 +591,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private void initDragAndDrop() {
         DragSource dragSource = DragSource.getDefaultDragSource();
+        dragSource.addDragSourceListener(tree);
         dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY, tree);
     }
 

@@ -38,6 +38,20 @@ public interface VDimension extends VDataReference {
     public void setSummable(Boolean summable);
 
     /**
+     * Flag when the dimension is dropped into the graph.
+     *
+     * @return Whether the dimension is dropped or not.
+     */
+    public boolean isDropped();
+
+    /**
+     * Sets whether the dimension is dropped or not in the graph.
+     *
+     * @param dropped Whether the dimension is dropped or not in the graph.
+     */
+    public void setDropped(boolean dropped);
+
+    /**
      * Returns whether the dimension contains data for parentable
      * usage or not.
      *

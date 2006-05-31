@@ -33,6 +33,9 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     // Whether the dimension is summable or not.
     private Boolean summable;
 
+    // Whether the dimension is dropped or not.
+    private boolean dropped;
+
     // Whether the dimension contains parentable data or not.
     private Boolean parentable;
 
@@ -71,6 +74,24 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
      */
     public void setSummable(Boolean summable) {
         this.summable = summable;
+    }
+
+    /**
+     * Flag when the dimension is dropped into the graph.
+     *
+     * @return Whether the dimension is dropped or not.
+     */
+    public boolean isDropped() {
+        return dropped;
+    }
+
+    /**
+     * Sets whether the dimension is dropped or not in the graph.
+     *
+     * @param dropped Whether the dimension is dropped or not in the graph.
+     */
+    public void setDropped(boolean dropped) {
+        this.dropped = dropped;
     }
 
     /**

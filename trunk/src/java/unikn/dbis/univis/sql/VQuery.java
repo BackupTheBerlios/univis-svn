@@ -182,7 +182,13 @@ public class VQuery {
             }
             else {
                 if (!dimension.equals(blueprint)) {
-                    from.append(", ").append(bluepName).append(", ").append(tableName);
+                    if (from.indexOf(bluepName) == -1) {
+                        from.append(", ").append(bluepName);
+                    }
+                    if (from.indexOf(tableName) == -1) {
+                        from.append(", ").append(tableName);
+                    }
+
                     where.append(" AND ").append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getJoinable());
 
                     String filter = getFilterWhereClause(blueprint);
@@ -191,7 +197,10 @@ public class VQuery {
                     }
                 }
                 else {
-                    from.append(", ").append(tableName);
+                    if (from.indexOf(tableName) == -1) {
+                        from.append(", ").append(tableName);
+                    }
+
                     where.append(" AND ").append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getJoinable());
 
                     if (blueprint.getSelections() != null && blueprint.getSelections().size() > 0) {

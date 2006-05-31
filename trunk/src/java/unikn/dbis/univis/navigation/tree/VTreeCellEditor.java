@@ -138,6 +138,10 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                     });
                 }
 
+                if (dimension.isDropped()) {
+                    label.setForeground(Color.LIGHT_GRAY);
+                }
+
                 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
                 Session session = sessionFactory.openSession();
                 session.refresh(dimension);
