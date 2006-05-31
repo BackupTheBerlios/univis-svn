@@ -8,7 +8,7 @@ INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (101
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1012, 'eligibility', 'hzb', 'bluep_hzb');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1007, 'nationality', NULL, 'bluep_nation');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1000, 'students', NULL, 'sos_cube');
-INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1001, 'term', 'fachsem', 'bluep_fachsem');
+INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1001, 'term', 'NULL', 'bluep_fachsem');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1002, 'by_term_group', 'fs', 'dim_fachsemestergruppen');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1003, 'by_term', 'gruppe', 'dim_fachsemester');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1004, 'degree', NULL, 'bluep_abschluss');
@@ -24,6 +24,7 @@ INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (101
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1020, 'by_semester', 'semester', 'dim_semester');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1021, '#bluep_nation#', 'nation', 'bluep_nation');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1022, '#bluep_abschluss#', 'abschluss', 'bluep_abschluss');
+INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (1023, '#bluep_fachsem#', 'fachsem', 'bluep_fachsem');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2000, 'orders', NULL, 'cob_busa_cube');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2001, 'cost_categories', 'kostenart', 'bluep_kostenart');
 INSERT INTO meta_data_reference (id, i18n_key, joinable, table_name) VALUES (2002, 'category', 'kategorie', 'dim_kostenkategorien');
@@ -72,6 +73,7 @@ INSERT INTO meta_dimension (data_reference_id, summable, parentable, visible) VA
 INSERT INTO meta_dimension (data_reference_id, summable, parentable, visible) VALUES (1020, true, true, true);
 INSERT INTO meta_dimension (data_reference_id, summable, parentable, visible) VALUES (1021, false, true, false);
 INSERT INTO meta_dimension (data_reference_id, summable, parentable, visible) VALUES (1022, true, true, false);
+INSERT INTO meta_dimension (data_reference_id, summable, parentable, visible) VALUES (1023, true, true, false);
 INSERT INTO meta_dimension (data_reference_id, summable, parentable, visible) VALUES (2001, false, false, true);
 INSERT INTO meta_dimension (data_reference_id, summable, parentable, visible) VALUES (2002, true, false, true);
 INSERT INTO meta_dimension (data_reference_id, summable, parentable, visible) VALUES (2003, true, true, true);
@@ -108,6 +110,7 @@ INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUE
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1018, 1018, 1000, 6);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1002, 1002, 1001, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1003, 1003, 1002, 0);
+INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1023, 1023, 1003, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1005, 1005, 1004, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1006, 1006, 1005, 0);
 INSERT INTO meta_hierarchy (id, data_reference_id, parent_id, child_order) VALUES (1008, 1008, 1007, 0);
@@ -192,6 +195,7 @@ INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1019, 
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1020, 1000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1021, 1000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1022, 1000);
+INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (1023, 1000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (2001, 2000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (2002, 2000);
 INSERT INTO meta_dimension_supported_cube (dimension_id, cube_id) VALUES (2003, 2000);

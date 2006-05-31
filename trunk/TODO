@@ -8,7 +8,8 @@
 * (+) graph shape rotation clockwise, graph shape rotation against clockwise
 * (+) statepanel that shows the current measure, language, chartmode, time and date
 * (+) assign the selected dimensions in the tree after drag and drop / disable drag functionality
-* (-) set up the database
+* (+) allow drag functionality only for dimension that are summable
+* (#) set up the database
 * (+) only show legend if less values as 15 or show legend as tooltip
 * (-) interactive zooming with rectangle selection
 * (-) adjust the graph scale after dropping a new dimension (100% of available graph panel size)

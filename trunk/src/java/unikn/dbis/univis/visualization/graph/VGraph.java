@@ -376,6 +376,10 @@ public class VGraph extends JGraph {
 
     public void undoCells() {
         cache.remove(cellHistory.getCurrent().toArray(), true, true);
+
+        // Reset the last drag and dropped dimension.
+        setAncestorsDropped(dimensions.get(dimensions.size() - 1), false);
+
         cellHistory.historyBack();
         queryHistory.historyBack();
 
@@ -384,7 +388,6 @@ public class VGraph extends JGraph {
         }
 
         reloadGraph();
-
     }
 
     public void reset() {

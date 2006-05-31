@@ -22,6 +22,7 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
 import org.hibernate.sql.QuerySelect;
 import org.hibernate.sql.JoinFragment;
@@ -64,6 +65,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
         setEditable(true);
 
         addMouseListener(new MouseAdapter() {
+
             /**
              * Invoked when a mouse button has been pressed on a component.
              */
@@ -76,6 +78,12 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
         });
     }
 
+    /**
+     * TODO: document me!!!
+     *
+     * @param x
+     * @param y
+     */
     public void showPopupMenu(int x, int y) {
 
         QuerySelect querySelect = new QuerySelect(HibernateUtil.getDialect());
@@ -137,6 +145,8 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                              */
                             public void actionPerformed(ActionEvent e) {
                                 popupMenu.setVisible(false);
+
+
                             }
                         });
 
@@ -158,6 +168,12 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
         }
     }
 
+    /**
+     * TODO: document me!!!
+     *
+     * @param node
+     * @return _
+     */
     public String getWhere(DefaultMutableTreeNode node) {
 
         Object o = node.getUserObject();
@@ -238,63 +254,76 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
      *            the gesture that has just occurred
      */
     public void dragGestureRecognized(DragGestureEvent dge) {
-        dge.startDrag(DragSource.DefaultMoveDrop, new Transferable() {
-            /**
-             * Returns an array of DataFlavor objects indicating the flavors the data
-             * can be provided in.  The array should be ordered according to preference
-             * for providing the data (from most richly descriptive to least descriptive).
-             *
-             * @return an array of data flavors in which this data can be transferred
-             */
-            public DataFlavor[] getTransferDataFlavors() {
-                return new DataFlavor[]{VDataReferenceFlavor.DIMENSION_FLAVOR};
-            }
 
-            /**
-             * Returns whether or not the specified data flavor is supported for
-             * this object.
-             *
-             * @param flavor the requested flavor for the data
-             * @return boolean indicating whether or not the data flavor is supported
-             */
-            public boolean isDataFlavorSupported(DataFlavor flavor) {
-                for (DataFlavor dataFlavor : getTransferDataFlavors()) {
-                    if (dataFlavor.match(flavor)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
+        // Gets the selected tree node.
+        Object o = getLastSelectedPathComponent();
 
-            /**
-             * Returns an object which represents the data to be transferred.  The class
-             * of the object returned is defined by the representation class of the flavor.
-             *
-             * @param flavor the requested flavor for the data
-             * @throws java.awt.datatransfer.UnsupportedFlavorException
-             *          if the requested data flavor is
-             *          not supported.
-             * @see java.awt.datatransfer.DataFlavor#getRepresentationClass
-             */
-            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+        if (o instanceof DefaultMutableTreeNode) {
 
-                if (VDataReferenceFlavor.DIMENSION_FLAVOR.match(flavor)) {
-                    Object o = getLastSelectedPathComponent();
+            // Gets the user object of the tree node.
+            Object userObject = ((DefaultMutableTreeNode) o).getUserObject();
 
-                    if (o instanceof DefaultMutableTreeNode) {
-                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
+            if (userObject instanceof VDimension) {
 
-                        Object userObject = node.getUserObject();
+                final VDimension dimension = (VDimension) userObject;
 
-                        if (userObject instanceof VDimension) {
-                            return userObject;
+                // Whether the selected dimension allows drag and drop
+                // or not.
+                if (dimension.isSummable() && !dimension.isDropped()) {
+                    dge.startDrag(DragSource.DefaultMoveDrop, new Transferable() {
+
+                        /**
+                         * Returns an array of DataFlavor objects indicating the flavors the data
+                         * can be provided in.  The array should be ordered according to preference
+                         * for providing the data (from most richly descriptive to least descriptive).
+                         *
+                         * @return an array of data flavors in which this data can be transferred
+                         */
+                        public DataFlavor[] getTransferDataFlavors() {
+                            return new DataFlavor[]{VDataReferenceFlavor.DIMENSION_FLAVOR};
                         }
+
+                        /**
+                         * Returns whether or not the specified data flavor is supported for
+                         * this object.
+                         *
+                         * @param flavor the requested flavor for the data
+                         * @return boolean indicating whether or not the data flavor is supported
+                         */
+                        public boolean isDataFlavorSupported(DataFlavor flavor) {
+                            for (DataFlavor dataFlavor : getTransferDataFlavors()) {
+                                if (dataFlavor.match(flavor)) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+
+                        /**
+                         * Returns an object which represents the data to be transferred.  The class
+                         * of the object returned is defined by the representation class of the flavor.
+                         *
+                         * @param flavor the requested flavor for the data
+                         * @throws java.awt.datatransfer.UnsupportedFlavorException
+                         *          if the requested data flavor is
+                         *          not supported.
+                         * @see java.awt.datatransfer.DataFlavor#getRepresentationClass
+                         */
+                        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+                            if (VDataReferenceFlavor.DIMENSION_FLAVOR.match(flavor)) {
+                                return dimension;
+                            }
+                            throw new UnsupportedFlavorException(flavor);
+                        }
+                    });
+                }
+                else {
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("The tree node isn't summable or has been drag and dropped in the past.");
                     }
                 }
-
-                throw new UnsupportedFlavorException(flavor);
             }
-        });
+        }
     }
 
     /**
@@ -310,8 +339,12 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
      * @param dsde the <code>DragSourceDropEvent</code>
      */
     public void dragDropEnd(DragSourceDropEvent dsde) {
-        System.out.println("VTree.dragDropEnd");
         if (dsde.getDropSuccess()) {
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Drag and drop finished successfuly. The tree UI will be updated.");
+            }
+
             updateUI();
         }
     }
@@ -337,7 +370,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
      * @param dse the <code>DragSourceEvent</code>
      */
     public void dragExit(DragSourceEvent dse) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty
     }
 
     /**
@@ -350,7 +383,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
      * @param dsde the <code>DragSourceDragEvent</code>
      */
     public void dropActionChanged(DragSourceDragEvent dsde) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty
     }
 
     /**
@@ -367,7 +400,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
      * @param dsde the <code>DragSourceDragEvent</code>
      */
     public void dragOver(DragSourceDragEvent dsde) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty
     }
 
     /**
@@ -383,6 +416,6 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
      * @param dsde the <code>DragSourceDragEvent</code>
      */
     public void dragEnter(DragSourceDragEvent dsde) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty
     }
 }
