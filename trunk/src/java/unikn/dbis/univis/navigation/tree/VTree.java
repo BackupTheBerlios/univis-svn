@@ -8,7 +8,6 @@ import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.dialect.UniVisDialect;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.message.MessageResolver;
-import unikn.dbis.univis.util.ComponentUtilities;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -22,7 +21,6 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 
 import org.hibernate.sql.QuerySelect;
 import org.hibernate.sql.JoinFragment;
