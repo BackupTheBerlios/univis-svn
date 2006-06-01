@@ -68,21 +68,19 @@ public class VExplorer extends JFrame implements Internationalizable {
         }
         */
 
-        /*
         try {
             splashScreen = new VSplashScreen(VImageDummy.class.getResource("splash_screen.png").openStream());
         }
         catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        */
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
                     explorer = new VExplorer();
                     explorer.setVisible(true);
-                    //splashScreen.destroy();
+                    splashScreen.destroy();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -97,7 +95,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private static VExplorer explorer;
 
-    //private static VSplashScreen splashScreen;
+    private static VSplashScreen splashScreen;
 
     private static Connection connection;
 
