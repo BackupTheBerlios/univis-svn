@@ -266,7 +266,7 @@ public class VGraphUI extends BasicGraphUI {
                     VChartPanel chart = (VChartPanel) o;
 
                     ChartEditor editor = ChartEditorManager.getChartEditor(chart.getChart());
-                    int result = JOptionPane.showConfirmDialog(graph, editor, "Chart_Properties", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    int result = JOptionPane.showConfirmDialog(graph.getParent(), editor, "Chart_Properties", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                     if (result == JOptionPane.OK_OPTION) {
                         editor.updateChart(chart.getChart());
                         graph.repaint();
