@@ -2,6 +2,8 @@ package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.VDiceBox;
 import unikn.dbis.univis.meta.VDimension;
+import unikn.dbis.univis.meta.VMetaHelper;
+import unikn.dbis.univis.meta.Filterable;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.explorer.VExplorer;
@@ -21,6 +23,7 @@ import java.awt.dnd.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.*;
 
 import org.hibernate.sql.QuerySelect;
 import org.hibernate.sql.JoinFragment;
@@ -46,6 +49,8 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
     // The logger to log info, error and other occuring messages
     // or exceptions.
     public static final transient Log LOG = LogFactory.getLog(VTree.class);
+
+    private JPopupMenu popupMenu = new JPopupMenu();
 
     /**
      * Returns a <code>JTree</code> with a sample model.
@@ -79,14 +84,12 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
     /**
      * TODO: document me!!!
      *
-     * @param x
-     * @param y
+     * @param p
      */
-    public void showPopupMenu(int x, int y) {
+    public void showPopupMenu(Point p) {
 
-        QuerySelect querySelect = new QuerySelect(HibernateUtil.getDialect());
-
-        final VPopupMenu popupMenu = new VPopupMenu(x, y);
+        // Remove all items from popup menu.
+        popupMenu.removeAll();
 
         Object o = getLastSelectedPathComponent();
 
@@ -101,41 +104,41 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                 VDimension dimension = (VDimension) userObject;
 
                 try {
-                    Connection connection = VExplorer.getConnection();
+                    Point p2 = new Point(p);
+                    SwingUtilities.convertPointToScreen(p2, this);
 
-                    Statement stmt = connection.createStatement();
+                    final FilterItemContainer container = createFilterContainer(dimension, p2);
 
-                    querySelect.addSelectColumn("id", "id");
-                    if (dimension.isParentable()) querySelect.addSelectColumn("parent", "parent");
-                    querySelect.addSelectColumn("name", "name");
-                    querySelect.getJoinFragment().addJoin(dimension.getTableName(), UniVisDialect.generateTableAlias(dimension.getTableName(), 1), new String[]{"parent"}, new String[]{"id"}, JoinFragment.FULL_JOIN);
+                    if (!container.isEmpty()) {
 
+                        JLabel header = new JLabel(MessageResolver.getMessage(dimension.getI18nKey()));
+                        header.setBorder(BorderFactory.createRaisedBevelBorder());
 
-                    String sql = "SELECT " + dimension.getTableName() + ".id, " + (dimension.isParentable() ? dimension.getTableName() + ".parent, " : "") + dimension.getTableName() + ".name " + getWhere(node);
+                        popupMenu.add(header);
 
-                    //System.out.println("SQL: " + sql);
+                        final JCheckBox button = new JCheckBox("Check/Uncheck all");
 
-                    ResultSet result = stmt.executeQuery(sql);
+                        button.setSelected(container.isAllChecked());
 
-                    boolean hasNoTupel = true;
-                    while (result.next()) {
-                        hasNoTupel = false;
+                        button.addActionListener(new ActionListener() {
+                            /**
+                             * Invoked when an action occurs.
+                             */
+                            public void actionPerformed(ActionEvent e) {
 
-                        VIdCheckBox checkBox;
-                        if (dimension.isParentable()) {
-                            checkBox = new VIdCheckBox(dimension, result.getLong(1), result.getLong(2), result.getString(3));
-                        }
-                        else {
-                            checkBox = new VIdCheckBox(dimension, result.getLong(1), result.getString(2));
-                        }
-                        popupMenu.add(checkBox);
-                    }
+                                for (Component c : container.getComponents()) {
+                                    if (c instanceof VIdCheckBox) {
+                                        ((VIdCheckBox) c).setChecked(button.isSelected());
+                                    }
+                                }
+                            }
+                        });
 
-                    if (hasNoTupel) {
-                        JOptionPane.showMessageDialog(VTree.this.getParent().getParent().getParent(), MessageResolver.getMessage("no_items_found"), MessageResolver.getMessage("error_message"), JOptionPane.ERROR_MESSAGE);
-                    }
-                    else {
-                        JMenuItem view = new JMenuItem(MessageResolver.getMessage("filtering"), VIcons.LIGHTNING);
+                        popupMenu.add(button);
+
+                        popupMenu.add(container);
+
+                        JButton view = new JButton(MessageResolver.getMessage("filtering"), VIcons.LIGHTNING);
                         view.addActionListener(new ActionListener() {
 
                             /**
@@ -143,14 +146,15 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                              */
                             public void actionPerformed(ActionEvent e) {
                                 popupMenu.setVisible(false);
-
-
                             }
                         });
 
                         popupMenu.add(view);
 
-                        popupMenu.show(VTree.this, x, y);
+                        popupMenu.show(VTree.this, (int) p.getX(), (int) p.getY());
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(VTree.this.getParent().getParent().getParent(), MessageResolver.getMessage("no_items_found"), MessageResolver.getMessage("error_message"), JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 catch (SQLException sqle) {
@@ -161,80 +165,144 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                     }
                 }
             }
-
-            //System.out.println("querySelect = " + querySelect.toQueryString());
         }
     }
 
     /**
      * TODO: document me!!!
      *
-     * @param node
-     * @return _
+     * @param dimension
+     * @param p
+     * @return
+     * @throws SQLException
      */
-    public String getWhere(DefaultMutableTreeNode node) {
+    private FilterItemContainer createFilterContainer(VDimension dimension, Point p) throws SQLException {
 
-        Object o = node.getUserObject();
+        FilterItemContainer container = new FilterItemContainer(p);
 
-        if (o instanceof VDimension) {
-            VDimension dimension = (VDimension) o;
+        boolean allChecked = false;
 
-            String tableName = dimension.getTableName();
+        for (ResultSet result = getResult(dimension); result.next();) {
 
-            StringBuffer from = new StringBuffer("FROM " + tableName + " AS " + tableName);
-            StringBuffer where = new StringBuffer();
+            Long id = result.getLong(1);
 
-            boolean test = true;
-            while (dimension.isParentable() && test) {
-
-                node = (DefaultMutableTreeNode) node.getParent();
-
-                Object o2 = node.getUserObject();
-
-                if (o2 instanceof VDimension) {
-                    dimension = (VDimension) o2;
-
-                    boolean appended = false;
-
-                    for (Object o3 : dimension.getSelections()) {
-
-                        Long selection = -1L;
-
-                        if (o3 instanceof Long) {
-                            selection = (Long) o3;
-                        }
-                        else if (o3 instanceof VIdCheckBox.VIdCheckBoxFilter) {
-                            selection = ((VIdCheckBox.VIdCheckBoxFilter) o3).getId();
-                        }
-
-                        appended = true;
-
-                        if (where.length() > 0) {
-                            where.append(" OR ");
-                        }
-                        else {
-                            where.append("(");
-                        }
-                        where.append(tableName).append(".parent = ").append(selection);
-                    }
-
-                    if (appended) {
-                        where.append(")");
-                    }
-                }
-                else {
-                    test = false;
+            for (Filterable filterable : dimension.getSelections()) {
+                if (filterable.getId().equals(id)) {
+                    allChecked = true;
+                    break;
                 }
             }
 
-            if (where.length() > 0) {
-                where.insert(0, " WHERE ");
+            VIdCheckBox checkBox;
+            if (dimension.isParentable()) {
+                checkBox = new VIdCheckBox(dimension, id, result.getLong(2), result.getString(3));
             }
-
-            return from.toString() + where.toString();
+            else {
+                checkBox = new VIdCheckBox(dimension, id, result.getString(2));
+            }
+            container.add(checkBox);
         }
 
-        return "";
+        container.setAllChecked(allChecked);
+
+        return container;
+    }
+
+    /**
+     * TODO: document me!!!
+     *
+     * @param dimension
+     * @return
+     * @throws SQLException
+     */
+    private ResultSet getResult(VDimension dimension) throws SQLException {
+
+        // Get a connection to retrieve items.
+        Connection connection = VExplorer.getConnection();
+
+        QuerySelect querySelect = new QuerySelect(HibernateUtil.getDialect());
+
+        Statement stmt = connection.createStatement();
+
+        querySelect.addSelectColumn("id", "id");
+
+        if (dimension.isParentable()) {
+            querySelect.addSelectColumn("parent", "parent");
+        }
+
+        querySelect.addSelectColumn("name", "name");
+
+        querySelect.getJoinFragment().addJoin(dimension.getTableName(), UniVisDialect.generateTableAlias(dimension.getTableName(), 1), new String[]{"parent"}, new String[]{"id"}, JoinFragment.FULL_JOIN);
+
+        String sql = "SELECT " + dimension.getTableName() + ".id, " + (dimension.isParentable() ? dimension.getTableName() + ".parent, " : "") + dimension.getTableName() + ".name " + createWhereClause(dimension);
+
+        return stmt.executeQuery(sql);
+    }
+
+    /**
+     * Creates the where clause for filtering the required values.
+     *
+     * @param dimension The dimension that gets the where clause statement.
+     * @return The where clause sql statement.
+     */
+    private String createWhereClause(VDimension dimension) {
+
+        // The table name.
+        String tableName = dimension.getTableName();
+
+        StringBuilder fromClause = new StringBuilder("FROM " + tableName + " AS " + tableName);
+        StringBuilder whereClause = new StringBuilder();
+
+        // Prepares the statement with parentable statements.
+        prepareParentableWhereClause(dimension, fromClause, whereClause);
+
+        // Check for existing where clause.
+        if (whereClause.length() > 0) {
+            whereClause.insert(0, " WHERE ");
+        }
+
+        return fromClause.toString() + whereClause.toString();
+    }
+
+    /**
+     * Prepares the where statement with available parentable statements.
+     *
+     * @param dimension   The dimension that contains the table which is needed
+     *                    to identify the selection values.
+     * @param whereClause The where clause that gets the statements.
+     */
+    private void prepareParentableWhereClause(VDimension dimension, StringBuilder fromClause, StringBuilder whereClause) {
+
+        // Check whether the parent is parentable to filter the previous selected
+        // items.
+        if (dimension.isParentable() && VMetaHelper.isParentADimension(dimension)) {
+
+            // The parent is a parent because the meta helper checked
+            // whether the parent is a parent or not. See while above.
+            VDimension parent = (VDimension) dimension.getParent();
+
+            // Append opening bracket if selections are available.
+            if (parent.getSelectionSize() > 0) {
+                whereClause.append("(");
+            }
+
+            for (Filterable filterable : parent.getSelections()) {
+
+                Object id = filterable.getId();
+
+                // Whether the statement contains a filtering.
+                if (whereClause.length() > 1) {
+                    whereClause.append(" OR ");
+                }
+
+                whereClause.append(dimension.getTableName()).append(".parent = ").append(id);
+            }
+
+            // Append closing bracket if selections are available.
+            if (parent.getSelectionSize() > 0) {
+                whereClause.append(")");
+            }
+        }
     }
 
     public void refresh(VDiceBox diceBox) {
@@ -340,7 +408,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
         if (dsde.getDropSuccess()) {
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Drag and drop finished successfuly. The tree UI will be updated.");
+                LOG.debug("Drag and drop finished successfully. The tree UI will be updated.");
             }
 
             updateUI();
@@ -415,5 +483,125 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
      */
     public void dragEnter(DragSourceDragEvent dsde) {
         // empty
+    }
+
+    /**
+     * TODO: document me!!!
+     */
+    class FilterItemContainer extends JScrollPane {
+
+        // The layout of the container.
+        private GridLayout containerLayout;
+
+        // The container that gets the components.
+        private Container container;
+
+        // The point to minimize the scrolling window.
+        private Point p;
+
+        // Whether all filter items are checked or not.
+        private boolean allChecked;
+
+        /**
+         * Creates a new <code>JPanel</code> with a double buffer
+         * and a flow layout.
+         */
+        public FilterItemContainer(Point p) {
+            this.p = p;
+
+            containerLayout = new GridLayout();
+            container = new JPanel(containerLayout);
+
+            setViewportView(container);
+            setBorder(BorderFactory.createEmptyBorder());
+        }
+
+        /**
+         * Appends the specified component to the end of this container.
+         * This is a convenience method for {@link #addImpl}.
+         * <p/>
+         * Note: If a component has been added to a container that
+         * has been displayed, <code>validate</code> must be
+         * called on that container to display the new component.
+         * If multiple components are being added, you can improve
+         * efficiency by calling <code>validate</code> only once,
+         * after all the components have been added.
+         *
+         * @param comp the component to be added
+         * @return the component argument
+         * @see #addImpl
+         * @see #validate
+         * @see javax.swing.JComponent#revalidate()
+         */
+        @Override
+        public Component add(Component comp) {
+            containerLayout.setRows(container.getComponentCount() + 1);
+            return container.add(comp);
+        }
+
+        /**
+         * Returns the components of the container.
+         *
+         * @return The components of the container.
+         */
+        public Component[] getComponents() {
+            return container.getComponents();
+        }
+
+        /**
+         * Returns whether the container is empty or not.
+         *
+         * @return Whether the container is empty or not.
+         */
+        public boolean isEmpty() {
+            return container.getComponentCount() <= 0;
+        }
+
+        /**
+         * Returns whether all filter items are checked or not.
+         *
+         * @return Whether all filter items are checked or
+         *                   not.
+         */
+        protected boolean isAllChecked() {
+            return allChecked;
+        }
+
+        /**
+         * Sets whether all filter items are checked or not.
+         *
+         * @param allChecked Whether all filter items are checked or
+         *                   not.
+         */
+        protected void setAllChecked(boolean allChecked) {
+            this.allChecked = allChecked;
+        }
+
+        /**
+         * If the <code>preferredSize</code> has been set to a
+         * non-<code>null</code> value just returns it.
+         * If the UI delegate's <code>getPreferredSize</code>
+         * method returns a non <code>null</code> value then return that;
+         * otherwise defer to the component's layout manager.
+         *
+         * @return the value of the <code>preferredSize</code> property
+         * @see #setPreferredSize
+         * @see javax.swing.plaf.ComponentUI
+         */
+        @Override
+        public Dimension getPreferredSize() {
+
+            Dimension d = super.getPreferredSize();
+
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+            double height = screenSize.getHeight() - p.getX();
+
+            if (d.getHeight() > height) {
+                return new Dimension((int) d.getWidth(), (int) height);
+            }
+
+            return d;
+        }
     }
 }

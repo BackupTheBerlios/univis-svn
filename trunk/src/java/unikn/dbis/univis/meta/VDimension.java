@@ -115,6 +115,13 @@ public interface VDimension extends VDataReference {
     public void setSelections(Set<Filterable> selections);
 
     /**
+     * Returns the size of the selected values.
+     *
+     * @return The size of the selected values.
+     */
+    public int getSelectionSize();
+
+    /**
      * Returns whether the selection of the dimension was changed
      * or not.
      *

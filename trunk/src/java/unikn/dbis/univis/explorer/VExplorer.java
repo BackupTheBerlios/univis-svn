@@ -129,11 +129,13 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JPopupMenu chartsMenu = new JPopupMenu();
     private JPopupMenu measuresMenu = new JPopupMenu();
     private JPopupMenu languageMenu = new JPopupMenu();
+    private JPopupMenu settingsMenu = new JPopupMenu();
 
+    private JCheckBoxMenuItem resize = new JCheckBoxMenuItem(VIcons.ARROW_INOUT);
     private JRadioButtonMenuItem german = new JRadioButtonMenuItem(VIcons.FLAG_DE);
     private JRadioButtonMenuItem english = new JRadioButtonMenuItem(VIcons.FLAG_EN);
-    private JRadioButtonMenuItem barChart1 = new JRadioButtonMenuItem(VIcons.CHART_BAR_HORIZONTAL);
-    private JRadioButtonMenuItem barChart2 = new JRadioButtonMenuItem(VIcons.CHART_BAR_VERTICAL);
+    private JRadioButtonMenuItem barChartHorizontal = new JRadioButtonMenuItem(VIcons.CHART_BAR_HORIZONTAL);
+    private JRadioButtonMenuItem barChartVertical = new JRadioButtonMenuItem(VIcons.CHART_BAR_VERTICAL);
     private JRadioButtonMenuItem pieChart = new JRadioButtonMenuItem(VIcons.CHART_PIE);
     private JRadioButtonMenuItem areaChart = new JRadioButtonMenuItem(VIcons.CHART_AREA);
     private JRadioButtonMenuItem ringChart = new JRadioButtonMenuItem(VIcons.CHART_RING);
@@ -151,6 +153,7 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JButton exit = new JButton(VIcons.EXIT);
     private JButton zoomIn = new JButton(VIcons.ZOOM_IN);
     private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
+    private JButton settings = new JButton(VIcons.APPLICATION_FORM_EDIT);
     private JButton rotateClockwise = new JButton(VIcons.SHAPE_ROTATE_CLOCKWISE);
     private JButton rotateAnticlockwise = new JButton(VIcons.SHAPE_ROTATE_ANTICLOCKWISE);
     private JMenuItem newMeasure = new JMenuItem(VIcons.NEW_MEASURE);
@@ -353,6 +356,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         makeChartsMenu();
         makeMeasuresMenu();
+        makeSettingsMenu();
         makeLanguageMenu();
 
         charts.addMouseListener(new MouseAdapter() {
@@ -366,6 +370,17 @@ public class VExplorer extends JFrame implements Internationalizable {
 
             public void mouseClicked(MouseEvent evt) {
                 measuresMenu.show(measures, 0, measures.getHeight());
+            }
+        });
+
+        settings.addMouseListener(new MouseAdapter() {
+
+            /**
+             * Invoked when the mouse has been clicked on a component.
+             */
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                settingsMenu.show(settings, 0, settings.getHeight());
             }
         });
 
@@ -469,6 +484,9 @@ public class VExplorer extends JFrame implements Internationalizable {
         toolbar.add(zoomOut);
         toolbar.add(rotateClockwise);
         toolbar.add(rotateAnticlockwise);
+        toolbar.addSeparator();
+        toolbar.add(settings);
+        toolbar.addSeparator();
         toolbar.add(languages);
         toolbar.addSeparator();
         toolbar.add(exit);
@@ -476,21 +494,21 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private void makeChartsMenu() {
 
-        makeActionListenerCharts(barChart1, ChartType.BAR_CHART, "Vertical", "barChartHorizontal");
-        makeActionListenerCharts(barChart2, ChartType.BAR_CHART, "Horizontal", "barChartVertical");
-        makeActionListenerCharts(pieChart, ChartType.PIE_CHART, "", "pieChart");
-        makeActionListenerCharts(areaChart, ChartType.AREA_CHART, "", "areaChart");
-        makeActionListenerCharts(ringChart, ChartType.RING_CHART, "", "ringChart");
+        makeActionListenerCharts(barChartHorizontal, ChartType.BAR_CHART_HORIZONTAL, "barChartHorizontal");
+        makeActionListenerCharts(barChartVertical, ChartType.BAR_CHART_VERTICAL, "barChartVertical");
+        makeActionListenerCharts(pieChart, ChartType.PIE_CHART, "pieChart");
+        makeActionListenerCharts(areaChart, ChartType.AREA_CHART, "areaChart");
+        makeActionListenerCharts(ringChart, ChartType.RING_CHART, "ringChart");
         ButtonGroup charts = new ButtonGroup();
-        barChart1.setSelected(true);
-        charts.add(barChart1);
-        charts.add(barChart2);
+        barChartHorizontal.setSelected(true);
+        charts.add(barChartHorizontal);
+        charts.add(barChartVertical);
         charts.add(pieChart);
         charts.add(areaChart);
         charts.add(ringChart);
 
-        chartsMenu.add(barChart1);
-        chartsMenu.add(barChart2);
+        chartsMenu.add(barChartHorizontal);
+        chartsMenu.add(barChartVertical);
         chartsMenu.add(pieChart);
         chartsMenu.add(areaChart);
         chartsMenu.add(ringChart);
@@ -521,6 +539,21 @@ public class VExplorer extends JFrame implements Internationalizable {
         measuresMenu.add(cases);
         measuresMenu.add(amount);
         measuresMenu.add(newMeasure);
+    }
+
+    private void makeSettingsMenu() {
+
+        resize.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                graph.setMoveable(!graph.isMoveable());
+                ComponentUtilities.repaintComponentTree(VExplorer.this.graph);
+            }
+        });
+
+        settingsMenu.add(resize);
     }
 
     private void makeLanguageMenu() {
@@ -626,12 +659,11 @@ public class VExplorer extends JFrame implements Internationalizable {
      * @param radioButtonMenuItem Item which gets the Listener.
      * @param chartType           The type of the current chart.
      */
-    public void makeActionListenerCharts(final JRadioButtonMenuItem radioButtonMenuItem, final ChartType chartType, final String barChartOrientation, final String i18NKey) {
+    public void makeActionListenerCharts(final JRadioButtonMenuItem radioButtonMenuItem, final ChartType chartType, final String i18NKey) {
 
         radioButtonMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                graph.setChartCheck(chartType);
-                graph.setBarChartOrientation(barChartOrientation);
+                graph.setChartType(chartType);
                 whatChartLabel.setI18NKey(i18NKey);
             }
         });
@@ -658,16 +690,19 @@ public class VExplorer extends JFrame implements Internationalizable {
         // Sets the text for the MenuItems.
         german.setText(MessageResolver.getMessage(Constants.GERMAN));
         english.setText(MessageResolver.getMessage(Constants.ENGLISH));
-        barChart1.setText(MessageResolver.getMessage(Constants.BAR_CHART));
-        barChart2.setText(MessageResolver.getMessage(Constants.BAR_CHART));
+        barChartHorizontal.setText(MessageResolver.getMessage(Constants.BAR_CHART));
+        barChartVertical.setText(MessageResolver.getMessage(Constants.BAR_CHART));
         pieChart.setText(MessageResolver.getMessage(Constants.PIE_CHART));
         areaChart.setText(MessageResolver.getMessage(Constants.AREA_CHART));
         ringChart.setText(MessageResolver.getMessage(Constants.RING_CHART));
         heads.setText(MessageResolver.getMessage(Constants.HEADS));
         cases.setText(MessageResolver.getMessage(Constants.CASES));
         amount.setText(MessageResolver.getMessage(Constants.AMOUNT));
+        resize.setText(MessageResolver.getMessage(Constants.GRAPH_EDITABLE));
 
         // Sets the tooltip for the Buttons.
+        settings.setToolTipText(MessageResolver.getMessage(Constants.SETTINGS_TOOLTIP));
+        resize.setToolTipText(MessageResolver.getMessage(Constants.GRAPH_EDITABLE_TOOLTIP));
         refresh.setToolTipText(MessageResolver.getMessage(Constants.REFRESH_TOOLTIP));
         undo.setToolTipText(MessageResolver.getMessage(Constants.UNDO_TOOLTIP));
         redo.setToolTipText(MessageResolver.getMessage(Constants.REDO_TOOLTIP));

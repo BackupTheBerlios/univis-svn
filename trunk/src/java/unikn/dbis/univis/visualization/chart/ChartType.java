@@ -16,7 +16,8 @@ package unikn.dbis.univis.visualization.chart;
  */
 public enum ChartType {
     AREA_CHART,
-    BAR_CHART,
+    BAR_CHART_VERTICAL,
+    BAR_CHART_HORIZONTAL,
     PIE_CHART,
     RING_CHART
 }

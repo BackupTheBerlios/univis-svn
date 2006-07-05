@@ -28,6 +28,9 @@ public interface Constants {
     public final static String HEADS = "heads";
     public final static String CASES = "cases";
     public final static String AMOUNT = "amount";
+    public static final String GRAPH_EDITABLE = "graph_editable";
+    public static final String GRAPH_EDITABLE_TOOLTIP = "graph_editable.tooltip";
+    public static final String SETTINGS_TOOLTIP = "settings.tooltip";
 
     // All Strings for the ToolTips of the Buttons.
     public final static String REFRESH_TOOLTIP = "refreshTooltip";

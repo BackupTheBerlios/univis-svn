@@ -154,6 +154,15 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     }
 
     /**
+     * Returns the size of the selected values.
+     *
+     * @return The size of the selected values.
+     */
+    public int getSelectionSize() {
+        return selections.size();
+    }
+
+    /**
      * Returns whether the selection of the dimension was changed
      * or not.
      *

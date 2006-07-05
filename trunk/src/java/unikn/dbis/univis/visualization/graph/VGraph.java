@@ -68,10 +68,9 @@ public class VGraph extends JGraph {
     private AbstractDataset dataset;
 
     // Strings for different topics.
-    private ChartType chartType = ChartType.BAR_CHART;
+    private ChartType chartType = ChartType.BAR_CHART_HORIZONTAL;
     private String rootHeadLine = "";
     private String xAxis = "Studenten";
-    private String barChartOrientation = "Vertical";
 
     // Int values for different topics.
     private int cellsize = 300;
@@ -95,7 +94,7 @@ public class VGraph extends JGraph {
         setGraphLayoutCache(cache);
         setEditable(false);
         setMoveable(false);
-        setSelectionEnabled(false);
+        setSelectionEnabled(true);
 
         layout.setOrientation(SwingConstants.NORTH);
     }
@@ -106,8 +105,8 @@ public class VGraph extends JGraph {
     public VGraphCell createVertex(String chartName, String id) {
 
         AbstractChart chart;
-        if (ChartType.BAR_CHART.equals(chartType)) {
-            chart = new BarChart(chartName, (CategoryDataset) dataset, xAxis, barChartOrientation);
+        if (ChartType.BAR_CHART_VERTICAL.equals(chartType) || ChartType.BAR_CHART_HORIZONTAL.equals(chartType)) {
+            chart = new BarChart(chartName, (CategoryDataset) dataset, xAxis, chartType);
         }
         else if (ChartType.AREA_CHART.equals(chartType)) {
             chart = new AreaChart(chartName, (CategoryDataset) dataset, xAxis);
@@ -206,7 +205,7 @@ public class VGraph extends JGraph {
 
             cellHistory.historize();
 
-            if (ChartType.BAR_CHART.equals(chartType) || ChartType.AREA_CHART.equals(chartType)) {
+            if (ChartType.BAR_CHART_VERTICAL.equals(chartType) || ChartType.BAR_CHART_HORIZONTAL.equals(chartType) || ChartType.AREA_CHART.equals(chartType)) {
                 dataset = new DefaultCategoryDataset();
 
                 while (result.next()) {
@@ -230,7 +229,7 @@ public class VGraph extends JGraph {
             cellHistory.historize();
 
             String buffer = "";
-            if (ChartType.BAR_CHART.equals(chartType) || ChartType.AREA_CHART.equals(chartType)) {
+            if (ChartType.BAR_CHART_VERTICAL.equals(chartType) || ChartType.BAR_CHART_HORIZONTAL.equals(chartType) || ChartType.AREA_CHART.equals(chartType)) {
                 while (result.next()) {
 
                     String currentValue = result.getString(idPos);
@@ -448,12 +447,8 @@ public class VGraph extends JGraph {
         this.xAxis = xAxis;
     }
 
-    public void setChartCheck(ChartType chartType) {
+    public void setChartType(ChartType chartType) {
         this.chartType = chartType;
-    }
-
-    public void setBarChartOrientation(String barChartOrientation) {
-        this.barChartOrientation = barChartOrientation;
     }
 
     /**
@@ -511,6 +506,7 @@ public class VGraph extends JGraph {
 
     private void setAncestorsDropped(VDimension dimension, boolean visibility) {
 
+        dimension.getSelections().clear();
         dimension.setDropped(visibility);
 
         VDataReference dataReference = dimension.getParent();

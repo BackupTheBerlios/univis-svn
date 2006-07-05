@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.Stack;
+import java.util.StringTokenizer;
 
 /**
  * TODO: document me!!!
@@ -182,10 +183,27 @@ public class VQuery {
             }
             else {
                 if (!dimension.equals(blueprint)) {
-                    if (from.indexOf(bluepName) == -1) {
+
+                    StringTokenizer tokenizer = new StringTokenizer(from.toString(), " ");
+
+                    boolean containsBluep = false;
+                    boolean containsTable = false;
+                    while (tokenizer.hasMoreTokens()) {
+                        String table = tokenizer.nextToken().replace(",", "").trim();
+
+                        if (table.equals(bluepName)) {
+                            containsBluep = true;
+                        }
+
+                        if (table.equals(tableName)) {
+                            containsTable = true;
+                        }
+                    }
+
+                    if (!containsBluep) {
                         from.append(", ").append(bluepName);
                     }
-                    if (from.indexOf(tableName) == -1) {
+                    if (!containsTable) {
                         from.append(", ").append(tableName);
                     }
 

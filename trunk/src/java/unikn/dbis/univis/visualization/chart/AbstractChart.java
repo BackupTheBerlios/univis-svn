@@ -3,6 +3,7 @@ package unikn.dbis.univis.visualization.chart;
 import unikn.dbis.univis.visualization.AbstractRenderer;
 import unikn.dbis.univis.visualization.Renderable;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.title.Title;
@@ -128,8 +129,7 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
         setSubtitles(total, legend);
 
         plot();
-
-
+        
         VChartPanel chartPanel = new VChartPanel(chart, true);
 
         if (getItemsCount() < 15) {

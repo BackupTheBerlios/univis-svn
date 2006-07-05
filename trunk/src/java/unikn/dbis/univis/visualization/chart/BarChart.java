@@ -3,15 +3,12 @@ package unikn.dbis.univis.visualization.chart;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.CategoryToolTipGenerator;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.DatasetRenderingOrder;
 import unikn.dbis.univis.visualization.Renderable;
-
-import java.awt.geom.Area;
 
 /**
  * TODO: document me!!!
@@ -32,8 +29,8 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
     // Description of the xAxis.
     private String xAxis;
 
-    // Orientation of the BarChart.
-    private String barChartOrientation;
+    // The type of the chart - vertical or horizontal
+    private ChartType chartType;
 
     // Total amount of the chart.
     private Integer total;
@@ -45,22 +42,24 @@ public class BarChart extends AbstractChart<CategoryDataset> implements Renderab
      * @param chartName Headline of the chart.
      * @param dataset   Dataset of the Chart.
      */
-    public BarChart(String chartName, CategoryDataset dataset, String xAxis, String barChartOrientation) {
+    public BarChart(String chartName, CategoryDataset dataset, String xAxis, ChartType chartType) {
         super(chartName, dataset);
         this.xAxis = xAxis;
-        this.barChartOrientation = barChartOrientation;
+        this.chartType = chartType;
     }
 
     /**
      * @return JFreeChart as BarChart3D.
      */
     protected JFreeChart createChart() {
-        if (barChartOrientation.equals("Horizontal")) {
-
+        if (ChartType.BAR_CHART_HORIZONTAL.equals(chartType)) {
             return ChartFactory.createBarChart3D(getChartName(), "", xAxis, getDataset(), PlotOrientation.HORIZONTAL, true, false, false);
         }
-        else {
+        else if (ChartType.BAR_CHART_VERTICAL.equals(chartType)) {
             return ChartFactory.createBarChart3D(getChartName(), "", xAxis, getDataset(), PlotOrientation.VERTICAL, true, false, false);
+        }
+        else {
+            return null;
         }
     }
 

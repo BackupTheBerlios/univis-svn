@@ -131,9 +131,9 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                         @Override
                         public void mousePressed(MouseEvent e) {
                             VTree vtree = (VTree) tree;
-                            e = SwingUtilities.convertMouseEvent(icon, e, vtree);
-                            //vtree.setSelectionRow(vtree.getRowForLocation(e.getX(), e.getY()));
-                            vtree.showPopupMenu(e.getX(), e.getY());
+                            MouseEvent converted = SwingUtilities.convertMouseEvent(icon, e, vtree);
+
+                            vtree.showPopupMenu(converted.getPoint());
                         }
                     });
                 }

@@ -26,4 +26,10 @@ public interface Renderable {
      *         to display on screen.
      */
     public Component render();
+
+    /**
+     * Updates the rendered component. It's similar to
+     * rerendering the component.
+     */
+    public void update();
 }

@@ -56,10 +56,29 @@ public class VGraphCell extends DefaultGraphCell {
         return o;
     }
 
+    /**
+     * TODO: document me!!!
+     */
+    public void update() {
+        Object o = super.getUserObject();
+
+        if (o instanceof Renderable) {
+            ((Renderable) o).update();
+        }
+    }
+
+    /**
+     * TODO: document me!!!
+     */
     public String getCellId() {
         return cellId;
     }
 
+    /**
+     * TODO: document me!!!
+     *
+     * @param cellId
+     */
     public void setCellId(String cellId) {
         this.cellId = cellId;
     }

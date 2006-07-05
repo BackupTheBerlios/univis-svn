@@ -36,6 +36,14 @@ public abstract class AbstractRenderer implements Renderable {
     }
 
     /**
+     * Updates the rendered component. It's similar to
+     * rerendering the component.
+     */
+    public void update() {
+        component = renderComponent();
+    }
+
+    /**
      * Renders the component that should be displayed
      * at screen.
      *
