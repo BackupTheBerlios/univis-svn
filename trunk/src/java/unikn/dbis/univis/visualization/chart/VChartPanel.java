@@ -4,6 +4,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.LegendItem;
 
+import javax.swing.*;
 import java.util.Collection;
 
 /**
@@ -83,5 +84,19 @@ public class VChartPanel extends ChartPanel {
      */
     public void setShowPopUp(boolean showPopUp) {
         this.showPopUp = showPopUp;
+    }
+
+    /**
+     * Creates a popup menu for the panel.
+     *
+     * @param properties include a menu item for the chart property editor.
+     * @param save       include a menu item for saving the chart.
+     * @param print      include a menu item for printing the chart.
+     * @param zoom       include menu items for zooming.
+     * @return The popup menu.
+     */
+    @Override
+    public JPopupMenu createPopupMenu(boolean properties, boolean save, boolean print, boolean zoom) {
+        return super.createPopupMenu(properties, save, print, zoom);
     }
 }

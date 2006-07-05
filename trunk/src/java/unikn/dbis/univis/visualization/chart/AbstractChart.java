@@ -129,7 +129,7 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
         setSubtitles(total, legend);
 
         plot();
-        
+
         VChartPanel chartPanel = new VChartPanel(chart, true);
 
         if (getItemsCount() < 15) {
@@ -137,7 +137,6 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
         }
 
         chartPanel.setMouseZoomable(true);
-
 
         return chartPanel;
     }

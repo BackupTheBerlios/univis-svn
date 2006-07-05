@@ -1,11 +1,16 @@
 package unikn.dbis.univis.visualization.graph.plaf;
 
 import org.jgraph.plaf.basic.BasicGraphUI;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.editor.ChartEditor;
+import org.jfree.chart.editor.ChartEditorManager;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 import unikn.dbis.univis.visualization.graph.VHintButton;
 import unikn.dbis.univis.visualization.graph.VGraphCell;
@@ -148,10 +153,18 @@ public class VGraphUI extends BasicGraphUI {
                     if (o != null && o instanceof VChartPanel) {
                         VChartPanel chart = (VChartPanel) o;
 
+                        if (SwingUtilities.isRightMouseButton(e)) {
+                            JPopupMenu menu = chart.createPopupMenu(true, true, true, true);
+
+                            menu.show(graph, e.getX(), e.getY());
+                        }
+
+                        /*
                         for (MouseListener l : chart.getMouseListeners()) {
                             System.out.println("LISTENS CLI");
                             l.mouseClicked(e);
                         }
+                        */
                     }
                 }
             }
@@ -180,7 +193,9 @@ public class VGraphUI extends BasicGraphUI {
             @Override
             public void mouseMoved(MouseEvent e) {
 
-                super.mouseMoved(e);
+                if (graph.isMoveable()) {
+                    super.mouseMoved(e);
+                }
 
                 Object o = graph.getFirstCellForLocation(e.getX(), e.getY());
 
@@ -192,9 +207,6 @@ public class VGraphUI extends BasicGraphUI {
 
                     menu.show(graph, (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + (int) (bounds.getHeight() - menu.getHeight()));
                 }
-                else {
-                    menu.setVisible(false);
-                }
             }
         };
     }
@@ -204,45 +216,63 @@ public class VGraphUI extends BasicGraphUI {
     private VGraphCell selectedCell;
 
     public VGraphUI() {
-        menu.add(new VHintButton(VIcons.ADD));
 
-        VHintButton button = new VHintButton(VIcons.ARROW_REFRESH);
-        button.addActionListener(new ActionListener() {
-            /**
-             * Invoked when an action occurs.
-             */
+        VHintButton zoomIn = new VHintButton(VIcons.ZOOM_IN);
+        menu.add(zoomIn);
+        zoomIn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                selectedCell.update();
-                graph.repaint();
+
+                VGraphCell cell = selectedCell;
+
+                Object o = cell.getUserObject();
+
+                if (o != null && o instanceof VChartPanel) {
+                    VChartPanel chart = (VChartPanel) o;
+
+                    chart.zoomInBoth(0, 0);
+                    graph.repaint();
+                }
             }
         });
 
-        menu.add(button);
-        menu.add(new VHintButton(VIcons.EURO));
-
-        VHintButton delete = new VHintButton(VIcons.DELETE);
-        delete.addActionListener(new ActionListener() {
-            /**
-             * Invoked when an action occurs.
-             */
+        VHintButton zoomOut = new VHintButton(VIcons.ZOOM_OUT);
+        menu.add(zoomOut);
+        zoomOut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JPanel panel = new JPanel(new BorderLayout());
-                panel.setSize(new Dimension(100, 100));
-                panel.setPreferredSize(new Dimension(100, 100));
-                panel.setMinimumSize(new Dimension(100, 100));
-                panel.setBackground(Color.RED);
 
-                JPopupMenu menu = new JPopupMenu();
+                VGraphCell cell = selectedCell;
 
-                menu.add(panel);
+                Object o = cell.getUserObject();
 
-                Rectangle2D bounds = graph.getCellBounds(selectedCell);
+                if (o != null && o instanceof VChartPanel) {
+                    VChartPanel chart = (VChartPanel) o;
 
-                menu.show(graph, (int) bounds.getX(), (int) bounds.getY() + (int) (bounds.getHeight() - menu.getHeight()));
+                    chart.zoomOutBoth(0, 0);
+                    graph.repaint();
+                }
             }
         });
 
-        menu.add(delete);
-        menu.add(new VHintButton(VIcons.SHAPE_ROTATE_ANTICLOCKWISE));
+        VHintButton euro = new VHintButton(VIcons.APPLICATION_FORM_EDIT);
+        menu.add(euro);
+        euro.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                VGraphCell cell = selectedCell;
+
+                Object o = cell.getUserObject();
+
+                if (o != null && o instanceof VChartPanel) {
+                    VChartPanel chart = (VChartPanel) o;
+
+                    ChartEditor editor = ChartEditorManager.getChartEditor(chart.getChart());
+                    int result = JOptionPane.showConfirmDialog(graph, editor, "Chart_Properties", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (result == JOptionPane.OK_OPTION) {
+                        editor.updateChart(chart.getChart());
+                        graph.repaint();
+                    }
+                }
+            }
+        });
     }
 }
