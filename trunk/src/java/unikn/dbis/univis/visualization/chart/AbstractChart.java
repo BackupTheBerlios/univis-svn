@@ -94,8 +94,8 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
     /**
      * Sets the subtitels and the legend.
      *
-     * @param total  : total amount of the chart.
-     * @param legend : the legend of the chart
+     * @param total  The total amount of the chart.
+     * @param legend The legend of the chart
      */
     public void setSubtitles(int total, LegendTitle legend) {
 
@@ -131,10 +131,6 @@ public abstract class AbstractChart<T extends Dataset> extends AbstractRenderer 
         plot();
 
         VChartPanel chartPanel = new VChartPanel(chart, true);
-
-        if (getItemsCount() < 15) {
-            chartPanel.setShowPopUp(false);
-        }
 
         chartPanel.setMouseZoomable(true);
 

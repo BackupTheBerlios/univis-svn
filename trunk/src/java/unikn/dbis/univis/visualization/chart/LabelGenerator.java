@@ -65,9 +65,9 @@ public class LabelGenerator implements CategorySeriesLabelGenerator, PieSectionL
     public String generateSectionLabel(PieDataset dataset, Comparable key) {
         Integer value = dataset.getValue(key).intValue();
         Comparable name = dataset.getKey(dataset.getIndex(key));
-        Double procent = ((full / total) * value);
+        Double percent = ((full / total) * value);
 
-        return name.toString() + " = " + value.toString() + " -> " + decimalFormat.format(procent) + "%";
+        return name.toString() + " = " + value.toString() + " -> " + decimalFormat.format(percent) + "%";
     }
 
     /**

@@ -1,19 +1,19 @@
 package unikn.dbis.univis.visualization.graph.plaf;
 
 import org.jgraph.plaf.basic.BasicGraphUI;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.editor.ChartEditor;
 import org.jfree.chart.editor.ChartEditorManager;
+import org.jfree.chart.LegendItem;
+import org.jfree.chart.LegendItemCollection;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 
 import unikn.dbis.univis.visualization.graph.VHintButton;
 import unikn.dbis.univis.visualization.graph.VGraphCell;
+import unikn.dbis.univis.visualization.graph.VLegend;
 import unikn.dbis.univis.visualization.chart.VChartPanel;
 import unikn.dbis.univis.icon.VIcons;
 
@@ -90,9 +90,41 @@ public class VGraphUI extends BasicGraphUI {
              */
             @Override
             public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
 
                 Object o = graph.getFirstCellForLocation(e.getX(), e.getY());
+
+                if (SwingUtilities.isLeftMouseButton(e) && e.isAltDown()) {
+                    if (o instanceof VGraphCell) {
+
+                        VGraphCell cell = (VGraphCell) o;
+
+                        JPopupMenu menu = new JPopupMenu();
+
+                        VChartPanel chartPanel = (VChartPanel) cell.getUserObject();
+
+                        LegendItemCollection collect = chartPanel.getChart().getPlot().getLegendItems();
+                        JMenu first = new JMenu("1-39");
+                        int checker = 0;
+
+                        for (Iterator iter = collect.iterator(); iter.hasNext();) {
+                            LegendItem item = (LegendItem) iter.next();
+                            checker++;
+                            first.add(new JMenuItem(item.getLabel()));
+                            if ((checker % 40) == 0) {
+                                menu.add(first);
+
+                                first = new JMenu("" + checker + "-" + (checker + 39));
+                            }
+                            if (!iter.hasNext()) {
+                                menu.add(first);
+                            }
+                        }
+
+                        menu.show(graph, e.getX(), e.getY());
+                    }
+                }
+
+                super.mousePressed(e);
 
                 if (o != null && o instanceof VGraphCell) {
 
@@ -104,7 +136,6 @@ public class VGraphUI extends BasicGraphUI {
                         VChartPanel chart = (VChartPanel) o;
 
                         for (MouseListener l : chart.getMouseListeners()) {
-                            System.out.println("LISTENS PRE");
                             l.mousePressed(e);
                         }
                     }
@@ -128,7 +159,6 @@ public class VGraphUI extends BasicGraphUI {
                         VChartPanel chart = (VChartPanel) o;
 
                         for (MouseListener l : chart.getMouseListeners()) {
-                            System.out.println("LISTENS REL");
                             l.mouseReleased(e);
                         }
                     }
@@ -253,9 +283,9 @@ public class VGraphUI extends BasicGraphUI {
             }
         });
 
-        VHintButton euro = new VHintButton(VIcons.APPLICATION_FORM_EDIT);
-        menu.add(euro);
-        euro.addActionListener(new ActionListener() {
+        VHintButton settings = new VHintButton(VIcons.APPLICATION_FORM_EDIT);
+        menu.add(settings);
+        settings.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
                 VGraphCell cell = selectedCell;
@@ -271,6 +301,31 @@ public class VGraphUI extends BasicGraphUI {
                         editor.updateChart(chart.getChart());
                         graph.repaint();
                     }
+                }
+            }
+        });
+
+        VHintButton legend = new VHintButton(VIcons.BRICKS);
+        menu.add(legend);
+        legend.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+
+                VGraphCell cell = selectedCell;
+
+                Object o = cell.getUserObject();
+
+                if (o != null && o instanceof VChartPanel) {
+                    VChartPanel chart = (VChartPanel) o;
+
+                    VLegend legend = new VLegend(chart.getChart());
+
+                    JPopupMenu menu = new JPopupMenu();
+                    menu.add(legend);
+
+                    menu.show(graph, 0, 0);
                 }
             }
         });

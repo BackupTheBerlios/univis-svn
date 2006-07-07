@@ -56,12 +56,12 @@ public class ComponentUtilities {
             ((JComponent) c).updateUI();
         }
 
-        c.repaint();
-
         // Internationalizing of the component.
         if (c instanceof Internationalizable) {
             ((Internationalizable) c).internationalize();
         }
+
+        c.repaint();
     }
 
     /**
@@ -79,8 +79,6 @@ public class ComponentUtilities {
             ((JComponent) c).updateUI();
         }
 
-        c.repaint();
-
         // Internationalizing of the component.
         if (c instanceof Internationalizable) {
             ((Internationalizable) c).internationalize();
@@ -93,10 +91,13 @@ public class ComponentUtilities {
         else if (c instanceof Container) {
             children = ((Container) c).getComponents();
         }
+
         if (children != null) {
             for (Component aChildren : children) {
                 repaintComponentTree0(aChildren);
             }
         }
+
+        c.repaint();
     }
 }

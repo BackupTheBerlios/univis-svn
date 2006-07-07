@@ -15,9 +15,9 @@ import unikn.dbis.univis.visualization.graph.VGraph;
 import unikn.dbis.univis.visualization.graph.VGraphCell;
 import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.Internationalizable;
-import unikn.dbis.univis.message.VLabel;
+import unikn.dbis.univis.message.swing.VLabel;
+import unikn.dbis.univis.message.swing.VRadioButtonMenuItem;
 import unikn.dbis.univis.system.Constants;
-import unikn.dbis.univis.exception.VDialog;
 import unikn.dbis.univis.images.VImageDummy;
 
 import javax.swing.*;
@@ -37,6 +37,8 @@ import org.hibernate.Session;
 import org.jgraph.graph.GraphLayoutCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jdesktop.swingx.JXErrorDialog;
+import org.jdesktop.swingx.IncidentInfo;
 
 /**
  * TODO: document me!!!
@@ -169,7 +171,7 @@ public class VExplorer extends JFrame implements Internationalizable {
     private VLabel chartLabel;
     private VLabel whatChartLabel;
     private VLabel languageLabel;
-    private VLabel whatLanguageLabel;
+    private JLabel whatLanguageLabel;
     private VLabel dateLabel;
     private JLabel whatDateLabel;
     private VLabel timeLabel;
@@ -195,7 +197,9 @@ public class VExplorer extends JFrame implements Internationalizable {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(800, 600));
         setSize(new Dimension(800, 600));
-        ComponentUtilities.centerComponentOnScreen(this);
+
+        // Centers the explorer on screen.
+        setLocationRelativeTo(null);
 
         split.setDividerLocation(300);
         split.setOneTouchExpandable(true);
@@ -274,8 +278,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         complete.add(whatChartLabel);
         statePanel.add(complete, gbc);
 
-        measureLabel = new VLabel();
-        measureLabel.setI18NKey(Constants.MEASURE);
+        measureLabel = new VLabel(Constants.MEASURE);
         whatMeasureLabel = new VLabel(Constants.HEADS);
         complete = new JPanel();
         complete.add(measureLabel);
@@ -284,7 +287,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         statePanel.add(complete, gbc);
 
         languageLabel = new VLabel(Constants.LANGUAGE);
-        whatLanguageLabel = new VLabel(Constants.GERMAN);
+        whatLanguageLabel = new JLabel(Locale.GERMAN.getDisplayName());
         complete = new JPanel();
         complete.add(languageLabel);
         complete.add(whatLanguageLabel);
@@ -560,16 +563,18 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         german.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MessageResolver.setLocale(Locale.GERMAN);
-                whatLanguageLabel.setI18NKey("german");
+                Locale locale = Locale.GERMAN;
+                MessageResolver.setLocale(locale);
+                whatLanguageLabel.setText(locale.getDisplayName(locale));
                 ComponentUtilities.repaintComponentTree(VExplorer.this);
             }
         });
 
         english.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MessageResolver.setLocale(Locale.ENGLISH);
-                whatLanguageLabel.setI18NKey("english");
+                Locale locale = Locale.ENGLISH;
+                MessageResolver.setLocale(locale);
+                whatLanguageLabel.setText(locale.getDisplayName(locale));
                 ComponentUtilities.repaintComponentTree(VExplorer.this);
             }
         });
@@ -630,7 +635,9 @@ public class VExplorer extends JFrame implements Internationalizable {
     }
 
     public static void publishException(Exception e) {
-        new VDialog(explorer, e);
+        IncidentInfo info = new IncidentInfo("Header", e.getMessage(), "asdfa\nasdfasdf\nasdfsadf\n\nsadfa", e);
+        JXErrorDialog.showDialog(explorer, info);
+        //new VDialog(explorer, e);
     }
 
     /**

@@ -1,4 +1,7 @@
-package unikn.dbis.univis.message;
+package unikn.dbis.univis.message.swing;
+
+import unikn.dbis.univis.message.Internationalizable;
+import unikn.dbis.univis.message.MessageResolver;
 
 import javax.swing.*;
 
@@ -74,46 +77,6 @@ public class VLabel extends JLabel implements Internationalizable {
     public VLabel(String i18nKey) {
         super(MessageResolver.getMessage(i18nKey));
         this.i18nKey = i18nKey;
-    }
-
-    /**
-     * Creates a <code>JLabel</code> instance with the specified
-     * image and horizontal alignment.
-     * The label is centered vertically in its display area.
-     *
-     * @param image               The image to be displayed by the label.
-     * @param horizontalAlignment One of the following constants
-     *                            defined in <code>SwingConstants</code>:
-     *                            <code>LEFT</code>,
-     *                            <code>CENTER</code>,
-     *                            <code>RIGHT</code>,
-     *                            <code>LEADING</code> or
-     *                            <code>TRAILING</code>.
-     */
-    public VLabel(Icon image, int horizontalAlignment) {
-        super(image, horizontalAlignment);
-    }
-
-    /**
-     * Creates a <code>JLabel</code> instance with the specified image.
-     * The label is centered vertically and horizontally
-     * in its display area.
-     *
-     * @param image The image to be displayed by the label.
-     */
-    public VLabel(Icon image) {
-        super(image);
-    }
-
-    /**
-     * Creates a <code>JLabel</code> instance with
-     * no image and with an empty string for the title.
-     * The label is centered vertically
-     * in its display area.
-     * The label's contents, once set, will be displayed on the leading edge
-     * of the label's display area.
-     */
-    public VLabel() {
     }
 
     /**

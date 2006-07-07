@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
+import unikn.dbis.univis.util.ComponentUtilities;
+
 /**
  * TODO: document me!!!
  * <p/>
@@ -67,10 +69,11 @@ public class VSplashScreen extends JFrame implements Runnable {
             ioe.printStackTrace();
         }
 
-        center();
-
         thread = new Thread(this);
+        thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
+
+        center();
 
         setVisible(true);
     }
