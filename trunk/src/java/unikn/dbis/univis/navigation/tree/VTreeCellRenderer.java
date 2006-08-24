@@ -49,7 +49,7 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
         Component label = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.WHITE);
+        panel.setBackground(UIManager.getColor("Tree.background"));
         panel.add(label, BorderLayout.CENTER);
 
         if (value instanceof DefaultMutableTreeNode) {
@@ -65,11 +65,13 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                 VDimension dimension = (VDimension) o;
 
                 if (dimension.isSummable()) {
-                    panel.add(new VIconComponent(VIcons.LIGHTNING), BorderLayout.EAST);
+                    panel.add(new VIconComponent(VIcons.FILTER), BorderLayout.EAST);
                 }
 
                 if (dimension.isDropped()) {
                     label.setForeground(Color.LIGHT_GRAY);
+                    //label.setBackground(UIManager.getColor("Tree.background"));
+                    label.setBackground(Color.RED);
                 }
 
                 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();

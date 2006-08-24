@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -70,19 +71,27 @@ public class VExplorer extends JFrame implements Internationalizable {
         }
         */
 
+        InputStream imageStream = null;
         try {
-            splashScreen = new VSplashScreen(VImageDummy.class.getResource("splash_screen.png").openStream());
+            imageStream = VImageDummy.class.getResource("splash_screen.png").openStream();
         }
         catch (IOException ioe) {
             ioe.printStackTrace();
         }
 
+        System.out.println("IN: " + imageStream);
+
+        final VSplashScreen splashScreen = new VSplashScreen(imageStream);
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    explorer = new VExplorer();
+                    VExplorer explorer = new VExplorer();
                     explorer.setVisible(true);
-                    splashScreen.destroy();
+
+                    if (splashScreen != null) {
+                        splashScreen.destroy();
+                    }
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -94,10 +103,6 @@ public class VExplorer extends JFrame implements Internationalizable {
     // The logger to log info, error and other occuring messages
     // or exceptions.
     public static final transient Log LOG = LogFactory.getLog(VExplorer.class);
-
-    private static VExplorer explorer;
-
-    private static VSplashScreen splashScreen;
 
     private static Connection connection;
 
@@ -635,8 +640,9 @@ public class VExplorer extends JFrame implements Internationalizable {
     }
 
     public static void publishException(Exception e) {
-        IncidentInfo info = new IncidentInfo("Header", e.getMessage(), "asdfa\nasdfasdf\nasdfsadf\n\nsadfa", e);
-        JXErrorDialog.showDialog(explorer, info);
+        System.out.println("REMOVED BECAUSE SHOULDN'T BE STATIC EXPLORER");
+        //IncidentInfo info = new IncidentInfo("Header", e.getMessage(), "asdfa\nasdfasdf\nasdfsadf\n\nsadfa", e);
+        //JXErrorDialog.showDialog(explorer, info);
         //new VDialog(explorer, e);
     }
 

@@ -138,7 +138,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
 
                         popupMenu.add(container);
 
-                        JButton view = new JButton(MessageResolver.getMessage("filtering"), VIcons.LIGHTNING);
+                        JButton view = new JButton(MessageResolver.getMessage("filtering"), VIcons.FILTER);
                         view.addActionListener(new ActionListener() {
 
                             /**

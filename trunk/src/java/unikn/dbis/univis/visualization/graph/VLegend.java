@@ -21,8 +21,14 @@ import java.awt.*;
  */
 public class VLegend extends JComponent {
 
+    // TODO: document me!!!
     private JFreeChart chart;
 
+    /**
+     * TODO: document me!!!
+     *
+     * @param chart
+     */
     public VLegend(JFreeChart chart) {
         this.chart = chart;
 

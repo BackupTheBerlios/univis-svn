@@ -33,7 +33,7 @@ public class VQuery {
 
     private String cubeName = "sos_cube";
     private String cubeAttribute = "SUM(koepfe)";
-    private String testSql;
+    private String itemCountSQL;
 
     /**
      *
@@ -266,7 +266,7 @@ public class VQuery {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(sql.toString());
             }
-            testSql = createTestSql(dimension);
+            itemCountSQL = createItemCountSQL(dimension);
             return sql.toString();
 
         }
@@ -275,10 +275,10 @@ public class VQuery {
             return sql.toString();
         }
 
-        public String createTestSql(VDimension dimension) {
+        public String createItemCountSQL(VDimension dimension) {
             String sql = "SELECT DISTINCT " + lastTableName + ".name FROM " + lastTableName;
 
-            if (dimension.getSelections() != null && dimension.getSelections().size() > 0) {
+            if (dimension.getSelections() != null && dimension.getSelectionSize() > 0) {
                 sql += " WHERE (";
 
                 int size = dimension.getSelections().size();
@@ -301,8 +301,8 @@ public class VQuery {
         }
     }
 
-    public String getTestSql() {
-        return testSql;
+    public String getItemCountSQL() {
+        return itemCountSQL;
     }
 
     public String getFilterWhereClause(VDimension dimension) {

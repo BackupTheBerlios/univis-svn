@@ -25,8 +25,12 @@ public class VCubeIcon implements Icon {
         this.cubeColor = cubeColor;
     }
 
+    /**
+     * Draw the icon at the specified location.  Icon implementations
+     * may use the Component argument to get properties useful for
+     * painting, e.g. the foreground or background color.
+     */
     public void paintIcon(Component c, Graphics g, int x, int y) {
-
         int width = 10;
         int height = 10;
         x += 5;

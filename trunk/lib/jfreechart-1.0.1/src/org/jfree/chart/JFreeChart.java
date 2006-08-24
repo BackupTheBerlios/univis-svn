@@ -1022,7 +1022,7 @@ public class JFreeChart implements Drawable,
         Iterator iterator = this.subtitles.iterator();
         while (iterator.hasNext()) {
             Title currentTitle = (Title) iterator.next();
-            EntityCollection e = drawTitle(currentTitle, g2, nonTitleArea, 
+            EntityCollection e = drawTitle(currentTitle, g2, nonTitleArea,
                     (entities != null));
             if (e != null) {
                 entities.addAll(e);   
@@ -1096,7 +1096,7 @@ public class JFreeChart implements Drawable,
      * 
      * @return An entity collection for the title (possibly <code>null</code>).
      */
-    protected EntityCollection drawTitle(Title t, Graphics2D g2, 
+    protected EntityCollection drawTitle(Title t, Graphics2D g2,
                                          Rectangle2D area, boolean entities) {
 
         if (t == null) {

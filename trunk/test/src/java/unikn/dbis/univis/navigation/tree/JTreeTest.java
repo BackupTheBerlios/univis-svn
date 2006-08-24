@@ -65,7 +65,7 @@ public class JTreeTest extends JTree {
 
                 TreeRow treeRow = new TreeRow();
                 treeRow.setContent(label);
-                treeRow.setIcon(new UVIcon(VIcons.LIGHTNING));
+                treeRow.setIcon(new UVIcon(VIcons.FILTER));
 
                 /*
                 JPanel panel = new JPanel(new BorderLayout());

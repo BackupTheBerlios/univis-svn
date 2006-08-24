@@ -319,7 +319,7 @@ public class VGraph extends JGraph {
         VDimension blueprint = searchBlueprint(dimension);
 
         String sql = queryHistory.createChartQuery(dimension, blueprint);
-        String testSql = queryHistory.getTestSql();
+        String testSql = queryHistory.getItemCountSQL();
 
         ResultSet result = null;
         ResultSet testResult = null;

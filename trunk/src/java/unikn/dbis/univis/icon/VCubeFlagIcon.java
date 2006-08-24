@@ -32,10 +32,10 @@ public class VCubeFlagIcon implements Icon {
      */
     public void paintIcon(Component c, Graphics g, int x, int y) {
         g.setColor(flagColor);
-        g.fillRect(x, y, 7, 7);
+        g.fill3DRect(x, y, 7, 7, true);
 
         g.setColor(Color.BLACK);
-        g.drawRect(x, y, 7, 7);
+        g.draw3DRect(x, y, 7, 7, true);
     }
 
     /**

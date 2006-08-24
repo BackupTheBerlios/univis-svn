@@ -121,7 +121,7 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                 VDimension dimension = (VDimension) o;
 
                 if (dimension.isSummable()) {
-                    final VIconComponent icon = new VIconComponent(VIcons.LIGHTNING, 8);
+                    final VIconComponent icon = new VIconComponent(VIcons.FILTER, 8);
                     panel.add(icon, BorderLayout.EAST);
                     icon.addMouseListener(new MouseAdapter() {
 
@@ -140,6 +140,8 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
 
                 if (dimension.isDropped()) {
                     label.setForeground(Color.LIGHT_GRAY);
+                    //label.setBackground(UIManager.getColor("Tree.background"));
+                    label.setBackground(Color.RED);
                 }
 
                 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();

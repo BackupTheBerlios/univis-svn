@@ -5,16 +5,10 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
-
-import unikn.dbis.univis.util.ComponentUtilities;
 
 /**
  * TODO: document me!!!
@@ -30,7 +24,7 @@ import unikn.dbis.univis.util.ComponentUtilities;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VSplashScreen extends JFrame implements Runnable {
+public class VSplashScreen implements Runnable {
 
 
     /**
@@ -45,10 +39,7 @@ public class VSplashScreen extends JFrame implements Runnable {
      */
     private Thread thread;
 
-    /**
-     * Das anzuzeigende <code>Image</code>.
-     */
-    private BufferedImage image;
+    private InputStream imageStream;
 
     /**
      * Erzeugt eine neue <code>SplashScreen</code> und sobald das Splashable gesetzt wurde
@@ -58,43 +49,11 @@ public class VSplashScreen extends JFrame implements Runnable {
      */
     public VSplashScreen(InputStream inputStream) {
 
-        // Setze die für einen SplashScreen üblichen Einstellungen.
-        setUndecorated(true);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-        try {
-            image = ImageIO.read(inputStream);
-        }
-        catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+        this.imageStream = inputStream;
 
         thread = new Thread(this);
         thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
-
-        center();
-
-        setVisible(true);
-    }
-
-    /**
-     * Zentriert die <code>SplashScreen</code> im sichtbaren Bereich des Bildschirms.
-     */
-    private void center() {
-
-        // Größe der eingestellten Bildschirmauflösung.
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-
-        width -= image.getWidth();
-        height -= image.getHeight();
-
-        setSize(new Dimension(image.getWidth(), image.getHeight()));
-
-        setLocation((int) width / 2, (int) height / 2);
     }
 
     /**
@@ -108,14 +67,6 @@ public class VSplashScreen extends JFrame implements Runnable {
     }
 
     /**
-     * @see JFrame#paint(java.awt.Graphics)
-     */
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.drawImage(image, 0, 0, this);
-    }
-
-    /**
      * @see Runnable#run()
      */
     public void run() {
@@ -124,9 +75,75 @@ public class VSplashScreen extends JFrame implements Runnable {
             LOG.debug("Starting splash screen animation...");
         }
 
+        JFrame frame = new JFrame() {
+
+            /**
+             * Das anzuzeigende <code>Image</code>.
+             */
+            private BufferedImage image;
+
+            /**
+             * Called by the constructors to init the <code>JWindow</code> properly.
+             */
+            @Override
+            protected void frameInit() {
+                try {
+                    image = ImageIO.read(imageStream);
+                }
+                catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+
+                super.frameInit();
+
+                center();
+
+                setVisible(true);
+            }
+
+
+
+            /**
+             * Paints each of the components in this container.
+             *
+             * @param g the graphics context.
+             * @see java.awt.Component#paint
+             * @see java.awt.Component#paintAll
+             */
+            @Override
+            public void paint(Graphics g) {
+                g.drawImage(image, 0, 0, this);
+                super.paint(g);
+            }
+
+            /**
+             * Zentriert die <code>SplashScreen</code> im sichtbaren Bereich des Bildschirms.
+             */
+            private void center() {
+
+                // Größe der eingestellten Bildschirmauflösung.
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+                double width = screenSize.getWidth();
+                double height = screenSize.getHeight();
+
+                width -= image.getWidth(this);
+                height -= image.getHeight(this);
+
+                setSize(new Dimension(image.getWidth(this), image.getHeight(this)));
+
+                setLocation((int) width / 2, (int) height / 2);
+            }
+        };
+
+        // Setze die für einen SplashScreen üblichen Einstellungen.
+        //frame.setUndecorated(true);
+        //frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
         while (Thread.currentThread() == thread && thread != null) {
 
             try {
+                frame.repaint();
                 Thread.sleep(100);
             }
             catch (InterruptedException ie) {
@@ -136,7 +153,7 @@ public class VSplashScreen extends JFrame implements Runnable {
             }
         }
 
-        dispose();
+        frame.dispose();
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("... splash screen animation finished.");
