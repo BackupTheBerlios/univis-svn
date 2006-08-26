@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!--
+   @author Roman R&auml;dle
+   @author Andreas Weiler
+   @version $Revision$
+   @since UniVis Explorer 0.1
+-->
+
+<hibernate-mapping>
+
+    <joined-subclass name="unikn.dbis.univis.meta.impl.VMeasureImpl" table="META_CUBE"
+                     extends="unikn.dbis.univis.meta.impl.VDataReferenceImpl">
+
+        <key column="DATA_REFERENCE_ID"/>
+
+        <property name="column" type="string">
+            <column name="MEASURE_COLUMN" not-null="true"/>
+        </property>
+
+    </joined-subclass>
+
+</hibernate-mapping>
