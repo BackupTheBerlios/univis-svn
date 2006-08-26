@@ -44,7 +44,7 @@ public class VGraphUI extends BasicGraphUI {
             /**
              * Invoked when a mouse button has been pressed on a component.
              *
-             @Override
+             //@Override
              public void mousePressed(MouseEvent e) {
 
              Object o = graph.getFirstCellForLocation(e.getX(), e.getY());

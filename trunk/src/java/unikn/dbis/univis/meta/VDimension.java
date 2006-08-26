@@ -138,4 +138,12 @@ public interface VDimension extends VDataReference {
      *                         was changed or not.
      */
     public void setSelectionChanged(boolean selectionChanged);
+
+    /**
+     * Returns the <code>VDimension</code> that is close to the
+     * cube.
+     *
+     * @return The blueprint that is close to the cube.
+     */
+    public VDimension getBlueprint();
 }

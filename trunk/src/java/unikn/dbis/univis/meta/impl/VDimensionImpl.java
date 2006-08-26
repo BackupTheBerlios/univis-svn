@@ -185,6 +185,36 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     }
 
     /**
+     * Returns the <code>VDimension</code> that is close to the
+     * cube.
+     *
+     * @return The blueprint that is close to the cube.
+     */
+    public VDimension getBlueprint() {
+        return searchBlueprint(this);
+    }
+
+    /**
+     * Searches the blueprint that connected to this dimension.
+     *
+     * @param dimension The dimension that contains the blueprint
+     *                  at a lower hierarchical position.
+     * @return The blueprint dimension.
+     */
+    private VDimension searchBlueprint(VDimension dimension) {
+        if (dimension.getChildren().size() == 0) {
+            return dimension;
+        }
+
+        VDimension blueprint = null;
+        for (VDataReference vDataReference : dimension.getChildren()) {
+            blueprint = searchBlueprint((VDimension) vDataReference);
+        }
+
+        return blueprint;
+    }
+
+    /**
      * Returns the cubes that supports this dimension.
      *
      * @return The cubes that supports this dimension.

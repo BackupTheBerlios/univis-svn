@@ -19,6 +19,8 @@ import unikn.dbis.univis.message.swing.VLabel;
 import unikn.dbis.univis.message.swing.VRadioButtonMenuItem;
 import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.images.VImageDummy;
+import unikn.dbis.univis.marion.view.UniVis;
+import unikn.dbis.univis.marion.view.UniViewPanelPivottable;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -39,7 +41,7 @@ import org.jgraph.graph.GraphLayoutCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdesktop.swingx.JXErrorDialog;
-import org.jdesktop.swingx.IncidentInfo;
+//import org.jdesktop.swingx.IncidentInfo;
 
 /**
  * TODO: document me!!!
@@ -146,6 +148,7 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JRadioButtonMenuItem pieChart = new JRadioButtonMenuItem(VIcons.CHART_PIE);
     private JRadioButtonMenuItem areaChart = new JRadioButtonMenuItem(VIcons.CHART_AREA);
     private JRadioButtonMenuItem ringChart = new JRadioButtonMenuItem(VIcons.CHART_RING);
+    private JRadioButtonMenuItem pivotTable = new JRadioButtonMenuItem(VIcons.PIVOT_TABLE);
     private JRadioButtonMenuItem heads = new JRadioButtonMenuItem(VIcons.STUDENTS_CASES);
     private JRadioButtonMenuItem cases = new JRadioButtonMenuItem(VIcons.STUDENTS_HEADS);
     private JRadioButtonMenuItem amount = new JRadioButtonMenuItem(VIcons.EURO);
@@ -507,6 +510,19 @@ public class VExplorer extends JFrame implements Internationalizable {
         makeActionListenerCharts(pieChart, ChartType.PIE_CHART, "pieChart");
         makeActionListenerCharts(areaChart, ChartType.AREA_CHART, "areaChart");
         makeActionListenerCharts(ringChart, ChartType.RING_CHART, "ringChart");
+
+        pivotTable.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                whatChartLabel.setI18NKey("pivottable");
+                UniViewPanelPivottable pivot = new UniViewPanelPivottable();
+                split.setRightComponent(pivot);
+
+            }
+        });
+
         ButtonGroup charts = new ButtonGroup();
         barChartHorizontal.setSelected(true);
         charts.add(barChartHorizontal);
@@ -514,12 +530,14 @@ public class VExplorer extends JFrame implements Internationalizable {
         charts.add(pieChart);
         charts.add(areaChart);
         charts.add(ringChart);
+        charts.add(pivotTable);
 
         chartsMenu.add(barChartHorizontal);
         chartsMenu.add(barChartVertical);
         chartsMenu.add(pieChart);
         chartsMenu.add(areaChart);
         chartsMenu.add(ringChart);
+        chartsMenu.add(pivotTable);
     }
 
     private void makeMeasuresMenu() {
@@ -708,6 +726,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         pieChart.setText(MessageResolver.getMessage(Constants.PIE_CHART));
         areaChart.setText(MessageResolver.getMessage(Constants.AREA_CHART));
         ringChart.setText(MessageResolver.getMessage(Constants.RING_CHART));
+        pivotTable.setText(MessageResolver.getMessage(Constants.PIVOT_TABLE));
         heads.setText(MessageResolver.getMessage(Constants.HEADS));
         cases.setText(MessageResolver.getMessage(Constants.CASES));
         amount.setText(MessageResolver.getMessage(Constants.AMOUNT));

@@ -29,6 +29,7 @@ public class VIcons {
     public static final Icon CHART_PIE = new ImageIcon(VIcons.class.getResource("../images/chart_pie.png"));
     public static final Icon CHART_AREA = new ImageIcon(VIcons.class.getResource("../images/chart_area.png"));
     public static final Icon CHART_RING = new ImageIcon(VIcons.class.getResource("../images/chart_ring.png"));
+    public static final Icon PIVOT_TABLE = new ImageIcon(VIcons.class.getResource("../images/pivottable.png"));
     public static final Icon DELETE = new ImageIcon(VIcons.class.getResource("../images/delete.png"));
     public static final Icon FILTER = new ImageIcon(VIcons.class.getResource("../images/filter.png"));
     public static final Icon FLAG_DE = new ImageIcon(VIcons.class.getResource("../images/flag_de.png"));

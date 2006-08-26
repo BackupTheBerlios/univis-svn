@@ -25,6 +25,7 @@ public interface Constants {
     public final static String PIE_CHART = "pieChart";
     public final static String AREA_CHART = "areaChart";
     public final static String RING_CHART = "ringChart";
+    public final static String PIVOT_TABLE = "pivottable";
     public final static String HEADS = "heads";
     public final static String CASES = "cases";
     public final static String AMOUNT = "amount";

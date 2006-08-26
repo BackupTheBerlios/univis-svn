@@ -115,11 +115,19 @@ public interface VDataReference {
     public void setEnabled(boolean enabled);
 
     /**
+     * Returns the decendants of this data reference.
+     *
+     * @return The decendants of this data reference within a
+     *         <code>Set</code>.
+     */
+    public Set<VDataReference> getDescendants();
+
+    /**
      * Returns the name that will be shown as tree label or
      * anywhere else on the frontend.
      *
      * @return The label that will be displayed on the
-     * frontend.
+     *         frontend.
      */
     public String toString();
 }

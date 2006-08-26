@@ -5,6 +5,7 @@ import unikn.dbis.univis.message.MessageResolver;
 
 import java.util.Set;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  * TODO: document me!!!
@@ -194,11 +195,21 @@ public abstract class VDataReferenceImpl implements VDataReference {
     }
 
     /**
+     * Returns the decendants of this data reference.
+     *
+     * @return The decendants of this data reference within a
+     *         <code>Set</code>.
+     */
+    public Set<VDataReference> getDescendants() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Returns the name that will be shown as tree label or
      * anywhere else on the frontend.
      *
      * @return The label that will be displayed on the
-     * frontend.
+     *         frontend.
      */
     @Override
     public String toString() {
