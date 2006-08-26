@@ -14,4 +14,20 @@ package unikn.dbis.univis.meta;
  * @since UniVis Explorer 0.2
  */
 public interface VMeasure extends VDataReference {
+
+    /**
+     * Returns the name of the measure.
+     *
+     * @return String
+     */
+    public String getMeasure();
+
+    /**
+     * Sets the name of the measure.
+     *
+     * @param measure
+     */
+    public void setMeasure(String measure);
+
+
 }

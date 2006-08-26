@@ -16,11 +16,9 @@ import unikn.dbis.univis.visualization.graph.VGraphCell;
 import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.Internationalizable;
 import unikn.dbis.univis.message.swing.VLabel;
-import unikn.dbis.univis.message.swing.VRadioButtonMenuItem;
 import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.images.VImageDummy;
-import unikn.dbis.univis.marion.view.UniVis;
-import unikn.dbis.univis.marion.view.UniViewPanelPivottable;
+import unikn.dbis.univis.pivot.view.UniViewPanelPivottable;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -40,7 +38,6 @@ import org.hibernate.Session;
 import org.jgraph.graph.GraphLayoutCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdesktop.swingx.JXErrorDialog;
 //import org.jdesktop.swingx.IncidentInfo;
 
 /**
@@ -139,6 +136,7 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JPopupMenu measuresMenu = new JPopupMenu();
     private JPopupMenu languageMenu = new JPopupMenu();
     private JPopupMenu settingsMenu = new JPopupMenu();
+    private JPopupMenu functionsMenu = new JPopupMenu();
 
     private JCheckBoxMenuItem resize = new JCheckBoxMenuItem(VIcons.ARROW_INOUT);
     private JRadioButtonMenuItem german = new JRadioButtonMenuItem(VIcons.FLAG_DE);
@@ -152,6 +150,8 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JRadioButtonMenuItem heads = new JRadioButtonMenuItem(VIcons.STUDENTS_CASES);
     private JRadioButtonMenuItem cases = new JRadioButtonMenuItem(VIcons.STUDENTS_HEADS);
     private JRadioButtonMenuItem amount = new JRadioButtonMenuItem(VIcons.EURO);
+    private JRadioButtonMenuItem sum = new JRadioButtonMenuItem();
+    private JRadioButtonMenuItem avg = new JRadioButtonMenuItem();
 
     private JButton refresh = new JButton(VIcons.ARROW_REFRESH);
     private JButton undo = new JButton(VIcons.ARROW_UNDO);

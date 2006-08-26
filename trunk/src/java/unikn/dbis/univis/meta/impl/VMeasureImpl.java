@@ -18,4 +18,27 @@ import unikn.dbis.univis.meta.VDataReference;
  * @since UniVis Explorer 0.2
  */
 public class VMeasureImpl extends VDataReferenceImpl implements VMeasure, VDataReference {
+
+    public VMeasureImpl() {
+    }
+
+    private String measure;
+
+    /**
+     * Returns the name of the measure.
+     *
+     * @return String
+     */
+    public String getMeasure() {
+        return measure;
+    }
+
+    /**
+     * Sets the name of the measure.
+     *
+     * @param measure
+     */
+    public void setMeasure(String measure) {
+        this.measure = measure;
+    }
 }
