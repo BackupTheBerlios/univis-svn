@@ -12,12 +12,12 @@
 
 <hibernate-mapping>
 
-    <joined-subclass name="unikn.dbis.univis.meta.impl.VMeasureImpl" table="META_CUBE"
+    <joined-subclass name="unikn.dbis.univis.meta.impl.VMeasureImpl" table="META_CUBE_MEASURES"
                      extends="unikn.dbis.univis.meta.impl.VDataReferenceImpl">
 
         <key column="DATA_REFERENCE_ID"/>
 
-        <property name="column" type="string">
+        <property name="measure" type="string">
             <column name="MEASURE_COLUMN" not-null="true"/>
         </property>
 
