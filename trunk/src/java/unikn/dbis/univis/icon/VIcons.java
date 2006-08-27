@@ -26,10 +26,11 @@ public class VIcons {
     public static final Icon BRICKS = new ImageIcon(VIcons.class.getResource("../images/bricks.png"));
     public static final Icon CHART_BAR_HORIZONTAL = new ImageIcon(VIcons.class.getResource("../images/chart_bar_horizontal.png"));
     public static final Icon CHART_BAR_VERTICAL = new ImageIcon(VIcons.class.getResource("../images/chart_bar_vertical.png"));
+    public static final Icon CHART_ORGANISATION = new ImageIcon(VIcons.class.getResource("../images/chart_organisation.png"));
     public static final Icon CHART_PIE = new ImageIcon(VIcons.class.getResource("../images/chart_pie.png"));
     public static final Icon CHART_AREA = new ImageIcon(VIcons.class.getResource("../images/chart_area.png"));
     public static final Icon CHART_RING = new ImageIcon(VIcons.class.getResource("../images/chart_ring.png"));
-    public static final Icon PIVOT_TABLE = new ImageIcon(VIcons.class.getResource("../images/pivottable.png"));
+    public static final Icon COLOR_SWATCH = new ImageIcon(VIcons.class.getResource("../images/color_swatch.png"));
     public static final Icon DELETE = new ImageIcon(VIcons.class.getResource("../images/delete.png"));
     public static final Icon FILTER = new ImageIcon(VIcons.class.getResource("../images/filter.png"));
     public static final Icon FLAG_DE = new ImageIcon(VIcons.class.getResource("../images/flag_de.png"));
@@ -37,6 +38,7 @@ public class VIcons {
     public static final Icon LIGHTNING = new ImageIcon(VIcons.class.getResource("../images/lightning.png"));
     public static final Icon SHAPE_ROTATE_CLOCKWISE = new ImageIcon(VIcons.class.getResource("../images/shape_rotate_clockwise.png"));
     public static final Icon SHAPE_ROTATE_ANTICLOCKWISE = new ImageIcon(VIcons.class.getResource("../images/shape_rotate_anticlockwise.png"));
+    public static final Icon TABLE = new ImageIcon(VIcons.class.getResource("../images/table.png"));
     public static final Icon ZOOM_IN = new ImageIcon(VIcons.class.getResource("../images/zoom_in.png"));
     public static final Icon ZOOM_OUT = new ImageIcon(VIcons.class.getResource("../images/zoom_out.png"));
 

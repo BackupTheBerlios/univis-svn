@@ -19,15 +19,13 @@ import unikn.dbis.univis.meta.VDataReference;
  */
 public class VMeasureImpl extends VDataReferenceImpl implements VMeasure, VDataReference {
 
-    public VMeasureImpl() {
-    }
-
+    // The name of the measure.
     private String measure;
 
     /**
      * Returns the name of the measure.
      *
-     * @return String
+     * @return The name of the measure.
      */
     public String getMeasure() {
         return measure;
@@ -36,7 +34,7 @@ public class VMeasureImpl extends VDataReferenceImpl implements VMeasure, VDataR
     /**
      * Sets the name of the measure.
      *
-     * @param measure
+     * @param measure The name of the measure.
      */
     public void setMeasure(String measure) {
         this.measure = measure;

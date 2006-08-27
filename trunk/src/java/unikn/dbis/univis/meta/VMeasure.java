@@ -18,16 +18,14 @@ public interface VMeasure extends VDataReference {
     /**
      * Returns the name of the measure.
      *
-     * @return String
+     * @return The name of the measure.
      */
     public String getMeasure();
 
     /**
      * Sets the name of the measure.
      *
-     * @param measure
+     * @param measure The name of the measure.
      */
     public void setMeasure(String measure);
-
-
 }

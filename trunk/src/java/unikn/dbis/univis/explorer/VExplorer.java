@@ -146,12 +146,10 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JRadioButtonMenuItem pieChart = new JRadioButtonMenuItem(VIcons.CHART_PIE);
     private JRadioButtonMenuItem areaChart = new JRadioButtonMenuItem(VIcons.CHART_AREA);
     private JRadioButtonMenuItem ringChart = new JRadioButtonMenuItem(VIcons.CHART_RING);
-    private JRadioButtonMenuItem pivotTable = new JRadioButtonMenuItem(VIcons.PIVOT_TABLE);
+    private JRadioButtonMenuItem pivotTable = new JRadioButtonMenuItem(VIcons.TABLE);
     private JRadioButtonMenuItem heads = new JRadioButtonMenuItem(VIcons.STUDENTS_CASES);
     private JRadioButtonMenuItem cases = new JRadioButtonMenuItem(VIcons.STUDENTS_HEADS);
     private JRadioButtonMenuItem amount = new JRadioButtonMenuItem(VIcons.EURO);
-    private JRadioButtonMenuItem sum = new JRadioButtonMenuItem();
-    private JRadioButtonMenuItem avg = new JRadioButtonMenuItem();
 
     private JButton refresh = new JButton(VIcons.ARROW_REFRESH);
     private JButton undo = new JButton(VIcons.ARROW_UNDO);
@@ -621,20 +619,12 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
+
         VDiceBox diceBox = (VDiceBox) session.createQuery("from " + VDiceBoxImpl.class.getName() + " where name = 'UniVis Explorer'").uniqueResult();
         tree = new VTree(diceBox);
 
-        //noinspection unchecked
-        List<VCube> cubes = session.createQuery("from " + VCubeImpl.class.getName()).list();
-
-        JPanel facts = new JPanel(new GridLayout(cubes.size(), 1));
-        for (VCube cube : cubes) {
-            facts.add(new VLabel(cube.getI18nKey(), new VCubeIcon(cube.getColor()), JLabel.LEFT));
-        }
-
         session.close();
 
-        navigation.add(facts, BorderLayout.NORTH);
         navigation.add(new JScrollPane(tree), BorderLayout.CENTER);
         navigation.add(underStatePanel, BorderLayout.SOUTH);
 

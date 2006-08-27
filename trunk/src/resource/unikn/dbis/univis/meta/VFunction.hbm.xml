@@ -12,13 +12,13 @@
 
 <hibernate-mapping>
 
-    <joined-subclass name="unikn.dbis.univis.meta.impl.VMeasureImpl" table="META_MEASURES"
+    <joined-subclass name="unikn.dbis.univis.meta.impl.VFunctionImpl" table="META_FUNCTIONS"
                      extends="unikn.dbis.univis.meta.impl.VDataReferenceImpl">
 
         <key column="DATA_REFERENCE_ID"/>
 
-        <property name="measure" type="string">
-            <column name="MEASURE_COLUMN" not-null="true"/>
+        <property name="function" type="string">
+            <column name="FUNCTION_COLUMN" not-null="true"/>
         </property>
 
     </joined-subclass>

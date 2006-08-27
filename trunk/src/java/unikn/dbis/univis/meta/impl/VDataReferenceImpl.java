@@ -213,6 +213,6 @@ public abstract class VDataReferenceImpl implements VDataReference {
      */
     @Override
     public String toString() {
-        return MessageResolver.getMessage(getI18nKey());
+        return MessageResolver.getMessage("data_reference." + getI18nKey());
     }
 }

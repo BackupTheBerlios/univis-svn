@@ -1,10 +1,10 @@
 package unikn.dbis.univis.navigation.tree;
 
-import unikn.dbis.univis.meta.VDimension;
-import unikn.dbis.univis.meta.VCube;
+import unikn.dbis.univis.meta.*;
 import unikn.dbis.univis.icon.VIconComponent;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.icon.VCubeFlagIcon;
+import unikn.dbis.univis.icon.VCubeIcon;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 
 import javax.swing.*;
@@ -168,6 +168,36 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                 session.close();
 
                 panel.add(flags, BorderLayout.WEST);
+            }
+            else if (o instanceof VCube) {
+                label.setIcon(new VCubeIcon(((VCube) o).getColor()));
+            }
+            else if (o instanceof VClass) {
+                VClass clazz = (VClass) o;
+
+                String type = clazz.getType();
+
+                if ("dimension".equals(type)) {
+                    label.setIcon(VIcons.CHART_ORGANISATION);
+                }
+                else if ("measure".equals(type)) {
+                    label.setIcon(VIcons.COLOR_SWATCH);
+                }
+                else if ("function".equals(type)) {
+                    label.setIcon(VIcons.BRICKS);
+                }
+            }
+            else if (o instanceof VMeasure || o instanceof VFunction) {
+
+                int preferredHeight = (int) rendererComponent.getPreferredSize().getHeight();
+                int height = (int) rendererComponent.getSize().getHeight();
+
+                JCheckBox selection = new JCheckBox(tree.convertValueToText(value, isSelected, expanded, leaf, row, true));
+                selection.getPreferredSize().setSize(selection.getPreferredSize().getWidth(), preferredHeight);
+                selection.getSize().setSize(selection.getSize().getWidth(), height);
+                selection.setFont(label.getFont());
+                selection.setBackground(label.getBackground());
+                panel.add(selection, BorderLayout.CENTER);
             }
         }
 

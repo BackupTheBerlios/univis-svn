@@ -1,9 +1,6 @@
 package unikn.dbis.univis.navigation.tree;
 
-import unikn.dbis.univis.meta.VDiceBox;
-import unikn.dbis.univis.meta.VDimension;
-import unikn.dbis.univis.meta.VMetaHelper;
-import unikn.dbis.univis.meta.Filterable;
+import unikn.dbis.univis.meta.*;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.explorer.VExplorer;
@@ -385,9 +382,60 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                 }
                 else {
                     if (LOG.isInfoEnabled()) {
-                        LOG.info("The tree node isn't summable or has been drag and dropped in the past.");
+                        LOG.info("The dimension node isn't summable or has been drag and dropped in the past.");
                     }
                 }
+            }
+            else if (userObject instanceof VMeasure) {
+
+                final VMeasure measure = (VMeasure) userObject;
+
+                dge.startDrag(DragSource.DefaultMoveDrop, new Transferable() {
+
+                    /**
+                     * Returns an array of DataFlavor objects indicating the flavors the data
+                     * can be provided in.  The array should be ordered according to preference
+                     * for providing the data (from most richly descriptive to least descriptive).
+                     *
+                     * @return an array of data flavors in which this data can be transferred
+                     */
+                    public DataFlavor[] getTransferDataFlavors() {
+                        return new DataFlavor[]{VDataReferenceFlavor.MEASURE_FLAVOR};
+                    }
+
+                    /**
+                     * Returns whether or not the specified data flavor is supported for
+                     * this object.
+                     *
+                     * @param flavor the requested flavor for the data
+                     * @return boolean indicating whether or not the data flavor is supported
+                     */
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        for (DataFlavor dataFlavor : getTransferDataFlavors()) {
+                            if (dataFlavor.match(flavor)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+
+                    /**
+                     * Returns an object which represents the data to be transferred.  The class
+                     * of the object returned is defined by the representation class of the flavor.
+                     *
+                     * @param flavor the requested flavor for the data
+                     * @throws java.awt.datatransfer.UnsupportedFlavorException
+                     *          if the requested data flavor is
+                     *          not supported.
+                     * @see java.awt.datatransfer.DataFlavor#getRepresentationClass
+                     */
+                    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+                        if (VDataReferenceFlavor.MEASURE_FLAVOR.match(flavor)) {
+                            return measure;
+                        }
+                        throw new UnsupportedFlavorException(flavor);
+                    }
+                });
             }
         }
     }
@@ -561,7 +609,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
          * Returns whether all filter items are checked or not.
          *
          * @return Whether all filter items are checked or
-         *                   not.
+         *         not.
          */
         protected boolean isAllChecked() {
             return allChecked;

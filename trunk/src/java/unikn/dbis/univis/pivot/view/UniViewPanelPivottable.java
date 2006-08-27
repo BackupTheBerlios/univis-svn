@@ -31,6 +31,7 @@ import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VMeasure;
 import unikn.dbis.univis.meta.VCube;
+import unikn.dbis.univis.meta.VDataReference;
 
 /**
  * @author Marion Herb
@@ -146,7 +147,17 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
     public void drop(DropTargetDropEvent dtde) {
         Object o = null;
         try {
-            o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
+            if (dtde.getTransferable().isDataFlavorSupported(VDataReferenceFlavor.DIMENSION_FLAVOR)) {
+                o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
+            }
+            else if (dtde.getTransferable().isDataFlavorSupported(VDataReferenceFlavor.MEASURE_FLAVOR)) {
+                o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.MEASURE_FLAVOR);
+            }
+
+            if (o == null) {
+                dtde.rejectDrop();
+                dtde.dropComplete(false);
+            }
         }
         catch (UnsupportedFlavorException ufe) {
             dtde.rejectDrop();
@@ -162,14 +173,14 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
                LOG.error(ioe.getMessage(), ioe);
            } */
         }
-        if (o instanceof VDimension) {
-            VDimension dimension = (VDimension) o;
-            action(dimension, dtde);
+        if (o instanceof VDimension || o instanceof VMeasure) {
+            VDataReference dataReference = (VDataReference) o;
+            action(dataReference, dtde);
             dtde.dropComplete(true);
         }
     }
 
-    public void action(VDimension dimension, DropTargetDropEvent dtde) {
+    public void action(VDataReference dataReference, DropTargetDropEvent dtde) {
 // in welche Component wurde gedroppt?
 //        String eventTarget = new String(e.getSource().toString());
 //        String eventTargetFieldColumns = new String(textfieldColumnsX
@@ -180,11 +191,13 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
         // hinzufuegen in entsprechenden Vector
         if (dtde.getSource() == dropAreaColX.getDropTarget()) {
 //            System.out.println("Measure?" + (dimension instanceof Measure) + "/size<1?" + ((xAxisNodes.size() < 1)));
-            if (dimension instanceof VMeasure) {
+            if (dataReference instanceof VMeasure) {
                 System.err.println("Drop of Measure not allowed.");
                 selectionChanged = false;
             }
-            else if (xAxisNodes.size() < 1) { // noch kein X-Achsen-Element spezifiziert
+            else if (dataReference instanceof VDimension && xAxisNodes.size() < 1) { // noch kein X-Achsen-Element spezifiziert
+                VDimension dimension = (VDimension) dataReference;
+
                 selectionChanged = true;
                 boolean rootWithChildren = dimension.getBlueprint().getClass().equals(VCube.class) && dimension.getDescendants().size() > 0;
 
@@ -217,11 +230,13 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
 
         }
         else if (dtde.getSource() == dropAreaRowY.getDropTarget()) {
-            if (dimension instanceof VMeasure) {
+            if (dataReference instanceof VMeasure) {
                 System.err.println("Drop of Measure not allowed.");
                 selectionChanged = false;
             }
-            else {
+            else if (dataReference instanceof VDimension) {
+                VDimension dimension = (VDimension) dataReference;
+
                 if (!yAxisNodes.contains(dimension)) { // nur wenn noch nicht enthalten
                     boolean rootWithChildren = dimension.getBlueprint().getClass().equals(VCube.class) && dimension.getDescendants().size() > 0;
                     selectionChanged = true;
@@ -251,14 +266,16 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
 
         }
         else if (dtde.getSource() == dropAreaMeasure.getDropTarget()) {
-            if (!(dimension instanceof VMeasure)) {
+            if (!(dataReference instanceof VMeasure)) {
                 System.err.println("Drop of Dimension not allowed.");
                 selectionChanged = false;
             }
             else if (measureNodes.size() < 1) {  // noch kein Measure spezifiziert
+                VMeasure measure = (VMeasure) dataReference;
+
                 selectionChanged = true;
-                System.out.println("GUI: dropped as measure value [" + dimension.toString());
-                measureNodes.add(dimension);
+                System.out.println("GUI: dropped as measure value [" + measure.toString());
+                measureNodes.add(measure);
                 dropAreaMeasure.setForeground(Color.BLACK);
                 dropAreaMeasure.setText(measureNodes.toString());
             }
@@ -267,9 +284,6 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
                 selectionChanged = false;
             }
 
-        }
-        else {
-            System.out.println("Wrong eventTarget: " + dimension.getTableName());
         }
 
         /*

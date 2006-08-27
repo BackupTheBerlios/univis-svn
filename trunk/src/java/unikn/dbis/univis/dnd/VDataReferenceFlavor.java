@@ -1,6 +1,8 @@
 package unikn.dbis.univis.dnd;
 
 import unikn.dbis.univis.meta.VDimension;
+import unikn.dbis.univis.meta.VMeasure;
+import unikn.dbis.univis.meta.VFunction;
 
 import java.awt.datatransfer.DataFlavor;
 
@@ -21,6 +23,10 @@ import java.awt.datatransfer.DataFlavor;
 public class VDataReferenceFlavor extends DataFlavor {
 
     public static final VDataReferenceFlavor DIMENSION_FLAVOR = new VDataReferenceFlavor(VDimension.class, "UniVis Explorer/VDimension");
+
+    public static final VDataReferenceFlavor MEASURE_FLAVOR = new VDataReferenceFlavor(VMeasure.class, "UniVis Explorer/VMeasure");
+
+    public static final VDataReferenceFlavor FUNCTION_FLAVOR = new VDataReferenceFlavor(VFunction.class, "UniVis Explorer/VFunction");
 
     /**
      * Constructs a new <code>DataFlavor</code>.  This constructor is

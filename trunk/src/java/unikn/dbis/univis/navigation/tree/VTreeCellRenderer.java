@@ -1,11 +1,10 @@
 package unikn.dbis.univis.navigation.tree;
 
-import unikn.dbis.univis.meta.VDimension;
-import unikn.dbis.univis.meta.VCube;
-import unikn.dbis.univis.meta.VDataReference;
+import unikn.dbis.univis.meta.*;
 import unikn.dbis.univis.icon.VIconComponent;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.icon.VCubeFlagIcon;
+import unikn.dbis.univis.icon.VCubeIcon;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -46,11 +45,10 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
      */
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
-        Component label = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+        Component rendererComponent = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(UIManager.getColor("Tree.background"));
-        panel.add(label, BorderLayout.CENTER);
 
         if (value instanceof DefaultMutableTreeNode) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
@@ -58,7 +56,7 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
 
             if (o instanceof VDataReference) {
                 VDataReference dataReference = (VDataReference) o;
-                label.setEnabled(dataReference.isEnabled());
+                rendererComponent.setEnabled(dataReference.isEnabled());
             }
 
             if (o instanceof VDimension) {
@@ -69,9 +67,9 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                 }
 
                 if (dimension.isDropped()) {
-                    label.setForeground(Color.LIGHT_GRAY);
-                    //label.setBackground(UIManager.getColor("Tree.background"));
-                    label.setBackground(Color.RED);
+                    rendererComponent.setForeground(Color.LIGHT_GRAY);
+                    //rendererComponent.setBackground(UIManager.getColor("Tree.background"));
+                    rendererComponent.setBackground(Color.RED);
                 }
 
                 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -99,7 +97,39 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
 
                 panel.add(flags, BorderLayout.WEST);
             }
+            else if (o instanceof VCube) {
+                ((JLabel) rendererComponent).setIcon(new VCubeIcon(((VCube) o).getColor()));
+            }
+            else if (o instanceof VClass) {
+                VClass clazz = (VClass) o;
+
+                String type = clazz.getType();
+
+                if ("dimension".equals(type)) {
+                    ((JLabel) rendererComponent).setIcon(VIcons.CHART_ORGANISATION);
+                }
+                else if ("measure".equals(type)) {
+                    ((JLabel) rendererComponent).setIcon(VIcons.COLOR_SWATCH);
+                }
+                else if ("function".equals(type)) {
+                    ((JLabel) rendererComponent).setIcon(VIcons.BRICKS);
+                }
+            }
+            else if (o instanceof VMeasure || o instanceof VFunction) {
+                JLabel label = (JLabel) rendererComponent;
+
+                int preferredHeight = (int) rendererComponent.getPreferredSize().getHeight();
+                int height = (int) rendererComponent.getSize().getHeight();
+
+                rendererComponent = new JCheckBox(label.getText());
+                rendererComponent.getPreferredSize().setSize(new Dimension((int) rendererComponent.getPreferredSize().getWidth(), preferredHeight));
+                rendererComponent.getSize().setSize(rendererComponent.getSize().getWidth(), height);
+                rendererComponent.setFont(label.getFont());
+                rendererComponent.setBackground(label.getBackground());
+            }
         }
+
+        panel.add(rendererComponent, BorderLayout.CENTER);
 
         return panel;
     }
