@@ -207,23 +207,19 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/swingx/swingx.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/table/table.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="file://C:/Dokumente und Einstellungen/Romsl/Desktop/swingx-20060611043003/src/java" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/envelopeTableModel/envelopeTableModel.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/swingx/swingx.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/envelopeTableModel/src/envelopeTableModel_src.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntryProperties />

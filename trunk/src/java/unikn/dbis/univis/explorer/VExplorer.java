@@ -198,7 +198,7 @@ public class VExplorer extends JFrame implements Internationalizable {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public VExplorer() throws HeadlessException {
-        super("UniVis Explorer 0.1 - (c) 2005-2006 a.d. - DBIS, University of Konstanz");
+        super("UniVis Explorer 0.2 - (c) 2005-2006 a.d. - DBIS, University of Konstanz");
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(800, 600));

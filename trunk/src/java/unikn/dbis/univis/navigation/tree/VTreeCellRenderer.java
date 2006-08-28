@@ -119,11 +119,9 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                 JLabel label = (JLabel) rendererComponent;
 
                 int preferredHeight = (int) rendererComponent.getPreferredSize().getHeight();
-                int height = (int) rendererComponent.getSize().getHeight();
 
                 rendererComponent = new JCheckBox(label.getText());
-                rendererComponent.getPreferredSize().setSize(new Dimension((int) rendererComponent.getPreferredSize().getWidth(), preferredHeight));
-                rendererComponent.getSize().setSize(rendererComponent.getSize().getWidth(), height);
+                rendererComponent.setPreferredSize(new Dimension((int) rendererComponent.getPreferredSize().getWidth() + 1, preferredHeight));
                 rendererComponent.setFont(label.getFont());
                 rendererComponent.setBackground(label.getBackground());
             }

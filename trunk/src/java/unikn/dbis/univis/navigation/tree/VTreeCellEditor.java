@@ -190,11 +190,9 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
             else if (o instanceof VMeasure || o instanceof VFunction) {
 
                 int preferredHeight = (int) rendererComponent.getPreferredSize().getHeight();
-                int height = (int) rendererComponent.getSize().getHeight();
 
                 JCheckBox selection = new JCheckBox(tree.convertValueToText(value, isSelected, expanded, leaf, row, true));
-                selection.getPreferredSize().setSize(selection.getPreferredSize().getWidth(), preferredHeight);
-                selection.getSize().setSize(selection.getSize().getWidth(), height);
+                selection.setPreferredSize(new Dimension((int) selection.getPreferredSize().getWidth() + 1, preferredHeight));
                 selection.setFont(label.getFont());
                 selection.setBackground(label.getBackground());
                 panel.add(selection, BorderLayout.CENTER);
