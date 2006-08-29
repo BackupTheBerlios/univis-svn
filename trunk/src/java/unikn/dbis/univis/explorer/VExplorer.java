@@ -7,9 +7,9 @@ import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.util.ComponentUtilities;
 import unikn.dbis.univis.visualization.VVisualization;
+import unikn.dbis.univis.visualization.Visualizable;
 import unikn.dbis.univis.visualization.chart.ChartType;
 import unikn.dbis.univis.visualization.graph.VGraph;
-import unikn.dbis.univis.visualization.graph.VGraphCell;
 import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.Internationalizable;
 import unikn.dbis.univis.message.swing.VLabel;
@@ -17,7 +17,7 @@ import unikn.dbis.univis.message.swing.VMenu;
 import unikn.dbis.univis.message.swing.VMenuItem;
 import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.images.VImageDummy;
-import unikn.dbis.univis.visualization.pivottable.UniViewPanelPivottable;
+import unikn.dbis.univis.visualization.pivottable.VPivotTable;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -33,7 +33,6 @@ import java.io.InputStream;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-import org.jgraph.graph.GraphLayoutCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -48,7 +47,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Roman R&auml;dle
  * @author Andreas Weiler
- * @version $Id$
+ * @version $Revision$
  * @since UniVis Explorer 0.1
  */
 public class VExplorer extends JFrame implements Internationalizable {
@@ -113,15 +112,14 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private VTree tree;
 
-    private VGraph graph = new VGraph();
-    private JScrollPane graphScrollPane;
+    private Visualizable visualizable;
+    private JScrollPane visualScrolling;
 
 //    private Point startSelection;
 //    private Point endSelection;
 //    private Rectangle selection;
 
     private JPopupMenu chartsMenu = new JPopupMenu();
-    private JPopupMenu measuresMenu = new JPopupMenu();
     private JPopupMenu languageMenu = new JPopupMenu();
     private JPopupMenu settingsMenu = new JPopupMenu();
 
@@ -452,20 +450,20 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                graph.reset();
+                visualizable.clear();
                 tree.updateUI();
             }
         });
 
         zoomIn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                graph.zoomIn();
+                visualizable.zoomIn();
             }
         });
 
         zoomOut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                graph.zoomOut();
+                visualizable.zoomOut();
             }
         });
 
@@ -474,20 +472,7 @@ public class VExplorer extends JFrame implements Internationalizable {
              * Invoked when an action occurs.
              */
             public void actionPerformed(ActionEvent e) {
-                if ((SwingConstants.NORTH) == graph.getLayoutOrientation()) {
-                    graph.setLayoutOrientation(SwingConstants.EAST);
-                }
-                else if ((SwingConstants.EAST) == graph.getLayoutOrientation()) {
-                    graph.setLayoutOrientation(SwingConstants.SOUTH);
-                }
-                else if ((SwingConstants.SOUTH) == graph.getLayoutOrientation()) {
-                    graph.setLayoutOrientation(SwingConstants.WEST);
-                }
-                else if ((SwingConstants.WEST) == graph.getLayoutOrientation()) {
-                    graph.setLayoutOrientation(SwingConstants.NORTH);
-                }
-
-                rotateGraph();
+                visualizable.rotateRight();
             }
         });
 
@@ -496,20 +481,7 @@ public class VExplorer extends JFrame implements Internationalizable {
              * Invoked when an action occurs.
              */
             public void actionPerformed(ActionEvent e) {
-                if ((SwingConstants.NORTH) == graph.getLayoutOrientation()) {
-                    graph.setLayoutOrientation(SwingConstants.WEST);
-                }
-                else if ((SwingConstants.WEST) == graph.getLayoutOrientation()) {
-                    graph.setLayoutOrientation(SwingConstants.SOUTH);
-                }
-                else if ((SwingConstants.SOUTH) == graph.getLayoutOrientation()) {
-                    graph.setLayoutOrientation(SwingConstants.EAST);
-                }
-                else if ((SwingConstants.EAST) == graph.getLayoutOrientation()) {
-                    graph.setLayoutOrientation(SwingConstants.NORTH);
-                }
-
-                rotateGraph();
+                visualizable.rotateLeft();
             }
         });
 
@@ -517,7 +489,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource().equals(undo)) {
-                    graph.undoCells();
+                    visualizable.undo();
                     tree.updateUI();
                 }
             }
@@ -553,9 +525,7 @@ public class VExplorer extends JFrame implements Internationalizable {
              */
             public void actionPerformed(ActionEvent e) {
                 whatChartLabel.setI18NKey("pivottable");
-                UniViewPanelPivottable pivot = new UniViewPanelPivottable();
-                split.setRightComponent(pivot);
-
+                setVisualization(new VPivotTable());
             }
         });
 
@@ -583,8 +553,11 @@ public class VExplorer extends JFrame implements Internationalizable {
              * Invoked when an action occurs.
              */
             public void actionPerformed(ActionEvent e) {
-                graph.setMoveable(!graph.isMoveable());
-                ComponentUtilities.repaintComponentTree(VExplorer.this.graph);
+                visualizable.setMoveable(!visualizable.isMoveable());
+
+                if (visualizable instanceof Component) {
+                    ComponentUtilities.repaintComponentTree((Component) VExplorer.this.visualizable);
+                }
             }
         });
 
@@ -643,13 +616,25 @@ public class VExplorer extends JFrame implements Internationalizable {
     }
 
     private void initVisualization() {
+        setVisualization(new VGraph());
+    }
 
-        graphScrollPane = new JScrollPane(graph);
+    private void setVisualization(Visualizable visualizable) {
+
+        // Set visualizable for interactive operations.
+        this.visualizable = visualizable;
+
+        visualization.removeAll();
+
+        if (visualizable instanceof Component) {
+            visualScrolling = new JScrollPane((Component) visualizable);
+        }
 
         visualization.setBackground(Color.WHITE);
-        visualization.add(graphScrollPane, BorderLayout.CENTER);
+        visualization.add(visualScrolling, BorderLayout.CENTER);
 
         split.setRightComponent(visualization);
+        split.validate();
     }
 
     private void initDragAndDrop() {
@@ -673,27 +658,19 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         radioButtonMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                graph.setChartType(chartType);
+
+                if (visualizable instanceof VGraph) {
+                    ((VGraph) visualizable).setChartType(chartType);
+                }
+                else {
+                    VGraph graph = new VGraph();
+                    graph.setChartType(chartType);
+                    setVisualization(graph);
+                }
+
                 whatChartLabel.setI18NKey(i18NKey);
             }
         });
-    }
-
-    public void rotateGraph() {
-        GraphLayoutCache cache = graph.getGraphLayoutCache();
-        Object cells[] = cache.getCells(false, true, false, false);
-        Object edges[] = cache.getCells(false, false, false, true);
-
-        graph.reloadGraph();
-        cache.remove(edges);
-
-        for (Object cell1 : cells) {
-
-            VGraphCell cell = (VGraphCell) cell1;
-            if (!cell.toString().equals("root")) {
-                graph.createEdges(cell, cell.getCellId());
-            }
-        }
     }
 
     public void internationalize() {

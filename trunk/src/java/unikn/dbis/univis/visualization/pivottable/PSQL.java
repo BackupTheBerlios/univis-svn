@@ -1,9 +1,5 @@
 package unikn.dbis.univis.visualization.pivottable;
 
-import unikn.dbis.univis.pivot.data.Strings;
-import unikn.dbis.univis.pivot.data.Measures;
-import unikn.dbis.univis.pivot.data.Measure;
-
 import java.sql.*;
 import java.util.*;
 
@@ -23,10 +19,6 @@ public class PSQL {
     final static String PASSWD = "UniVis";
 
     final static String SCHEMA = "public";
-
-    Strings names = new Strings();
-
-    Strings types = new Strings();
 
     Connection conn = null;
 
@@ -64,59 +56,6 @@ public class PSQL {
             e.printStackTrace();
         }
         return this.connected;
-    }
-
-    /**
-     * return database tables
-     *
-     * @return database tables
-     */
-    Strings tables() {
-        if (!connect())
-            return null;
-
-        Strings tables = new Strings();
-        try {
-            result = conn.getMetaData().getTables(null, null, "%",
-                    new String[]{"TABLE"});
-            while (result.next()) {
-                tables.add(result.getString("TABLE_NAME"));
-            }
-        }
-        catch (SQLException e) {
-            System.out.println("PSQL: Could not read database tables...: " + e.getMessage());
-            e.printStackTrace();
-        }
-        finally {
-            close();
-        }
-        return tables;
-    }
-
-    /**
-     * return database field names
-     *
-     * @param table table name
-     */
-    void createFields(String table) {
-        if (!connect())
-            return;
-
-        try {
-            result = conn.getMetaData().getColumns(null, null, table, "%");
-            // get field names and types...
-            while (result.next()) {
-                names.add(result.getString("COLUMN_NAME"));
-                types.add(result.getString("TYPE_NAME"));
-            }
-        }
-        catch (SQLException e) {
-            System.out.println("PSQL: Could not read database fields...: " + e.getMessage());
-            e.printStackTrace();
-        }
-        finally {
-            close();
-        }
     }
 
     /**
@@ -177,7 +116,7 @@ public class PSQL {
     }
 
     /**
-     * @return
+     * @return empty
      */
     String[] next() {
         try {
@@ -251,19 +190,4 @@ public class PSQL {
         this.connected = false;
         System.out.println("PSQL: Closed");
     }
-
-    /* retrieves measure for given cube id */
-    /* TODO aus Faktentabellen die Spalten holen die keine Foreign Keys haben */
-    public Measures getDataMeasures(int id) {
-        Measures m = new Measures();
-        if (id == 2) {
-            m.add(new Measure("koepfe", "Koepfe"));
-            m.add(new Measure("faelle", "Faelle"));
-        }
-        else if (id == 1) {
-            m.add(new Measure("betrag", "Betrag"));
-        }
-        return m;
-    }
-
 }

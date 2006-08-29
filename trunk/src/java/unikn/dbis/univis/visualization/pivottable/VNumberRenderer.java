@@ -15,14 +15,14 @@ import table.model.renderer.NumberRenderer;
  *         This renderer extends a number component.
  *         It is used each time a cell must be displayed.
  */
-public class MyNumberRenderer extends NumberRenderer {
+public class VNumberRenderer extends NumberRenderer {
 
-    public MyNumberRenderer() {
+    public VNumberRenderer() {
         this(false);
         // TODO Auto-generated constructor stub
     }
 
-    public MyNumberRenderer(boolean showGroupText) {
+    public VNumberRenderer(boolean showGroupText) {
         super(showGroupText);
         super.setFormat(new DecimalFormat("#,###"));
 

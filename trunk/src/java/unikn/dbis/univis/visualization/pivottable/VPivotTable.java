@@ -17,33 +17,44 @@ import java.util.Set;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.border.EtchedBorder;
 import javax.swing.table.TableColumn;
 
 import table.model.renderer.SimpleRenderer;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.*;
 import unikn.dbis.univis.sql.CubeChooser;
+import unikn.dbis.univis.visualization.Visualizable;
 //import unikn.dbis.univis.pivot.view.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * TODO: document me!!!
+ * <p/>
+ * The <code>VPivotTable</code> organizes the areas to drop dimensions for X-/Y-Axis
+ * and calculation of the pivot table data for pivot table visualization.
+ * <p/>
+ * User: herb, raedler
+ * Date: 28.08.2006
+ * Time: 17:06:14
+ *
+ * @author Roman R&auml;dle
  * @author Marion Herb
- *         <p/>
- *         Organizes Pivottable Panel with areas to drop measures and nodes for X-/Y-Axis
+ * @version $Revision$
+ * @since UniVis Explorer 0.2
  */
-public class UniViewPanelPivottable extends UniViewPanel implements DropTargetListener {
+public class VPivotTable extends JPanel implements Visualizable, DropTargetListener {
 
     // The logger to log info, error and other occuring messages
     // or exceptions.
-    public static final transient Log LOG = LogFactory.getLog(UniViewPanelPivottable.class);
+    public static final transient Log LOG = LogFactory.getLog(VPivotTable.class);
 
     // SQL neu generieren und ausgeführen und Pivottabelle neu zeichnen? 
     boolean selectionChanged = false;
@@ -61,15 +72,8 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
     JTextArea dropAreaY;
     JTextArea dropAreaMeasure;
 
-    TableSorter tableSorter;
+    VTableSorter tableSorter;
     JTable pivotTable;
-
-
-    JPanel panelButtons;
-
-    JButton bStart;
-    JButton bStartDataView;
-    JButton bReset;
 
     JScrollBar bar;
 
@@ -80,16 +84,19 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
     Vector<VDimension> yAxisDimensions = new Vector<VDimension>();
     Vector<VDimension> measureNodes = new Vector<VDimension>();
 
-    UniViewTableData uniData;
+    VPivotTableData uniData;
 
-    public UniViewPanelPivottable() {
-        super();
+    public VPivotTable() {
+        setBorder(new EtchedBorder());
+        setPreferredSize(new Dimension(1000, 700));
+        setLayout(new BorderLayout());
+        setBackground(Color.white);
 
         /* *** First Row *** */
         JLabel jlabelMeasure = new JLabel("Measure:");
         JLabel jlabelX = new JLabel("X-Axis Elements:");
         JLabel forVerticalSpace = new JLabel(" ");
-        panelFirstRow = new JPanel(new TableLayout(3, 2, 3, 3));
+        panelFirstRow = new JPanel(new VTableLayout(3, 2, 3, 3));
 
         dropAreaMeasure = new JTextArea(textInMeasureBox);
         dropAreaMeasure.setToolTipText(textInMeasureBox);
@@ -115,7 +122,7 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
         /* *** Second Row *** */
         JLabel jlabelY1 = new JLabel("Y-Axis");
         JLabel jlabelY2 = new JLabel("Elements:");
-        panelSecondRow = new JPanel(new TableLayout(1, 2, 3, 3));
+        panelSecondRow = new JPanel(new VTableLayout(1, 2, 3, 3));
 
         dropAreaY = new JTextArea(textInXYBox);
         dropAreaY.setToolTipText(textInXYBox);
@@ -126,25 +133,12 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
         dropAreaY.setPreferredSize(new Dimension(100, 400));
         dropAreaY.setBorder(BorderFactory.createEtchedBorder(Color.WHITE, Color.LIGHT_GRAY));
 
-        JPanel panelY = new JPanel(new TableLayout(3, 1, 1, 1));
+        JPanel panelY = new JPanel(new VTableLayout(3, 1, 1, 1));
         panelY.add(jlabelY1);
         panelY.add(jlabelY2);
         panelY.add(dropAreaY);
         panelSecondRow.add(panelY);
         add(panelSecondRow, BorderLayout.WEST);
-
-        /* *** Third Row *** */
-//        bStart = UniLayout.newButton("Create Pivot-Table View", al_createTable);
-        bStartDataView = UniLayout.newButton("Create Only-Data View", al_dataViewTable);
-        bReset = UniLayout.newButton("Reset View", al_reset);
-        panelButtons = new JPanel();
-        // 1 Row, 3 Columns
-        panelButtons.setLayout(new TableLayout(1, 4));
-        panelButtons.setBackground(Color.WHITE);
-//        panelButtons.add(bStart);
-        panelButtons.add(bStartDataView);
-        panelButtons.add(bReset);
-        add(panelButtons, BorderLayout.SOUTH);
 
         new DropTarget(dropAreaX, DnDConstants.ACTION_COPY_OR_MOVE, this);
         new DropTarget(dropAreaY, DnDConstants.ACTION_COPY_OR_MOVE, this);
@@ -227,7 +221,7 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
             if (cube == null) {
                 Set<VCube> supportedCubes = dimension.getSupportedCubes();
                 if (supportedCubes.size() > 1) {
-                    cube = CubeChooser.showCubeChooser(UniViewPanelPivottable.this, supportedCubes);
+                    cube = CubeChooser.showCubeChooser(VPivotTable.this, supportedCubes);
                 }
                 else {
                     cube = supportedCubes.iterator().next();
@@ -377,7 +371,7 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
         }
 
         // JTable anlegen mit Daten sowie Ueberschriften
-        uniData = new UniViewTableData(cube, measure, function);
+        uniData = new VPivotTableData(cube, measure, function);
         Vector vectorData = uniData.getPivottableData(xAxisDimensions, yAxisDimensions);
         Vector vectorHeader = uniData.getPivottableHeader(xAxisDimensions, yAxisDimensions);
 
@@ -393,20 +387,20 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
         }
         if (dataGiven & headerDataGiven) {
 
-            TableModel modelOrigin = new TableModel(vectorData, vectorHeader);
+            VPivotTableModel modelOrigin = new VPivotTableModel(vectorData, vectorHeader);
 
             if (dataOnly) {
-                tableSorter = new TableSorter(modelOrigin);
+                tableSorter = new VTableSorter(modelOrigin);
                 pivotTable = new JTable(tableSorter);
                 tableSorter.setTableHeader(pivotTable.getTableHeader());
             }
             else {
-                MyEnvelopeTableModel modelEnv = new MyEnvelopeTableModel(modelOrigin);
+                VEnvelopeTableModel modelEnv = new VEnvelopeTableModel(modelOrigin);
                 pivotTable = new JTable(modelEnv);
                 modelEnv.setTableHeader(pivotTable.getTableHeader());
             }
 
-            SimpleRenderer renderer = new MyNumberRenderer(false);
+            SimpleRenderer renderer = new VNumberRenderer(false);
             pivotTable.setDefaultRenderer(String.class, renderer);
             // reine Number-Klasse hat Doubles nicht gefaerbt!
 //            pivotTable.setDefaultRenderer(Number.class, renderer);
@@ -416,7 +410,7 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
 
             // spezieller CellRenderer für letzte Total-Spalte
             TableColumn col = pivotTable.getColumnModel().getColumn(vectorHeader.size() - 1);
-            col.setCellRenderer(new MyTableTotalCellRenderer());
+            col.setCellRenderer(new VTotalCellRenderer());
 
             /* *** Second Row --> Content Area *** */
             pivotTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -447,26 +441,7 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
     /* deletes Textfields and most of all JTable */
     ActionListener al_reset = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            xAxisDimensions = new Vector();
-            yAxisDimensions = new Vector();
-            measureNodes = new Vector();
-            dropAreaX.setForeground(Color.LIGHT_GRAY);
-            dropAreaX.setToolTipText(textInXYBox);
-            dropAreaX.setText(textInXYBox);
-            dropAreaY.setForeground(Color.LIGHT_GRAY);
-            dropAreaY.setToolTipText(textInXYBox);
-            dropAreaY.setText(textInXYBox);
-            dropAreaMeasure.setForeground(Color.LIGHT_GRAY);
-            dropAreaMeasure.setToolTipText(textInMeasureBox);
-            dropAreaMeasure.setText(textInMeasureBox);
-            try {
-                remove(tableScrollPane);
-            }
-            catch (Exception exc) {
-            }
-            validate();
-            repaint();
-            System.out.println("\n#### View and Data reset ! ####");
+
         }
     };
 
@@ -477,4 +452,57 @@ public class UniViewPanelPivottable extends UniViewPanel implements DropTargetLi
         }
     };
 
+    public void clear() {
+        xAxisDimensions.clear();
+        yAxisDimensions.clear();
+        measureNodes.clear();
+        dropAreaX.setForeground(Color.LIGHT_GRAY);
+        dropAreaX.setToolTipText(textInXYBox);
+        dropAreaX.setText(textInXYBox);
+        dropAreaY.setForeground(Color.LIGHT_GRAY);
+        dropAreaY.setToolTipText(textInXYBox);
+        dropAreaY.setText(textInXYBox);
+        dropAreaMeasure.setForeground(Color.LIGHT_GRAY);
+        dropAreaMeasure.setToolTipText(textInMeasureBox);
+        dropAreaMeasure.setText(textInMeasureBox);
+
+        if (tableScrollPane != null) {
+            remove(tableScrollPane);
+        }
+
+        validate();
+        repaint();
+    }
+
+    public void undo() {
+        throw new UnsupportedOperationException("The undo functionality isn't supported by " + getClass().getName());
+    }
+
+    public void redo() {
+        throw new UnsupportedOperationException("The redo functionality isn't supported by " + getClass().getName());
+    }
+
+    public void zoomIn() {
+        throw new UnsupportedOperationException("The zoom into visualization isn't supported by " + getClass().getName());
+    }
+
+    public void zoomOut() {
+        throw new UnsupportedOperationException("The zoom out of visualization isn't supported by " + getClass().getName());
+    }
+
+    public void rotateRight() {
+        throw new UnsupportedOperationException("The clockwise rotation of the visualization isn't supported by " + getClass().getName());
+    }
+
+    public void rotateLeft() {
+        throw new UnsupportedOperationException("The anticlockwise rotation of the visualization isn't supported by " + getClass().getName());
+    }
+
+    public void setMoveable(boolean movable) {
+        throw new UnsupportedOperationException("The moveing of the visualization isn't supported by " + getClass().getName());
+    }
+
+    public boolean isMoveable() {
+        throw new UnsupportedOperationException("The visualization isn't moveable at this time. See " + getClass().getName());
+    }
 }

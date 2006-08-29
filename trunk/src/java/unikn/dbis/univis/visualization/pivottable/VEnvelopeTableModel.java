@@ -15,11 +15,11 @@ import table.model.exception.GroupException;
  *         <p/>
  *         Wrapper
  */
-public class MyEnvelopeTableModel extends table.model.EnvelopeTableModel {
+public class VEnvelopeTableModel extends table.model.EnvelopeTableModel {
 
     private JTableHeader tableHeader;
 
-    public MyEnvelopeTableModel(TableModel source) {
+    public VEnvelopeTableModel(TableModel source) {
         super(source);
 
         // User kann mehr Elemente droppen als angezeigt werden, zB Laender 2x

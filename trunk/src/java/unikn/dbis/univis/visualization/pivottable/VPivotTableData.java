@@ -6,11 +6,20 @@ import java.util.Vector;
 import java.text.MessageFormat;
 
 /**
+ * TODO: document me!!!
+ * <p/>
+ * The <code>VPivotTableData</code> organizes the pivot table data structure.
+ * <p/>
+ * User: herb, raedler
+ * Date: 28.08.2006
+ * Time: 17:35:44
+ *
+ * @author Roman R&auml;dle
  * @author Marion Herb
- *         <p/>
- *         Pivottable data structure
+ * @version $Revision$
+ * @since UniVis Explorer 0.2
  */
-public class UniViewTableData {
+public class VPivotTableData {
 
     private enum PivotType {
         X_Y,
@@ -39,7 +48,7 @@ public class UniViewTableData {
     static String NULL_VALUE = "*NULL*";
     PSQL myPSQL = new PSQL();
 
-    public UniViewTableData(VCube cube, VMeasure measure, VFunction function) {
+    public VPivotTableData(VCube cube, VMeasure measure, VFunction function) {
         this.cube = cube;
         this.measure = measure;
         this.function = function;

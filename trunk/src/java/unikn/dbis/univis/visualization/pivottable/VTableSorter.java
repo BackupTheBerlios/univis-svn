@@ -13,27 +13,27 @@ import javax.swing.table.*;
 // Nicht benutzt momentan da nicht kompatibel zu EnvelopeTableModel
 
 /**
- * TableSorter is a decorator for TableModels; adding sorting
- * functionality to a supplied TableModel. TableSorter does
- * not store or copy the data in its TableModel; instead it maintains
+ * VTableSorter is a decorator for TableModels; adding sorting
+ * functionality to a supplied VPivotTableModel. VTableSorter does
+ * not store or copy the data in its VPivotTableModel; instead it maintains
  * a map from the row indexes of the view to the row indexes of the
  * model. As requests are made of the sorter (like getValueAt(row, col))
  * they are passed to the underlying model after the row numbers
  * have been translated via the internal mapping array. This way,
- * the TableSorter appears to hold another copy of the table
+ * the VTableSorter appears to hold another copy of the table
  * with the rows in a different order.
  * <p/>
- * TableSorter registers itself as a listener to the underlying model,
+ * VTableSorter registers itself as a listener to the underlying model,
  * just as the JTable itself would. Events recieved from the model
  * are examined, sometimes manipulated (typically widened), and then
- * passed on to the TableSorter's listeners (typically the JTable).
- * If a change to the model has invalidated the order of TableSorter's
+ * passed on to the VTableSorter's listeners (typically the JTable).
+ * If a change to the model has invalidated the order of VTableSorter's
  * rows, a note of this is made and the sorter will resort the
  * rows the next time a value is requested.
  * <p/>
  * When the tableHeader property is set, either by using the
  * setTableHeader() method or the two argument constructor, the
- * table header may be used as a complete UI for TableSorter.
+ * table header may be used as a complete UI for VTableSorter.
  * The default renderer of the tableHeader is decorated with a renderer
  * that indicates the sorting status of each column. In addition,
  * a mouse listener is installed with the following behavior:
@@ -64,8 +64,8 @@ import javax.swing.table.*;
  * @version 2.0 02/27/04
  */
 
-public class TableSorter extends AbstractTableModel {
-    protected unikn.dbis.univis.visualization.pivottable.TableModel tableModel;
+public class VTableSorter extends AbstractTableModel {
+    protected unikn.dbis.univis.visualization.pivottable.VPivotTableModel tableModel;
 
     public static final int DESCENDING = -1;
     public static final int NOT_SORTED = 0;
@@ -93,17 +93,17 @@ public class TableSorter extends AbstractTableModel {
     private Map columnComparators = new HashMap();
     private List sortingColumns = new ArrayList();
 
-    public TableSorter() {
+    public VTableSorter() {
         this.mouseListener = new MouseHandler();
         this.tableModelListener = new TableModelHandler();
     }
 
-    public TableSorter(unikn.dbis.univis.visualization.pivottable.TableModel tableModel) {
+    public VTableSorter(unikn.dbis.univis.visualization.pivottable.VPivotTableModel tableModel) {
         this();
         setTableModel(tableModel);
     }
 
-    public TableSorter(unikn.dbis.univis.visualization.pivottable.TableModel tableModel, JTableHeader tableHeader) {
+    public VTableSorter(unikn.dbis.univis.visualization.pivottable.VPivotTableModel tableModel, JTableHeader tableHeader) {
         this();
         setTableHeader(tableHeader);
         setTableModel(tableModel);
@@ -114,11 +114,11 @@ public class TableSorter extends AbstractTableModel {
         modelToView = null;
     }
 
-    public unikn.dbis.univis.visualization.pivottable.TableModel getTableModel() {
+    public unikn.dbis.univis.visualization.pivottable.VPivotTableModel getTableModel() {
         return tableModel;
     }
 
-    public void setTableModel(unikn.dbis.univis.visualization.pivottable.TableModel tableModel) {
+    public void setTableModel(unikn.dbis.univis.visualization.pivottable.VPivotTableModel tableModel) {
         if (this.tableModel != null) {
             this.tableModel.removeTableModelListener(tableModelListener);
         }
@@ -253,7 +253,7 @@ public class TableSorter extends AbstractTableModel {
         return modelToView;
     }
 
-    // TableModel interface methods 
+    // VPivotTableModel interface methods
 
     public int getRowCount() {
         return (tableModel == null) ? 0 : tableModel.getRowCount();
@@ -366,7 +366,7 @@ public class TableSorter extends AbstractTableModel {
                     && getSortingStatus(column) == NOT_SORTED
                     && modelToView != null) {
                 int viewIndex = getModelToView()[e.getFirstRow()];
-                fireTableChanged(new TableModelEvent(TableSorter.this,
+                fireTableChanged(new TableModelEvent(VTableSorter.this,
                         viewIndex, viewIndex,
                         column, e.getType()));
                 return;

@@ -4,18 +4,25 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 /**
+ * TODO: document me!!!
+ * <p/>
+ * The <code>VPivotTableModel</code> specifies the methods the JTable will use
+ * to interrogate a tabular data model.
+ * <p/>
+ * User: herb
+ * Date: 28.08.2006
+ * Time: 17:55:13
+ *
  * @author Marion Herb
- *         <p/>
- *         The TableModel interface specifies the methods the JTable will use
- *         to interrogate a tabular data model.
+ * @version $Revision$
+ * @since UniVis Explorer 0.2
  */
-public class TableModel extends AbstractTableModel {
-    private boolean DEBUG = false;
+public class VPivotTableModel extends AbstractTableModel {
 
     private Vector data;
     private Vector columnNames;
 
-    public TableModel(Vector data, Vector columnNames) {
+    public VPivotTableModel(Vector data, Vector columnNames) {
         super();
         this.data = data;
         this.columnNames = columnNames;

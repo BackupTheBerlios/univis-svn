@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * @author Christian Gruen
  */
-public class TableLayout implements LayoutManager {
+public class VTableLayout implements LayoutManager {
     int rows;
     int cols;
     int insetX;
@@ -21,7 +21,7 @@ public class TableLayout implements LayoutManager {
      * @param rows number of rows
      * @param cols number of columns
      */
-    public TableLayout(int rows, int cols) {
+    public VTableLayout(int rows, int cols) {
         this(rows, cols, 0, 0);
     }
 
@@ -34,7 +34,7 @@ public class TableLayout implements LayoutManager {
      * @param insetX horizontal inset size
      * @param insetY vertical inset size
      */
-    public TableLayout(int rows, int cols, int insetX, int insetY) {
+    public VTableLayout(int rows, int cols, int insetX, int insetY) {
         this.rows = rows;
         this.cols = cols;
         this.insetX = insetX;

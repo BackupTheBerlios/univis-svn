@@ -15,6 +15,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
+import java.awt.event.ActionEvent;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.text.MessageFormat;
 
 import unikn.dbis.univis.visualization.chart.*;
 import unikn.dbis.univis.visualization.graph.plaf.VGraphUI;
+import unikn.dbis.univis.visualization.Visualizable;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
@@ -55,7 +57,7 @@ import com.jgraph.layout.tree.JGraphTreeLayout;
  * @version $Id$
  * @since UniVis Explorer 0.1
  */
-public class VGraph extends JGraph {
+public class VGraph extends JGraph implements Visualizable {
 
     // The logger to log info, error and other occuring messages
     // or exceptions.
@@ -383,26 +385,7 @@ public class VGraph extends JGraph {
         return blueprint;
     }
 
-    public void undoCells() {
-        cache.remove(cellHistory.getCurrent().toArray(), true, true);
-
-        // Get last added dimension and remove it.
-        VDimension dimension = dimensions.remove(dimensions.size() - 1);
-
-        // Reset the last drag and dropped dimension.
-        setAncestorsDropped(dimension, false);
-
-        cellHistory.historyBack();
-        queryHistory.historyBack();
-
-        if (queryHistory.isEmpty()) {
-            reset();
-        }
-
-        reloadGraph();
-    }
-
-    public void reset() {
+    public void clear() {
         root = null;
 
         model = new DefaultGraphModel();
@@ -423,11 +406,77 @@ public class VGraph extends JGraph {
         cellHistory.reset();
     }
 
-    public void reloadGraph() {
-        layout.run(facade);
-        facade.setOrdered(true);
-        Map nested = facade.createNestedMap(true, true);
-        cache.edit(nested);
+    public void undo() {
+        cache.remove(cellHistory.getCurrent().toArray(), true, true);
+
+        // Get last added dimension and remove it.
+        VDimension dimension = dimensions.remove(dimensions.size() - 1);
+
+        // Reset the last drag and dropped dimension.
+        setAncestorsDropped(dimension, false);
+
+        cellHistory.historyBack();
+        queryHistory.historyBack();
+
+        if (queryHistory.isEmpty()) {
+            clear();
+        }
+
+        reloadGraph();
+    }
+
+    public void redo() {
+        throw new UnsupportedOperationException("The redo functionality isn't supported by " + getClass().getName());
+    }
+
+    public void rotateRight() {
+        if ((SwingConstants.NORTH) == getLayoutOrientation()) {
+            setLayoutOrientation(SwingConstants.EAST);
+        }
+        else if ((SwingConstants.EAST) == getLayoutOrientation()) {
+            setLayoutOrientation(SwingConstants.SOUTH);
+        }
+        else if ((SwingConstants.SOUTH) == getLayoutOrientation()) {
+            setLayoutOrientation(SwingConstants.WEST);
+        }
+        else if ((SwingConstants.WEST) == getLayoutOrientation()) {
+            setLayoutOrientation(SwingConstants.NORTH);
+        }
+
+        rotateGraph();
+    }
+
+    public void rotateLeft() {
+        if ((SwingConstants.NORTH) == getLayoutOrientation()) {
+            setLayoutOrientation(SwingConstants.WEST);
+        }
+        else if ((SwingConstants.WEST) == getLayoutOrientation()) {
+            setLayoutOrientation(SwingConstants.SOUTH);
+        }
+        else if ((SwingConstants.SOUTH) == getLayoutOrientation()) {
+            setLayoutOrientation(SwingConstants.EAST);
+        }
+        else if ((SwingConstants.EAST) == getLayoutOrientation()) {
+            setLayoutOrientation(SwingConstants.NORTH);
+        }
+
+        rotateGraph();
+    }
+
+    private void rotateGraph() {
+        Object cells[] = cache.getCells(false, true, false, false);
+        Object edges[] = cache.getCells(false, false, false, true);
+
+        reloadGraph();
+        cache.remove(edges);
+
+        for (Object cell1 : cells) {
+
+            VGraphCell cell = (VGraphCell) cell1;
+            if (!cell.toString().equals("root")) {
+                createEdges(cell, cell.getCellId());
+            }
+        }
     }
 
     private double zoomScale = 1.0;
@@ -438,6 +487,13 @@ public class VGraph extends JGraph {
 
     public void zoomOut() {
         this.setScale(zoomScale -= 0.05);
+    }
+
+    public void reloadGraph() {
+        layout.run(facade);
+        facade.setOrdered(true);
+        Map nested = facade.createNestedMap(true, true);
+        cache.edit(nested);
     }
 
     public void setLayoutOrientation(int orientation) {

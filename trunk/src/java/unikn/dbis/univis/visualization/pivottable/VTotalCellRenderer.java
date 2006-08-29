@@ -15,14 +15,14 @@ import javax.swing.table.DefaultTableCellRenderer;
  *         This renderer extends a component.
  *         It is used each time a cell must be displayed.
  */
-public class MyTableTotalCellRenderer extends DefaultTableCellRenderer {
+public class VTotalCellRenderer extends DefaultTableCellRenderer {
 
     /**
      * Default number format.
      */
     protected NumberFormat format = new DecimalFormat("#,###");
 
-    public MyTableTotalCellRenderer() {
+    public VTotalCellRenderer() {
         super();
         setBackground(Color.LIGHT_GRAY);
     }
