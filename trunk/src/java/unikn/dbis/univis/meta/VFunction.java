@@ -14,7 +14,7 @@ package unikn.dbis.univis.meta;
  * @version $Revision$
  * @since UniVis Explorer 0.2
  */
-public interface VFunction extends VDataReference {
+public interface VFunction extends VDataReference, Selectable {
 
   /**
      * Returns the name of the function.

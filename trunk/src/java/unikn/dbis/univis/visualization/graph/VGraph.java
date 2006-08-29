@@ -20,12 +20,14 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.sql.*;
+import java.text.MessageFormat;
 
 import unikn.dbis.univis.visualization.chart.*;
 import unikn.dbis.univis.visualization.graph.plaf.VGraphUI;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
+import unikn.dbis.univis.meta.VCombination;
 import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.VQuery;
 import unikn.dbis.univis.message.MessageResolver;
@@ -494,6 +496,31 @@ public class VGraph extends JGraph {
                     addDimension(dimension);
                     dimensions.add(dimension);
                     setAncestorsDropped(dimension, true);
+                }
+                catch (SQLException sqle) {
+                    dtde.rejectDrop();
+                    dtde.dropComplete(false);
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error(sqle.getMessage(), sqle);
+                    }
+                }
+            }
+            else if (o instanceof VCombination) {
+                VCombination combination = (VCombination) o;
+
+                try {
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY);
+
+                    String cubeAttribute = MessageFormat.format(combination.getFunction().getFunction(), combination.getMeasure().getMeasure());
+
+                    System.out.println("CUBE_ATTRIBUTE: " + cubeAttribute);
+
+                    queryHistory.setCubeName(combination.getCube().getTableName());
+                    queryHistory.setCubeAttribute(cubeAttribute);
+
+                    addDimension(combination.getDimension());
+                    dimensions.add(combination.getDimension());
+                    setAncestorsDropped(combination.getDimension(), true);
                 }
                 catch (SQLException sqle) {
                     dtde.rejectDrop();

@@ -28,7 +28,7 @@ public class VTreeHelper {
 
     public static MutableTreeNode createDefaultTree(VDiceBox diceBox) {
 
-        MutableTreeNode root = new DefaultMutableTreeNode(diceBox.getName());
+        MutableTreeNode root = new DefaultMutableTreeNode(diceBox);
 
         int index = 0;
         for (VHierarchy child : diceBox.getChildren()) {

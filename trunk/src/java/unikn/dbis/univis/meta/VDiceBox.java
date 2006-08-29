@@ -28,4 +28,12 @@ public interface VDiceBox extends VHierarchy {
      * @param name The name of the dice box.
      */
     public void setName(String name);
+
+    /**
+     * Returns the name of the dice box which contains the
+     * cubes.
+     *
+     * @return The name of the dice box.
+     */
+    public String toString();
 }

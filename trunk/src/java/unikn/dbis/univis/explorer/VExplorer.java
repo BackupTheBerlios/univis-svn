@@ -2,12 +2,9 @@ package unikn.dbis.univis.explorer;
 
 import unikn.dbis.univis.navigation.tree.VTree;
 import unikn.dbis.univis.meta.impl.VDiceBoxImpl;
-import unikn.dbis.univis.meta.impl.VCubeImpl;
 import unikn.dbis.univis.meta.VDiceBox;
-import unikn.dbis.univis.meta.VCube;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.icon.VIcons;
-import unikn.dbis.univis.icon.VCubeIcon;
 import unikn.dbis.univis.util.ComponentUtilities;
 import unikn.dbis.univis.visualization.VVisualization;
 import unikn.dbis.univis.visualization.chart.ChartType;
@@ -16,6 +13,8 @@ import unikn.dbis.univis.visualization.graph.VGraphCell;
 import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.Internationalizable;
 import unikn.dbis.univis.message.swing.VLabel;
+import unikn.dbis.univis.message.swing.VMenu;
+import unikn.dbis.univis.message.swing.VMenuItem;
 import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.images.VImageDummy;
 import unikn.dbis.univis.pivot.view.UniViewPanelPivottable;
@@ -26,7 +25,6 @@ import java.awt.event.*;
 import java.awt.*;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DnDConstants;
-import java.util.List;
 import java.util.Locale;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -38,7 +36,7 @@ import org.hibernate.Session;
 import org.jgraph.graph.GraphLayoutCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import org.jdesktop.swingx.IncidentInfo;
+import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 
 /**
  * TODO: document me!!!
@@ -61,15 +59,6 @@ public class VExplorer extends JFrame implements Internationalizable {
      */
     public static void main(String args[]) {
 
-        /*
-        try {
-            UIManager.setLookAndFeel(new com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
-        }
-        catch (UnsupportedLookAndFeelException ulafe) {
-            ulafe.printStackTrace();
-        }
-        */
-
         InputStream imageStream = null;
         try {
             imageStream = VImageDummy.class.getResource("splash_screen.png").openStream();
@@ -78,8 +67,6 @@ public class VExplorer extends JFrame implements Internationalizable {
             ioe.printStackTrace();
         }
 
-        System.out.println("IN: " + imageStream);
-
         final VSplashScreen splashScreen = new VSplashScreen(imageStream);
 
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -87,6 +74,8 @@ public class VExplorer extends JFrame implements Internationalizable {
                 try {
                     VExplorer explorer = new VExplorer();
                     explorer.setVisible(true);
+                    explorer.requestFocus();
+                    explorer.toFront();
 
                     if (splashScreen != null) {
                         splashScreen.destroy();
@@ -128,15 +117,14 @@ public class VExplorer extends JFrame implements Internationalizable {
     private VGraph graph = new VGraph();
     private JScrollPane graphScrollPane;
 
-    private Point startSelection;
-    private Point endSelection;
-    private Rectangle selection;
+//    private Point startSelection;
+//    private Point endSelection;
+//    private Rectangle selection;
 
     private JPopupMenu chartsMenu = new JPopupMenu();
     private JPopupMenu measuresMenu = new JPopupMenu();
     private JPopupMenu languageMenu = new JPopupMenu();
     private JPopupMenu settingsMenu = new JPopupMenu();
-    private JPopupMenu functionsMenu = new JPopupMenu();
 
     private JCheckBoxMenuItem resize = new JCheckBoxMenuItem(VIcons.ARROW_INOUT);
     private JRadioButtonMenuItem german = new JRadioButtonMenuItem(VIcons.FLAG_DE);
@@ -156,7 +144,6 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JButton redo = new JButton(VIcons.ARROW_REDO);
     private JButton delete = new JButton(VIcons.DELETE);
     private JButton charts = new JButton(VIcons.CHART);
-    private JButton measures = new JButton(VIcons.MEASURE);
     private JButton languages = new JButton(VIcons.WORLD);
     private JButton exit = new JButton(VIcons.EXIT);
     private JButton zoomIn = new JButton(VIcons.ZOOM_IN);
@@ -167,8 +154,6 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JMenuItem newMeasure = new JMenuItem(VIcons.NEW_MEASURE);
     private JMenuItem newLanguage = new JMenuItem(VIcons.NEW_WORLD);
 
-    private String measureMessage;
-    private String measureTitle;
     private String languageMessage;
     private String languageTitle;
 
@@ -210,6 +195,7 @@ public class VExplorer extends JFrame implements Internationalizable {
         split.setDividerLocation(300);
         split.setOneTouchExpandable(true);
 
+        initMenuBar();
         initToolbar();
         initStatePanel();
         initNavigation();
@@ -265,6 +251,80 @@ public class VExplorer extends JFrame implements Internationalizable {
                 System.out.println("selection = " + selection);
             }
         });*/
+
+        ComponentUtilities.repaintComponentTree(this);
+    }
+
+    private void initMenuBar() {
+
+        JMenuBar menuBar = new JMenuBar();
+
+        VMenu program = new VMenu(Constants.PROGRAM);
+
+        VMenuItem exit = new VMenuItem(Constants.EXIT);
+        exit.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        program.add(exit);
+
+        VMenu lafMenu = new VMenu(Constants.LOOK_AND_FEEL);
+
+        ButtonGroup lafGroup = new ButtonGroup();
+        for (final UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
+            JRadioButtonMenuItem lafMenuItem = new JRadioButtonMenuItem(laf.getName());
+            lafMenuItem.addActionListener(new ActionListener() {
+                /**
+                 * Invoked when an action occurs.
+                 */
+                public void actionPerformed(ActionEvent e) {
+                    updateLookAndFeel(laf.getClassName());
+                }
+            });
+            lafGroup.add(lafMenuItem);
+            lafMenu.add(lafMenuItem);
+        }
+
+        VMenu help = new VMenu(Constants.HELP);
+
+        VMenuItem about = new VMenuItem(Constants.ABOUT);
+        about.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("ABOUT DIALOG");
+            }
+        });
+        help.add(about);
+
+        menuBar.add(program);
+        menuBar.add(lafMenu);
+        menuBar.add(help);
+
+        setJMenuBar(menuBar);
+    }
+
+    private void updateLookAndFeel(String className) {
+        try {
+            UIManager.setLookAndFeel(className);
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        catch (InstantiationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        catch (IllegalAccessException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         ComponentUtilities.repaintComponentTree(this);
     }
@@ -364,7 +424,6 @@ public class VExplorer extends JFrame implements Internationalizable {
 
 
         makeChartsMenu();
-        makeMeasuresMenu();
         makeSettingsMenu();
         makeLanguageMenu();
 
@@ -372,13 +431,6 @@ public class VExplorer extends JFrame implements Internationalizable {
 
             public void mouseClicked(MouseEvent evt) {
                 chartsMenu.show(charts, 0, charts.getHeight());
-            }
-        });
-
-        measures.addMouseListener(new MouseAdapter() {
-
-            public void mouseClicked(MouseEvent evt) {
-                measuresMenu.show(measures, 0, measures.getHeight());
             }
         });
 
@@ -488,7 +540,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         toolbar.add(delete);
         toolbar.addSeparator();
         toolbar.add(charts);
-        toolbar.add(measures);
         toolbar.add(zoomIn);
         toolbar.add(zoomOut);
         toolbar.add(rotateClockwise);
@@ -536,33 +587,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         chartsMenu.add(areaChart);
         chartsMenu.add(ringChart);
         chartsMenu.add(pivotTable);
-    }
-
-    private void makeMeasuresMenu() {
-
-
-        makeActionListenerMeasures(heads, "sos_cube", "SUM(koepfe)", "Studenten", "heads");
-        makeActionListenerMeasures(cases, "sos_cube", "SUM(faelle)", "Studenten", "cases");
-        makeActionListenerMeasures(amount, "cob_busa_cube", "SUM(betrag)", "Betraege", "amount");
-
-        newMeasure.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(VExplorer.this.getContentPane(), measureMessage, measureTitle, 1);
-            }
-        });
-
-
-        ButtonGroup measuresGroup = new ButtonGroup();
-
-        heads.setSelected(true);
-        measuresGroup.add(heads);
-        measuresGroup.add(cases);
-        measuresGroup.add(amount);
-
-        measuresMenu.add(heads);
-        measuresMenu.add(cases);
-        measuresMenu.add(amount);
-        measuresMenu.add(newMeasure);
     }
 
     private void makeSettingsMenu() {
@@ -665,12 +689,10 @@ public class VExplorer extends JFrame implements Internationalizable {
 
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource().equals(radioButtonMenuItem)) {
-
                     graph.getQueryHistory().setCubeAttribute(measureName);
                     graph.getQueryHistory().setCubeName(cube);
                     graph.setxAxis(xAxisName);
-                    whatMeasureLabel.setI18NKey(i18NKey);
-
+                    whatMeasureLabel.setI18NKey("data_reference." + i18NKey);
                 }
             }
         });
@@ -730,7 +752,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         redo.setToolTipText(MessageResolver.getMessage(Constants.REDO_TOOLTIP));
         delete.setToolTipText(MessageResolver.getMessage(Constants.DELETE_TOOLTIP));
         charts.setToolTipText(MessageResolver.getMessage(Constants.CHARTS_TOOLTIP));
-        measures.setToolTipText(MessageResolver.getMessage(Constants.MEASURES_TOOLTIP));
         newMeasure.setText(MessageResolver.getMessage(Constants.NEW_MEASURE));
         newMeasure.setToolTipText(MessageResolver.getMessage(Constants.NEW_MEASURE_TOOLTIP));
         newLanguage.setText(MessageResolver.getMessage(Constants.NEW_LANGUAGE));
@@ -741,8 +762,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         zoomOut.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_OUT_TOOLTIP));
         rotateClockwise.setToolTipText(MessageResolver.getMessage(Constants.ROTATE_CLOCKWISE_TOOLTIP));
         rotateAnticlockwise.setToolTipText(MessageResolver.getMessage(Constants.ROTATE_ANTICLOCKWISE_TOOLTIP));
-        measureMessage = MessageResolver.getMessage(Constants.MEASURE_MESSAGE);
-        measureTitle = MessageResolver.getMessage(Constants.NEW_MEASURE);
         languageMessage = MessageResolver.getMessage(Constants.NEW_LANGUAGE_MESSAGE);
         languageTitle = MessageResolver.getMessage(Constants.NEW_LANGUAGE);
     }

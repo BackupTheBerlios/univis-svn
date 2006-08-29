@@ -23,6 +23,7 @@ public class VIcons {
     public static final Icon ARROW_REFRESH = new ImageIcon(VIcons.class.getResource("../images/arrow_refresh.png"));
     public static final Icon ARROW_UNDO = new ImageIcon(VIcons.class.getResource("../images/arrow_undo.png"));
     public static final Icon ARROW_REDO = new ImageIcon(VIcons.class.getResource("../images/arrow_redo.png"));
+    public static final Icon BRICK = new ImageIcon(VIcons.class.getResource("../images/brick.png"));
     public static final Icon BRICKS = new ImageIcon(VIcons.class.getResource("../images/bricks.png"));
     public static final Icon CHART_BAR_HORIZONTAL = new ImageIcon(VIcons.class.getResource("../images/chart_bar_horizontal.png"));
     public static final Icon CHART_BAR_VERTICAL = new ImageIcon(VIcons.class.getResource("../images/chart_bar_vertical.png"));

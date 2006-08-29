@@ -22,11 +22,17 @@ public interface Constants {
     public final static String BAR_CHART = "barChart";
     public final static String BAR_CHART_VERTICAL = "barChartVertical";
     public final static String BAR_CHART_HORIZONTAL = "barChartHorizontal";
+    public final static String LOOK_AND_FEEL = "look_and_feel";
     public final static String PIE_CHART = "pieChart";
     public final static String AREA_CHART = "areaChart";
     public final static String RING_CHART = "ringChart";
     public final static String PIVOT_TABLE = "pivottable";
+    public static final String PROGRAM = "program";
+    public static final String EXIT = "exit";
+    public static final String ABOUT = "about";
+    public static final String CREDITS = "credits";
     public final static String HEADS = "heads";
+    public final static String HELP = "help";
     public final static String CASES = "cases";
     public final static String AMOUNT = "amount";
     public static final String GRAPH_EDITABLE = "graph_editable";

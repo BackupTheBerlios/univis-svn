@@ -33,7 +33,7 @@ public class VCubeIcon implements Icon {
     public void paintIcon(Component c, Graphics g, int x, int y) {
         int width = 10;
         int height = 10;
-        x += 5;
+        x += 0;
         y += 6;
 
         g.setColor(cubeColor);
@@ -68,7 +68,7 @@ public class VCubeIcon implements Icon {
      * @return an int specifying the fixed width of the icon.
      */
     public int getIconWidth() {
-        return 20;
+        return 15;
     }
 
     /**

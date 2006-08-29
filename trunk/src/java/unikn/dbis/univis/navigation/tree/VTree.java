@@ -1,6 +1,7 @@
 package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.*;
+import unikn.dbis.univis.meta.impl.VCombinationImpl;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.explorer.VExplorer;
@@ -306,6 +307,19 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
         setModel(new DefaultTreeModel(VTreeHelper.createDefaultTree(diceBox)));
     }
 
+    private VMeasure measure;
+    private VFunction function;
+
+    public void setMeasure(VMeasure measure) {
+        System.out.println(measure);
+        this.measure = measure;
+    }
+
+    public void setFunction(VFunction function) {
+        System.out.println(function);
+        this.function = function;
+    }
+
     /**
      * A <code>DragGestureRecognizer</code> has detected
      * a platform-dependent drag initiating gesture and
@@ -374,7 +388,22 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                          */
                         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
                             if (VDataReferenceFlavor.DIMENSION_FLAVOR.match(flavor)) {
-                                return dimension;
+
+                                VCube cube = null;
+                                for (VDataReference dataReference = dimension; dataReference != null; dataReference = dataReference.getParent()) {
+                                    if (dataReference instanceof VCube) {
+                                        cube = (VCube) dataReference;
+                                        break;
+                                    }
+                                }
+
+                                VCombination combination = new VCombinationImpl();
+                                combination.setCube(cube);
+                                combination.setDimension(dimension);
+                                combination.setMeasure(measure);
+                                combination.setFunction(function);
+
+                                return combination;
                             }
                             throw new UnsupportedFlavorException(flavor);
                         }

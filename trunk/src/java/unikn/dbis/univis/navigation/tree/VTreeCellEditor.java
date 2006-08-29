@@ -13,6 +13,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.util.EventObject;
 
 import org.hibernate.SessionFactory;
@@ -115,7 +117,7 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                 }
             }
 
-            Object o = node.getUserObject();
+            final Object o = node.getUserObject();
 
             if (o instanceof VDimension) {
                 VDimension dimension = (VDimension) o;
@@ -169,6 +171,10 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
 
                 panel.add(flags, BorderLayout.WEST);
             }
+
+            else if (o instanceof VDiceBox) {
+                label.setIcon(VIcons.BRICK);
+            }
             else if (o instanceof VCube) {
                 label.setIcon(new VCubeIcon(((VCube) o).getColor()));
             }
@@ -196,6 +202,32 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                 selection.setFont(label.getFont());
                 selection.setBackground(label.getBackground());
                 panel.add(selection, BorderLayout.CENTER);
+
+                selection.addActionListener(new ActionListener() {
+                    /**
+                     * Invoked when an action occurs.
+                     */
+                    public void actionPerformed(ActionEvent e) {
+                        ((Selectable) o).setSelected(((JCheckBox) e.getSource()).isSelected());
+
+                        if (((JCheckBox) e.getSource()).isSelected()) {
+                            if (o instanceof VMeasure) {
+                                ((VTree) tree).setMeasure((VMeasure) o);
+                            }
+                            else if (o instanceof VFunction) {
+                                ((VTree) tree).setFunction((VFunction) o);
+                            }
+                        }
+
+                        tree.repaint();
+                    }
+                });
+
+                if (o instanceof Selectable) {
+                    boolean valueSelected = ((Selectable) o).isSelected();
+
+                    selection.setSelected(valueSelected);
+                }
             }
         }
 

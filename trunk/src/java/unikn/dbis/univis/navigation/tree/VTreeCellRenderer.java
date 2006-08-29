@@ -11,6 +11,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -49,10 +51,11 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(UIManager.getColor("Tree.background"));
+        rendererComponent.setBackground(UIManager.getColor("Tree.background"));
 
         if (value instanceof DefaultMutableTreeNode) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-            Object o = node.getUserObject();
+            final Object o = node.getUserObject();
 
             if (o instanceof VDataReference) {
                 VDataReference dataReference = (VDataReference) o;
@@ -68,8 +71,7 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
 
                 if (dimension.isDropped()) {
                     rendererComponent.setForeground(Color.LIGHT_GRAY);
-                    //rendererComponent.setBackground(UIManager.getColor("Tree.background"));
-                    rendererComponent.setBackground(Color.RED);
+                    rendererComponent.setBackground(UIManager.getColor("Tree.background"));
                 }
 
                 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -85,7 +87,7 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                 }
 
                 JPanel flags = new JPanel(new GridLayout(2, size));
-                flags.setBackground(Color.WHITE);
+                flags.setBackground(UIManager.getColor("Tree.background"));
 
                 for (VCube cube : dimension.getSupportedCubes()) {
                     JLabel flag = new JLabel(new VCubeFlagIcon(cube.getColor()));
@@ -96,6 +98,9 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                 session.close();
 
                 panel.add(flags, BorderLayout.WEST);
+            }
+            else if (o instanceof VDiceBox) {
+                ((JLabel) rendererComponent).setIcon(VIcons.BRICK);
             }
             else if (o instanceof VCube) {
                 ((JLabel) rendererComponent).setIcon(new VCubeIcon(((VCube) o).getColor()));
@@ -124,6 +129,12 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                 rendererComponent.setPreferredSize(new Dimension((int) rendererComponent.getPreferredSize().getWidth() + 1, preferredHeight));
                 rendererComponent.setFont(label.getFont());
                 rendererComponent.setBackground(label.getBackground());
+
+                if (o instanceof Selectable) {
+                    boolean valueSelected = ((Selectable) o).isSelected();
+
+                    ((JCheckBox) rendererComponent).setSelected(valueSelected);
+                }
             }
         }
 

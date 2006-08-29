@@ -13,7 +13,7 @@ package unikn.dbis.univis.meta;
  * @version $Id$
  * @since UniVis Explorer 0.2
  */
-public interface VMeasure extends VDataReference {
+public interface VMeasure extends VDataReference, Selectable {
 
     /**
      * Returns the name of the measure.

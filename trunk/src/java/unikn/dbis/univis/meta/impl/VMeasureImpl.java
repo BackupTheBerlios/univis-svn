@@ -2,6 +2,7 @@ package unikn.dbis.univis.meta.impl;
 
 import unikn.dbis.univis.meta.VMeasure;
 import unikn.dbis.univis.meta.VDataReference;
+import unikn.dbis.univis.meta.Selectable;
 
 /**
  * TODO: document me!!!
@@ -17,10 +18,13 @@ import unikn.dbis.univis.meta.VDataReference;
  * @version $Id$
  * @since UniVis Explorer 0.2
  */
-public class VMeasureImpl extends VDataReferenceImpl implements VMeasure, VDataReference {
+public class VMeasureImpl extends VDataReferenceImpl implements VMeasure, Selectable, VDataReference {
 
     // The name of the measure.
     private String measure;
+
+    // Whether the measure is selected or not.
+    private boolean selected;
 
     /**
      * Returns the name of the measure.
@@ -38,5 +42,23 @@ public class VMeasureImpl extends VDataReferenceImpl implements VMeasure, VDataR
      */
     public void setMeasure(String measure) {
         this.measure = measure;
+    }
+
+    /**
+     * Returns whether the object is selected or not.
+     *
+     * @return Whether the object is selected or not.
+     */
+    public boolean isSelected() {
+        return selected;
+    }
+
+    /**
+     * Sets whether the object should be selected or not.
+     *
+     * @param selected Whether the object is selected or not.
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }
