@@ -472,7 +472,12 @@ public class VGraph extends JGraph {
 
             Object o = null;
             try {
-                o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
+                if (dtde.getTransferable().isDataFlavorSupported(VDataReferenceFlavor.COMBINATION_FLAVOR)) {
+                    o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.COMBINATION_FLAVOR);
+                }
+                else if (dtde.getTransferable().isDataFlavorSupported(VDataReferenceFlavor.DIMENSION_FLAVOR)) {
+                    o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
+                }
             }
             catch (UnsupportedFlavorException ufe) {
                 dtde.rejectDrop();

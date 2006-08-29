@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.EventObject;
+import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -208,6 +209,17 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                      * Invoked when an action occurs.
                      */
                     public void actionPerformed(ActionEvent e) {
+
+                        VDataReference dataReference = (VDataReference) o;
+
+                        dataReference = dataReference.getParent();
+
+                        for (VDataReference child : dataReference.getChildren()) {
+                            if (child instanceof Selectable) {
+                                ((Selectable) child).setSelected(false);
+                            }
+                        }
+
                         ((Selectable) o).setSelected(((JCheckBox) e.getSource()).isSelected());
 
                         if (((JCheckBox) e.getSource()).isSelected()) {

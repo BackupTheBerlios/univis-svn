@@ -3,6 +3,7 @@ package unikn.dbis.univis.dnd;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VMeasure;
 import unikn.dbis.univis.meta.VFunction;
+import unikn.dbis.univis.meta.VCombination;
 
 import java.awt.datatransfer.DataFlavor;
 
@@ -21,6 +22,8 @@ import java.awt.datatransfer.DataFlavor;
  * @since UniVis Explorer 0.1
  */
 public class VDataReferenceFlavor extends DataFlavor {
+
+    public static final VDataReferenceFlavor COMBINATION_FLAVOR = new VDataReferenceFlavor(VCombination.class, "UniVis Explorer/VCombination");
 
     public static final VDataReferenceFlavor DIMENSION_FLAVOR = new VDataReferenceFlavor(VDimension.class, "UniVis Explorer/VDimension");
 

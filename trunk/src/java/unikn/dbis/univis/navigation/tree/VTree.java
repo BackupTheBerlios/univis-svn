@@ -357,7 +357,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                          * @return an array of data flavors in which this data can be transferred
                          */
                         public DataFlavor[] getTransferDataFlavors() {
-                            return new DataFlavor[]{VDataReferenceFlavor.DIMENSION_FLAVOR};
+                            return new DataFlavor[]{VDataReferenceFlavor.COMBINATION_FLAVOR, VDataReferenceFlavor.DIMENSION_FLAVOR};
                         }
 
                         /**
@@ -387,7 +387,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                          * @see java.awt.datatransfer.DataFlavor#getRepresentationClass
                          */
                         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-                            if (VDataReferenceFlavor.DIMENSION_FLAVOR.match(flavor)) {
+                            if (VDataReferenceFlavor.COMBINATION_FLAVOR.match(flavor)) {
 
                                 VCube cube = null;
                                 for (VDataReference dataReference = dimension; dataReference != null; dataReference = dataReference.getParent()) {
@@ -404,6 +404,9 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                                 combination.setFunction(function);
 
                                 return combination;
+                            }
+                            else if (VDataReferenceFlavor.DIMENSION_FLAVOR.match(flavor)) {
+                                return dimension;
                             }
                             throw new UnsupportedFlavorException(flavor);
                         }
