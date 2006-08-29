@@ -1,10 +1,9 @@
-package unikn.dbis.univis.pivot.data;
+package unikn.dbis.univis.visualization.pivottable;
 
-import unikn.dbis.univis.meta.VDataReference;
-import unikn.dbis.univis.meta.VDimension;
+import unikn.dbis.univis.meta.*;
 
-import java.util.Iterator;
 import java.util.Vector;
+import java.text.MessageFormat;
 
 /**
  * @author Marion Herb
@@ -13,45 +12,59 @@ import java.util.Vector;
  */
 public class UniViewTableData {
 
-    Vector xAxisNodes = new Vector();
-    Vector yAxisNodes = new Vector();
-    Vector measureNodes = new Vector();
+    private enum PivotType {
+        X_Y,
+        X,
+        Y
+    }
+
+    private PivotType pivotType;
+
+    private VCube cube;
+    private VMeasure measure;
+    private VFunction function;
+
+//    private List<VDimension> xAxisDimensions = new ArrayList<VDimension>();
+//    private List<VDimension> yAxisDimensions = new ArrayList<VDimension>();
+    private Vector<VDimension> xAxisDimensions = new Vector<VDimension>();
+    private Vector<VDimension> yAxisDimensions = new Vector<VDimension>();
 
     int amountCols;
 
     int groupsInY;
-    Vector allJoinTables;
-    String pivotTableType;
+
+    //Vector allJoinTables;
 
     // Anzeige für NULL-Values in den Dimensions-Elementen
-    static String nullValue = "*NULL*";
+    static String NULL_VALUE = "*NULL*";
     PSQL myPSQL = new PSQL();
+
+    public UniViewTableData(VCube cube, VMeasure measure, VFunction function) {
+        this.cube = cube;
+        this.measure = measure;
+        this.function = function;
+    }
 
     /**
      * get data for Pivottable
      *
-     * @param xAxisNodes
-     * @param yAxisNodes
-     * @param measureNodes
+     * @param xAxisDimensions
+     * @param yAxisDimensions
      * @return Returns a Vector with data for pivottable
      */
-    public Vector getPivottableData(Vector xAxisNodes, Vector yAxisNodes, Vector measureNodes) {
-        this.xAxisNodes = xAxisNodes;
-        this.yAxisNodes = yAxisNodes;
-        this.measureNodes = measureNodes;
+    public Vector getPivottableData(Vector<VDimension> xAxisDimensions, Vector<VDimension> yAxisDimensions) {
+        this.xAxisDimensions = xAxisDimensions;
+        this.yAxisDimensions = yAxisDimensions;
 
-        allJoinTables = buildJoinTables();
+        //allJoinTables = buildJoinTables();
 
-//		System.out.println("alljointables: " + new ArrayList(allJoinTables).toString());
-//		int j = 0;
-//		for (Iterator x = allJoinTables.iterator(); x.hasNext();) {
-//			System.out.println("alljointables: " + (j++) + " " + x.next());
-//		}
+        // Detects the pivot type.
+        detectPivotType();
 
-        String sql = new String();
-        String sql_select = new String();
-        String sql_from = new String();
-        String sql_order = new String();
+        String sql;
+        String sql_select;
+        String sql_from = "";
+        String sql_order = "";
 
         boolean buildSelect = false;
         boolean buildFrom = false;
@@ -108,32 +121,46 @@ public class UniViewTableData {
     /**
      * Get the header info for pivot table
      *
-     * @param xAxisNodes
-     * @param yAxisNodes
+     * @param xAxisDimensions
+     * @param yAxisDimensions
      * @return Returns String[] of column names
      */
-    public Vector getPivottableHeader(Vector xAxisNodes, Vector yAxisNodes) {
-        int size = amountCols + groupsInY;
-        Vector columnNames = new Vector();
+    public Vector<String> getPivottableHeader(Vector<VDimension> xAxisDimensions, Vector<VDimension> yAxisDimensions) {
 
-        for (int j = 0; j < groupsInY; j++) {
-            columnNames.addElement(((VDataReference) yAxisNodes.get(j)).getTableName());
+        int size = yAxisDimensions.size();
+        if (xAxisDimensions.size() > 0) {
+            size += getAmountOfTableRows(xAxisDimensions.get(0));
+        }
+
+        Vector<String> columnNames = new Vector<String>();
+
+        for (VDimension dimension : yAxisDimensions) {
+            columnNames.addElement(dimension.getTableName());
         }
 
         try {
-            if (!pivotTableType.equals("y_value")) {
-                myPSQL.execute("select name from " + ((VDataReference) yAxisNodes.get(0)).getTableName() + ";");
-                for (int i = groupsInY; i < size; i++) {
-                    columnNames.addElement(new String(myPSQL.next()[0]));
-                }
+            switch (pivotType) {
+                case Y:
+                    columnNames.addElement("SUM");
+                    break;
+                case X:
+                    myPSQL.execute("select name from " + (xAxisDimensions.get(0)).getTableName() + ";");
+
+                    for (int i = yAxisDimensions.size(); i < size; i++) {
+                        columnNames.addElement(myPSQL.next()[0]);
+                    }
+                    break;
+                case X_Y:
+                    myPSQL.execute("select name from " + (xAxisDimensions.get(0)).getTableName() + ";");
+
+                    for (int i = yAxisDimensions.size(); i < size; i++) {
+                        columnNames.addElement(myPSQL.next()[0]);
+                    }
+                    break;
+                default:
+                    break;
             }
-            else {
-                columnNames.addElement("SUM");
-            }
-//			int j = 0;
-//			for (Iterator x = columnNames.iterator(); x.hasNext();) {
-//			System.out.println("columnNames: " + (j++) + " " + x.next());
-//			}
+
             return columnNames;
         }
         catch (Exception e) {
@@ -146,44 +173,41 @@ public class UniViewTableData {
         }
     }
 
-    /*
-      * SQL-Teil bauen welcher alle Spalten definiert: also alle Gruppierungen,
-      * und anschliessend Platzhalter für alle Spalten in X-Richtung
-      * Sonderfall: wenn kein Element für X-Achse gegeben -> in X-Achse wird nur die
-      * Summe für die Gruppierung auf der Y-Achse geschrieben, also nur 1 Spalte
-      */
-    private String buildSqlSelect() {
+    private void detectPivotType() {
+        int groupedXValues = xAxisDimensions.size();
+        int groupedYValues = yAxisDimensions.size();
 
-        // Zuallererst Festlegen des Typs der Pivottabelle
-        String pivotTableTypes[] = {"x_y_value", "x_value", "y_value"};
-        int groupedXValues = xAxisNodes.isEmpty() ? 0 : xAxisNodes.size();
-        int groupedYValues = groupsInY;
         if ((groupedYValues > 0) && (groupedXValues > 0)) {
-            pivotTableType = pivotTableTypes[0]; // x_y_value => Werte auf x- und Y-Achse
+            pivotType = PivotType.X_Y; // PivotType.X_Y => Values on x-axis and y-axis.
         }
         else if (groupedYValues == 0) {
-            pivotTableType = pivotTableTypes[1]; // x_value => Werte nur auf X-Achse (momentan nur 1 Knoten mgl.)
+            pivotType = PivotType.X; // PivotType.X => Only values on x-axis.
         }
         else if (groupedXValues == 0) {
-            pivotTableType = pivotTableTypes[2]; // y_value => Werte nur auf Y-Achse
+            pivotType = PivotType.Y; // PivotType.Y => Only values on y-axis.
         }
+    }
 
-        StringBuffer select = new StringBuffer("");
+    /*
+    * SQL-Teil bauen welcher alle Spalten definiert: also alle Gruppierungen,
+    * und anschliessend Platzhalter für alle Spalten in X-Richtung
+    * Sonderfall: wenn kein Element für X-Achse gegeben -> in X-Achse wird nur die
+    * Summe für die Gruppierung auf der Y-Achse geschrieben, also nur 1 Spalte
+    */
+    private String buildSqlSelect() {
 
-        /* abbrechen wenn keine Werte auf X-Achse denn dann wird lediglich ein
-           * Subselect benötigt, und kein Mergen verschiedener Selects
-           */
-        if (pivotTableType.equals("y_value")) {
-            return "";
-        } // besser NULL aber nicht möglich
+        StringBuilder select = new StringBuilder();
+
+        // abbrechen wenn keine Werte auf X-Achse denn dann wird lediglich ein
+        // Subselect benötigt, und kein Mergen verschiedener Selects
+        if (PivotType.Y.equals(pivotType)) return ""; // besser NULL aber nicht möglich
 
         select.append("SELECT \n");
 
         int instancesOnXAxis;
 
         /* momentan noch nur 1 Element */
-        String tmpTable = ((VDataReference) yAxisNodes.get(0)).getTableName();
-        instancesOnXAxis = getAmountOfTableRows(tmpTable);
+        instancesOnXAxis = getAmountOfTableRows(xAxisDimensions.get(0));
 
         amountCols = instancesOnXAxis;
         // bei mehr als x Spalten wird abgebrochen -> entspricht Subselects -> tatsächliche Grenze??
@@ -191,10 +215,13 @@ public class UniViewTableData {
             System.out.println(amountCols + " Columns are too many for X-Axis! Please transform your query.");
             return null;
         }
+
+        int groupedYValues = yAxisDimensions.size();
+
         /*
-           * outer loop runs through elements displayed in x-axis ->
-           * instancesOnXAxis + groupedYValues
-           */
+        * outer loop runs through elements displayed in x-axis ->
+        * instancesOnXAxis + groupedYValues
+        */
         for (int i = 0; i < (instancesOnXAxis + groupedYValues); i++) {
             if (i != 0) {
                 select.append(",\n");
@@ -228,16 +255,16 @@ public class UniViewTableData {
       */
     private String buildSqlFrom() {
 
-        int groupedYValues = groupsInY;
+        int groupedYValues = yAxisDimensions.size();
 
         // aneinanderhängen der Subselects entweder mit FULL JOIN (wenn Werte auf Y-Achse vorhanden)
         // oder Konkatenation (wenn nur Werte auf X-Achse)
         String attached = new String();
-//		if (groupedYValues > 0) { 
-        if (pivotTableType.equals("x_y_value")) {
+//		if (groupedYValues > 0) {
+        if (PivotType.X_Y.equals(pivotType)) {
             attached = "\nFULL JOIN\n";
         }
-        else if (pivotTableType.equals("x_value")) {
+        else if (PivotType.X.equals(pivotType)) {
             attached = "\n, \n";
         }
 
@@ -248,19 +275,19 @@ public class UniViewTableData {
             int upperBorder = 1; // damit Schleife 1x durchlaufen wird
             // nur wenn mind. 1 Wert auf X-Achse ist kann man seine Instanzen holen
             // also Ausnahme bei Anfrage bei nur Knote auf Y-Achse, dann ist per default upperBorder=-1
-            if (!pivotTableType.equals("y_value")) {
-                String xDimTables = ((VDataReference) yAxisNodes.get(0)).getTableName(); // Abschluesse...
-                upperBorder = getAmountOfTableRows(xDimTables);
-                myPSQL.execute("select name from " + xDimTables + ";");
+            if (!PivotType.Y.equals(pivotType)) {
+                VDimension dimension = xAxisDimensions.get(0);
+                upperBorder = getAmountOfTableRows(dimension);
+                myPSQL.execute("select name from " + dimension.getTableName() + ";");
                 from.append("FROM ");
             }
 
-            String xDimTable = new String();
+            String xDimTable = "";
 
             /* loop through elements on x-axis for creating the subselects */
             for (int instanceOnX = 0; instanceOnX < upperBorder; instanceOnX++) {
                 /* Loop for which instance? e.g. "mit Bachelorabschluss", "I"... */
-                if (!pivotTableType.equals("y_value")) {
+                if (!PivotType.Y.equals(pivotType)) {
                     xDimTable = myPSQL.next()[0];
                     from.append("\n( ");
                 }
@@ -268,22 +295,16 @@ public class UniViewTableData {
                 from.append("SELECT\n");
                 /* loop through elements on y-axis */
                 /* SELECT elements */
-                String fromTable = new String();
-                Vector uniqueY = buildUniqueNodes(yAxisNodes);
+                String fromTable;
 
-                int j;
-                for (j = 0; j < groupedYValues; j++) {
-                    fromTable = ((VDataReference) uniqueY.get(j)).getTableName();
+                //Vector uniqueY = buildUniqueNodes(yAxisDimensions);
 
-//					if (!pivotTableType.equals("y_value")) {
+                int i = 0;
+                for (VDimension dimension : yAxisDimensions) {
                     from.append("CASE WHEN ");
-//					}
-                    from.append(fromTable + ".name");
-//					if (!pivotTableType.equals("y_value")) {
-                    from.append(" isnull THEN '" + nullValue + "' ELSE "
-                            + fromTable + ".name");
-                    from.append(" END AS y" + j);
-//					}
+                    from.append(dimension.getTableName() + ".name");
+                    from.append(" isnull THEN '" + NULL_VALUE + "' ELSE " + dimension.getTableName() + ".name");
+                    from.append(" END AS y" + i++);
                     from.append(",\n");
                 }
 
@@ -293,66 +314,78 @@ public class UniViewTableData {
                      * dann kracht es bei getValueAt() von EnvelopeTableModell der auf NULL trifft
                      * "CASE WHEN sum(SOS_CUBE.koepfe) isnull THEN '*NULL*' ELSE sum(SOS_CUBE.koepfe) END"
                      */
-                for (Iterator iter = measureNodes.iterator(); iter.hasNext();) {
-                    VDataReference element = (VDataReference) iter.next();
-                    String cubePlusMeasure = ((VDataReference) allJoinTables.get(0)).getTableName() + "." + element.getTableName();
-                    if (pivotTableType.equals("y_value")) {
-                        from.append("CASE WHEN ");
-                    }
-                    from.append("sum(" + cubePlusMeasure + ")");
-                    if (pivotTableType.equals("y_value")) {
-                        from.append(" isnull THEN 0 ELSE sum(" + cubePlusMeasure + ") END");
-                        //					from.append("\"y" + (instanceOnX+j) + "\" -- " + xDimTable);
-                    }
-                    from.append(" AS \"y" + (instanceOnX + j) + "\"");
-                    if (iter.hasNext()) from.append(",");
-                    from.append("\n");
+                if (PivotType.Y.equals(pivotType)) {
+                    from.append("CASE WHEN ");
                 }
+
+                // Merge function [e.g. SUM({0})] with measure [e.g. cases]. E.g. merge result [SUM(cases)]
+                String cubeAttribute = MessageFormat.format("SUM({0})", cube.getTableName() + "." + measure.getMeasure());
+
+                from.append(cubeAttribute);
+
+                if (PivotType.Y.equals(pivotType)) {
+                    from.append(" isnull THEN 0 ELSE " + cubeAttribute + " END");
+                    //					from.append("\"y" + (instanceOnX+j) + "\" -- " + xDimTable);
+                }
+                from.append(" AS \"y" + (instanceOnX + i) + "\"");
+                from.append("\n");
 
                 /*
                      * JOINS
                      */
-                from.append("FROM " + ((VDataReference) allJoinTables.get(0)).getTableName() + "\n");
+                from.append("FROM " + cube.getTableName() + "\n");
 
                 /*
-                     * Loop through all needed tables in order to join them all to
-                     * the fact table, important to first join all Blueps to fact table
+                     * Loop through all needed tables in order to joinDimensions them all to
+                     * the fact table, important to first joinDimensions all Blueps to fact table
                      * and after that the dimensions because otherwise syntax errors appear
                      */
                 // 1 because first element was cube, already taken out
-                for (int k = 1; k < allJoinTables.size(); k++) {
-                    VDataReference node = (VDataReference) allJoinTables.get(k);
-                    from.append("FULL JOIN " + node.getTableName());
-                    from.append(" ON ( " + node.getTableName() + ".id");
-                    from.append(" = ");
-                    // Joins always carried out with root
+                Vector<VDimension> joinDimensions = new Vector<VDimension>();
+                joinDimensions.addAll(xAxisDimensions);
+                joinDimensions.addAll(yAxisDimensions);
 
-                    //TODO: from.append(node.getJoinable().getTable() + ".id");
-                    from.append(" ) " + "\n");
+                for (VDimension dimension : joinDimensions) {
+
+                    if (!dimension.getBlueprint().equals(dimension)) {
+                        VDimension blueprint = dimension.getBlueprint();
+
+                        from.append("FULL JOIN " + blueprint.getTableName() + " ON ( " + blueprint.getTableName() + ".id = ");
+                        from.append(cube.getTableName() + "." + blueprint.getJoinable());
+                        from.append(" ) " + "\n");
+
+                        from.append("FULL JOIN " + dimension.getTableName() + " ON ( " + dimension.getTableName() + ".id = ");
+                        from.append(dimension.getBlueprint().getTableName() + "." + dimension.getJoinable());
+                        from.append(" ) " + "\n");
+                    }
+                    else {
+                        from.append("FULL JOIN " + dimension.getTableName() + " ON ( " + dimension.getTableName() + ".id = ");
+                        from.append(cube.getTableName() + "." + dimension.getJoinable());
+                        from.append(" ) " + "\n");
+                    }
                 }
 
                 /* WHERE */
-                if (!pivotTableType.equals("y_value")) {
-                    from.append("WHERE " + ((VDataReference) xAxisNodes.get(0)).getTableName()
-                            + ".name = '" + xDimTable + "'\n");
+                if (!PivotType.Y.equals(pivotType)) {
+                    from.append("WHERE " + xAxisDimensions.get(0).getTableName() + ".name = '" + xDimTable + "'\n");
                 }
 
                 /* GROUP BY */
-                if ((pivotTableType.equals("x_y_value")) || (pivotTableType.equals("y_value"))) {
+                if (PivotType.X_Y.equals(pivotType) || PivotType.Y.equals(pivotType)) {
                     from.append("GROUP BY ");
                     for (int l = 0; l < groupedYValues; l++) {
-                        from.append(((VDataReference) uniqueY.get(l)).getTableName() + ".name");
+                        from.append(yAxisDimensions.get(l).getTableName() + ".name");
                         if (l < (groupedYValues - 1))
                             from.append(", ");
                     }
                 }
-                if (!pivotTableType.equals("y_value")) {
+                if (!PivotType.Y.equals(pivotType)) {
                     from.append("\n ) AS t" + instanceOnX + "\n");
                 }
                 // wenn Werte auf Y-Achse:
-                /* subselects need a join-criteria */
+                /* subselects need a joinDimensions-criteria */
 //				if (groupedYValues > 0) {
-                if (pivotTableType.equals("x_y_value")) {
+                if (PivotType.X_Y.equals(pivotType)) {
                     if (instanceOnX > 0) {
                         from.append("\nON (");
                         /* loop through elements on yAxis */
@@ -396,9 +429,9 @@ public class UniViewTableData {
 
         StringBuffer orderBy = new StringBuffer();
         // order by nicht nötig bei Werten nur in X-Achse
-        if (!pivotTableType.equals("x_value")) {
+        if (!PivotType.X.equals(pivotType)) {
             orderBy.append("\nORDER BY ");
-            for (int i = 0; i < groupsInY; i++) {
+            for (int i = 0; i < yAxisDimensions.size(); i++) {
                 if (i != 0)
                     orderBy.append(", ");
                 orderBy.append("y" + i);
@@ -408,30 +441,33 @@ public class UniViewTableData {
     }
 
     /*
+    /**
       * Eliminiert Duplikate in Nodes
       * Bedeutung: wenn Node mehrmals gedroppt wird, findet trotzdem nur einmalige
       * Gruppierung danach statt
-      */
-    private Vector buildUniqueNodes(Vector axisNodes) {
-        int groupedYValues = yAxisNodes.size();
-        Vector uniqueNodes = new Vector();
+      *
+    private Vector<VDimension> buildUniqueNodes(Vector<VDimension> axisDimensions) {
+        int groupedYValues = yAxisDimensions.size();
+        Vector<VDimension> uniqueNodes = new Vector<VDimension>();
 
         for (int i = 0; i < groupedYValues; i++) {
-            if (!uniqueNodes.contains(axisNodes.elementAt(i)))
-                uniqueNodes.add(axisNodes.elementAt(i));
+            if (!uniqueNodes.contains(axisDimensions.elementAt(i)))
+                uniqueNodes.add(axisDimensions.elementAt(i));
         }
         return uniqueNodes;
     }
+    */
 
     /*
       * which ones are needed? connecting fact table with all tables in x- as
       * well as in y-axis, as well as all bluep-tables on the way down to
       * those dim-tables
-      */
+      *
     private Vector buildJoinTables() {
-        int nodesOnXAxis = xAxisNodes.size();
-        int nodesOnYAxis = yAxisNodes.size();
-        Vector joinNodes = new Vector();
+        int nodesOnXAxis = xAxisDimensions.size();
+        int nodesOnYAxis = yAxisDimensions.size();
+
+        Vector<VDimension> joinDimensions = new Vector<VDimension>();
 
         // zuerst Faktentabelle in Vektor
         // man nehme zufaelligen Knoten aus einem Vektor und holt Cube dazu
@@ -439,67 +475,70 @@ public class UniViewTableData {
 
         // wichtig: alle Blueps jeweils vor ihren Dims einsortieren
         // first all entries from x-axis ...
-        if (!xAxisNodes.isEmpty()) { // -> es exisitieren Werte in X-Achse
-            //TODO: joinNodes.add(((VDimension) xAxisNodes.get(0)).getSupportedCubes().getCube());
+        if (!xAxisDimensions.isEmpty()) { // -> es exisitieren Werte in X-Achse
+
             for (int i = 0; i < nodesOnXAxis; i++) {
-                VDataReference node = (VDataReference) xAxisNodes.get(i);
+                VDimension dimension = xAxisDimensions.get(i);
                 // if not already inserted
-                if (!joinNodes.contains(node)) {
-                    VDataReference rootNode = ((VDimension) node).getBlueprint();
-                    // test if rootnode is Cube or not
-                    // if not add root node as well
-                    if (!joinNodes.contains(rootNode)) {
-                        joinNodes.add(rootNode);
+                if (!joinDimensions.contains(dimension)) {
+
+                    joinDimensions.add(dimension);
+
+                    VDimension blueprint = dimension.getBlueprint();
+                    if (!joinDimensions.contains(blueprint)) {
+                        joinDimensions.add(blueprint);
                     }
-                    joinNodes.add(node);
                 }
             }
             groupsInY = 0;
         }
 
         // ... then all entries from y-axis
-        if (!yAxisNodes.isEmpty()) { // -> es exisitieren Werte in Y-Achse
+        if (!yAxisDimensions.isEmpty()) { // -> es exisitieren Werte in Y-Achse
             // nur Cube adden falls noch keiner drin!
-            if (xAxisNodes.isEmpty()) {
-                // TODO joinNodes.add(yAxisNodes.get(0).getCube());
+            if (xAxisDimensions.isEmpty()) {
+                // TODO joinDimensions.add(yAxisDimensions.get(0).getCube());
             }
             for (int i = 0; i < nodesOnYAxis; i++) {
-                VDataReference node = (VDataReference) yAxisNodes.get(i);
+                VDimension dimension = yAxisDimensions.get(i);
                 // if not already inserted
-                if (!joinNodes.contains(node)) {
-                    VDataReference rootNode = ((VDimension) node).getBlueprint();
-                    // test if rootnode is Cube or not
-                    // if not add root node as well
-                    if (!joinNodes.contains(rootNode)) {
-                        joinNodes.add(rootNode);
+                if (!joinDimensions.contains(dimension)) {
+
+                    joinDimensions.add(dimension);
+
+                    VDimension blueprint = dimension.getBlueprint();
+                    if (!joinDimensions.contains(blueprint)) {
+                        joinDimensions.add(blueprint);
                     }
-                    joinNodes.addElement(node);
+
                     groupsInY ++;
                 }
             }
         }
 //		System.out.println("groupsInY " + groupsInY);
-        return joinNodes;
+        return joinDimensions;
     }
+    */
 
     /*
       * Methode holt Anzahl der Dimensions-Elemente in X-Achse also Anzahl Spalten
       */
-    private int getAmountOfTableRows(String tmpTable) {
+    private int getAmountOfTableRows(VDimension dimension) {
         int i = -1;
+
         try {
-            myPSQL.execute("select count(*) from " + tmpTable + ";");
+            myPSQL.execute("select count(*) from " + dimension.getTableName() + ";");
             myPSQL.result.next();
             i = myPSQL.result.getInt(1);
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out
-                    .println("PSQL: Could not retrieve amount of table rows.");
+            System.out.println("PSQL: Could not retrieve amount of table rows.");
         }
         finally {
             myPSQL.close();
         }
+
         return i;
     }
 }

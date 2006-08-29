@@ -1,4 +1,8 @@
-package unikn.dbis.univis.pivot.data;
+package unikn.dbis.univis.visualization.pivottable;
+
+import unikn.dbis.univis.pivot.data.Strings;
+import unikn.dbis.univis.pivot.data.Measures;
+import unikn.dbis.univis.pivot.data.Measure;
 
 import java.sql.*;
 import java.util.*;

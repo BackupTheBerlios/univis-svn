@@ -17,7 +17,7 @@ import unikn.dbis.univis.message.swing.VMenu;
 import unikn.dbis.univis.message.swing.VMenuItem;
 import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.images.VImageDummy;
-import unikn.dbis.univis.pivot.view.UniViewPanelPivottable;
+import unikn.dbis.univis.visualization.pivottable.UniViewPanelPivottable;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -36,7 +36,6 @@ import org.hibernate.Session;
 import org.jgraph.graph.GraphLayoutCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 
 /**
  * TODO: document me!!!
@@ -145,7 +144,6 @@ public class VExplorer extends JFrame implements Internationalizable {
     private JButton delete = new JButton(VIcons.DELETE);
     private JButton charts = new JButton(VIcons.CHART);
     private JButton languages = new JButton(VIcons.WORLD);
-    private JButton exit = new JButton(VIcons.EXIT);
     private JButton zoomIn = new JButton(VIcons.ZOOM_IN);
     private JButton zoomOut = new JButton(VIcons.ZOOM_OUT);
     private JButton settings = new JButton(VIcons.APPLICATION_FORM_EDIT);
@@ -515,15 +513,6 @@ public class VExplorer extends JFrame implements Internationalizable {
             }
         });
 
-        exit.addActionListener(new ActionListener() {
-            /**
-             * Invoked when an action occurs.
-             */
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-
         undo.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -548,8 +537,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         toolbar.add(settings);
         toolbar.addSeparator();
         toolbar.add(languages);
-        toolbar.addSeparator();
-        toolbar.add(exit);
     }
 
     private void makeChartsMenu() {
@@ -680,26 +667,6 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     /**
      * @param radioButtonMenuItem Item which gets the Listener.
-     * @param cube                String which is need to set.
-     * @param measureName         String which is need to set.
-     */
-    public void makeActionListenerMeasures(final JRadioButtonMenuItem radioButtonMenuItem, final String cube, final String measureName, final String xAxisName, final String i18NKey) {
-
-        radioButtonMenuItem.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(radioButtonMenuItem)) {
-                    graph.getQueryHistory().setCubeAttribute(measureName);
-                    graph.getQueryHistory().setCubeName(cube);
-                    graph.setxAxis(xAxisName);
-                    whatMeasureLabel.setI18NKey("data_reference." + i18NKey);
-                }
-            }
-        });
-    }
-
-    /**
-     * @param radioButtonMenuItem Item which gets the Listener.
      * @param chartType           The type of the current chart.
      */
     public void makeActionListenerCharts(final JRadioButtonMenuItem radioButtonMenuItem, final ChartType chartType, final String i18NKey) {
@@ -757,7 +724,6 @@ public class VExplorer extends JFrame implements Internationalizable {
         newLanguage.setText(MessageResolver.getMessage(Constants.NEW_LANGUAGE));
         newLanguage.setToolTipText(MessageResolver.getMessage(Constants.NEW_LANGUAGE));
         languages.setToolTipText(MessageResolver.getMessage(Constants.LANGUAGES_TOOLTIP));
-        exit.setToolTipText(MessageResolver.getMessage(Constants.EXIT_TOOLTIP));
         zoomIn.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_IN_TOOLTIP));
         zoomOut.setToolTipText(MessageResolver.getMessage(Constants.ZOOM_OUT_TOOLTIP));
         rotateClockwise.setToolTipText(MessageResolver.getMessage(Constants.ROTATE_CLOCKWISE_TOOLTIP));

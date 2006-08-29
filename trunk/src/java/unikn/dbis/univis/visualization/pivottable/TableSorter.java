@@ -1,4 +1,4 @@
-package unikn.dbis.univis.pivot.view;
+package unikn.dbis.univis.visualization.pivottable;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -65,7 +65,7 @@ import javax.swing.table.*;
  */
 
 public class TableSorter extends AbstractTableModel {
-    protected TableModel tableModel;
+    protected unikn.dbis.univis.visualization.pivottable.TableModel tableModel;
 
     public static final int DESCENDING = -1;
     public static final int NOT_SORTED = 0;
@@ -98,12 +98,12 @@ public class TableSorter extends AbstractTableModel {
         this.tableModelListener = new TableModelHandler();
     }
 
-    public TableSorter(TableModel tableModel) {
+    public TableSorter(unikn.dbis.univis.visualization.pivottable.TableModel tableModel) {
         this();
         setTableModel(tableModel);
     }
 
-    public TableSorter(TableModel tableModel, JTableHeader tableHeader) {
+    public TableSorter(unikn.dbis.univis.visualization.pivottable.TableModel tableModel, JTableHeader tableHeader) {
         this();
         setTableHeader(tableHeader);
         setTableModel(tableModel);
@@ -114,11 +114,11 @@ public class TableSorter extends AbstractTableModel {
         modelToView = null;
     }
 
-    public TableModel getTableModel() {
+    public unikn.dbis.univis.visualization.pivottable.TableModel getTableModel() {
         return tableModel;
     }
 
-    public void setTableModel(TableModel tableModel) {
+    public void setTableModel(unikn.dbis.univis.visualization.pivottable.TableModel tableModel) {
         if (this.tableModel != null) {
             this.tableModel.removeTableModelListener(tableModelListener);
         }

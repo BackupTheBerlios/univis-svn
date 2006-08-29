@@ -2,6 +2,7 @@ package unikn.dbis.univis.sql;
 
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.Filterable;
+import unikn.dbis.univis.meta.VCube;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,7 +32,7 @@ public class VQuery {
     // The history of query statements.
     private Stack<VQueryStatement> history;
 
-    private String cubeName = "sos_cube";
+    private VCube cube;
     private String cubeAttribute = "SUM(koepfe)";
     private String itemCountSQL;
 
@@ -73,14 +74,39 @@ public class VQuery {
         this.cubeAttribute = cubeAttribute;
     }
 
-    public void setCubeName(String cubeName) {
-        this.cubeName = cubeName;
+    /**
+     * Sets the cube that should be used for exploration. Be careful with
+     * changing the cube during an exploration. !!! It is not allowed !!!
+     *
+     * @param cube The cube that will be used for exploration.
+     * @throws CubeChangeException The exception will be thrown if you
+     *                             try to change the cube during an
+     *                             exploration.
+     */
+    public void setCube(VCube cube) throws CubeChangeException {
+        if (this.cube != null) {
+            throw new CubeChangeException("You could not change the cube during exploration.");
+        }
+        this.cube = cube;
+    }
+
+    /**
+     * Returns whether the query contains a cube or not.
+     *
+     * @return Whether the query contains a cube or not.
+     */
+    public boolean containsCube() {
+        return cube != null;
     }
 
     /**
      * Resets the query to initial state.
      */
     public void reset() {
+
+        // Reset the cube.
+        cube = null;
+
         // Clears the query history.
         history.clear();
     }
@@ -146,6 +172,8 @@ public class VQuery {
          * @return
          */
         public String createChartQuery(VDimension dimension, VDimension blueprint) {
+
+            String cubeName = cube.getTableName();
 
             String bluepName = blueprint.getTableName();
             String tableName = dimension.getTableName();

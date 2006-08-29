@@ -22,6 +22,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.*;
+import java.io.IOException;
 
 import org.hibernate.sql.QuerySelect;
 import org.hibernate.sql.JoinFragment;
@@ -392,7 +393,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                                 VCube cube = null;
                                 for (VDataReference dataReference = dimension; dataReference != null; dataReference = dataReference.getParent()) {
                                     if (dataReference instanceof VCube) {
-                                        cube = (VCube) dataReference;
+//                                        cube = (VCube) dataReference;
                                         break;
                                     }
                                 }

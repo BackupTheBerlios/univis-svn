@@ -1,11 +1,18 @@
 package unikn.dbis.univis.meta;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Romsl
+ * TODO: document me!!!
+ * <p/>
+ * <code>VCombination</code>.
+ * <p/>
+ * User: raedler, weiler
  * Date: 29.08.2006
- * Time: 01:20:12
- * To change this template use File | Settings | File Templates.
+ * Time: 01:20:24
+ *
+ * @author Roman R&auml;dle
+ * @author Andreas Weiler
+ * @version $Revision$
+ * @since UniVis Explorer 0.2
  */
 public interface VCombination {
     public VCube getCube();

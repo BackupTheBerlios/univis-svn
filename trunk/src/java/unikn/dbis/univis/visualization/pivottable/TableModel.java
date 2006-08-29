@@ -1,4 +1,4 @@
-package unikn.dbis.univis.pivot.view;
+package unikn.dbis.univis.visualization.pivottable;
 
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;

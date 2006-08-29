@@ -3,11 +3,18 @@ package unikn.dbis.univis.meta.impl;
 import unikn.dbis.univis.meta.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Romsl
+ * TODO: document me!!!
+ * <p/>
+ * <code>VCombinationImpl</code>.
+ * <p/>
+ * User: raedler, weiler
  * Date: 29.08.2006
- * Time: 01:20:12
- * To change this template use File | Settings | File Templates.
+ * Time: 01:23:24
+ *
+ * @author Roman R&auml;dle
+ * @author Andreas Weiler
+ * @version $Revision$
+ * @since UniVis Explorer 0.2
  */
 public class VCombinationImpl implements VCombination {
 

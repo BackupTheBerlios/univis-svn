@@ -18,6 +18,7 @@ import java.awt.dnd.*;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 import java.io.IOException;
 import java.sql.*;
 import java.text.MessageFormat;
@@ -28,8 +29,11 @@ import unikn.dbis.univis.dnd.VDataReferenceFlavor;
 import unikn.dbis.univis.meta.VDimension;
 import unikn.dbis.univis.meta.VDataReference;
 import unikn.dbis.univis.meta.VCombination;
+import unikn.dbis.univis.meta.VCube;
 import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.VQuery;
+import unikn.dbis.univis.sql.CubeChangeException;
+import unikn.dbis.univis.sql.CubeChooser;
 import unikn.dbis.univis.message.MessageResolver;
 
 import javax.swing.*;
@@ -207,7 +211,8 @@ public class VGraph extends JGraph {
 
             cellHistory.historize();
 
-            if (ChartType.BAR_CHART_VERTICAL.equals(chartType) || ChartType.BAR_CHART_HORIZONTAL.equals(chartType) || ChartType.AREA_CHART.equals(chartType)) {
+            if (ChartType.BAR_CHART_VERTICAL.equals(chartType) || ChartType.BAR_CHART_HORIZONTAL.equals(chartType) || ChartType.AREA_CHART.equals(chartType))
+            {
                 dataset = new DefaultCategoryDataset();
 
                 while (result.next()) {
@@ -231,7 +236,8 @@ public class VGraph extends JGraph {
             cellHistory.historize();
 
             String buffer = "";
-            if (ChartType.BAR_CHART_VERTICAL.equals(chartType) || ChartType.BAR_CHART_HORIZONTAL.equals(chartType) || ChartType.AREA_CHART.equals(chartType)) {
+            if (ChartType.BAR_CHART_VERTICAL.equals(chartType) || ChartType.BAR_CHART_HORIZONTAL.equals(chartType) || ChartType.AREA_CHART.equals(chartType))
+            {
                 while (result.next()) {
 
                     String currentValue = result.getString(idPos);
@@ -313,6 +319,8 @@ public class VGraph extends JGraph {
      */
     public void addDimension(VDimension dimension) throws SQLException {
 
+        dimensions.add(dimension);
+
         Connection connection = VExplorer.getConnection();
 
         Statement statement = connection.createStatement();
@@ -379,7 +387,7 @@ public class VGraph extends JGraph {
         cache.remove(cellHistory.getCurrent().toArray(), true, true);
 
         // Get last added dimension and remove it.
-        VDimension dimension = dimensions.remove(dimensions.size() -1);
+        VDimension dimension = dimensions.remove(dimensions.size() - 1);
 
         // Reset the last drag and dropped dimension.
         setAncestorsDropped(dimension, false);
@@ -475,9 +483,6 @@ public class VGraph extends JGraph {
                 if (dtde.getTransferable().isDataFlavorSupported(VDataReferenceFlavor.COMBINATION_FLAVOR)) {
                     o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.COMBINATION_FLAVOR);
                 }
-                else if (dtde.getTransferable().isDataFlavorSupported(VDataReferenceFlavor.DIMENSION_FLAVOR)) {
-                    o = dtde.getTransferable().getTransferData(VDataReferenceFlavor.DIMENSION_FLAVOR);
-                }
             }
             catch (UnsupportedFlavorException ufe) {
                 dtde.rejectDrop();
@@ -493,39 +498,48 @@ public class VGraph extends JGraph {
                     LOG.error(ioe.getMessage(), ioe);
                 }
             }
-            if (o instanceof VDimension) {
-                VDimension dimension = (VDimension) o;
-
-                try {
-                    dtde.acceptDrop(DnDConstants.ACTION_COPY);
-                    addDimension(dimension);
-                    dimensions.add(dimension);
-                    setAncestorsDropped(dimension, true);
-                }
-                catch (SQLException sqle) {
-                    dtde.rejectDrop();
-                    dtde.dropComplete(false);
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error(sqle.getMessage(), sqle);
-                    }
-                }
-            }
-            else if (o instanceof VCombination) {
+            if (o instanceof VCombination) {
                 VCombination combination = (VCombination) o;
 
                 try {
+
+                    VDimension dimension = combination.getDimension();
+
                     dtde.acceptDrop(DnDConstants.ACTION_COPY);
 
+                    Set<VCube> supportedCubes = dimension.getSupportedCubes();
+
+                    VCube cube;
+                    if (!queryHistory.containsCube()) {
+                        if (supportedCubes.size() > 1) {
+                            cube = CubeChooser.showCubeChooser(VGraph.this, supportedCubes);
+                        }
+                        else {
+                            cube = supportedCubes.iterator().next();
+                        }
+
+                        // Check whether a cube exists or a cube has been selected on the
+                        // cube chooser. The chooser maybe interrupted with window close
+                        // and then return null.
+                        if (cube == null) {
+                            return;
+                        }
+
+                        try {
+                            queryHistory.setCube(cube);
+                        }
+                        catch (CubeChangeException e) {
+                            // Do nothing if query history currently using a
+                            // cube for exploration.
+                        }
+                    }
+
+                    // Merge function [e.g. SUM({0})] with measure [e.g. cases]. E.g. merge result [SUM(cases)]
                     String cubeAttribute = MessageFormat.format(combination.getFunction().getFunction(), combination.getMeasure().getMeasure());
-
-                    System.out.println("CUBE_ATTRIBUTE: " + cubeAttribute);
-
-                    queryHistory.setCubeName(combination.getCube().getTableName());
                     queryHistory.setCubeAttribute(cubeAttribute);
 
-                    addDimension(combination.getDimension());
-                    dimensions.add(combination.getDimension());
-                    setAncestorsDropped(combination.getDimension(), true);
+                    addDimension(dimension);
+                    setAncestorsDropped(dimension, true);
                 }
                 catch (SQLException sqle) {
                     dtde.rejectDrop();

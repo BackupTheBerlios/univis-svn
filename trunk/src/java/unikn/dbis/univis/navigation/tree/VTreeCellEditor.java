@@ -198,18 +198,18 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
 
                 int preferredHeight = (int) rendererComponent.getPreferredSize().getHeight();
 
-                JCheckBox selection = new JCheckBox(tree.convertValueToText(value, isSelected, expanded, leaf, row, true));
+                final JCheckBox selection = new JCheckBox(tree.convertValueToText(value, isSelected, expanded, leaf, row, true));
                 selection.setPreferredSize(new Dimension((int) selection.getPreferredSize().getWidth() + 1, preferredHeight));
                 selection.setFont(label.getFont());
                 selection.setBackground(label.getBackground());
                 panel.add(selection, BorderLayout.CENTER);
+
 
                 selection.addActionListener(new ActionListener() {
                     /**
                      * Invoked when an action occurs.
                      */
                     public void actionPerformed(ActionEvent e) {
-
                         VDataReference dataReference = (VDataReference) o;
 
                         dataReference = dataReference.getParent();
@@ -231,7 +231,22 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                             }
                         }
 
-                        tree.repaint();
+                        SwingUtilities.invokeLater(new Runnable() {
+                            /**
+                             * When an object implementing interface <code>Runnable</code> is used
+                             * to create a thread, starting the thread causes the object's
+                             * <code>run</code> method to be called in that separately executing
+                             * thread.
+                             * <p/>
+                             * The general contract of the method <code>run</code> is that it may
+                             * take any action whatsoever.
+                             *
+                             * @see Thread#run()
+                             */
+                            public void run() {
+                                tree.repaint();
+                            }
+                        });
                     }
                 });
 
@@ -242,7 +257,6 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                 }
             }
         }
-
         return panel;
     }
 }
