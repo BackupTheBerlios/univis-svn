@@ -246,8 +246,20 @@ public class VPivotTable extends JPanel implements Visualizable, DropTargetListe
             }
 
             addDimension(dimension, dtde);
-
+            setAncestorsDropped(dimension, true);
             dtde.dropComplete(true);
+        }
+    }
+
+    private void setAncestorsDropped(VDimension dimension, boolean visibility) {
+
+        dimension.getSelections().clear();
+        dimension.setDropped(visibility);
+
+        VDataReference dataReference = dimension.getParent();
+
+        if (dataReference instanceof VDimension) {
+            setAncestorsDropped((VDimension) dataReference, visibility);
         }
     }
 
@@ -455,6 +467,18 @@ public class VPivotTable extends JPanel implements Visualizable, DropTargetListe
     };
 
     public void clear() {
+
+        if (!xAxisDimensions.isEmpty()) {
+            for (VDimension dimension : xAxisDimensions) {
+                setAncestorsDropped(dimension, false);
+            }
+        }
+        if (!yAxisDimensions.isEmpty()) {
+            for (VDimension dimension : yAxisDimensions) {
+                setAncestorsDropped(dimension, false);
+            }
+        }
+
         xAxisDimensions.clear();
         yAxisDimensions.clear();
         measureNodes.clear();
