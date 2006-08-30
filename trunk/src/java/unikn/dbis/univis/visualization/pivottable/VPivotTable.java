@@ -78,7 +78,7 @@ public class VPivotTable extends JPanel implements Visualizable, DropTargetListe
     JScrollBar bar;
 
     String textInXYBox = "Drop Element(s)!";
-    String textInMeasureBox = "Drop Measure!";
+    String textInMeasureBox = "Choose Measure!";
 
     Vector<VDimension> xAxisDimensions = new Vector<VDimension>();
     Vector<VDimension> yAxisDimensions = new Vector<VDimension>();
@@ -94,6 +94,7 @@ public class VPivotTable extends JPanel implements Visualizable, DropTargetListe
 
         /* *** First Row *** */
         JLabel jlabelMeasure = new JLabel("Measure:");
+        jlabelMeasure.setVisible(false);
         JLabel jlabelX = new JLabel("X-Axis Elements:");
         JLabel forVerticalSpace = new JLabel(" ");
         panelFirstRow = new JPanel(new VTableLayout(3, 2, 3, 3));
@@ -104,6 +105,7 @@ public class VPivotTable extends JPanel implements Visualizable, DropTargetListe
         dropAreaMeasure.setEditable(false);
         dropAreaMeasure.setPreferredSize(new Dimension(100, 20));
         dropAreaMeasure.setBorder(BorderFactory.createEtchedBorder(Color.WHITE, Color.LIGHT_GRAY));
+        dropAreaMeasure.setVisible(false);
 
         dropAreaX = new JTextArea(textInXYBox);
         dropAreaX.setToolTipText(textInXYBox);
