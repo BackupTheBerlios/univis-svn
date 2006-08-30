@@ -152,6 +152,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private String languageMessage;
     private String languageTitle;
+    private boolean pivotCheck = false;
 
     private VLabel measureLabel;
     private VLabel whatMeasureLabel;
@@ -452,6 +453,7 @@ public class VExplorer extends JFrame implements Internationalizable {
             public void actionPerformed(ActionEvent e) {
                 visualizable.clear();
                 tree.updateUI();
+                ;
             }
         });
 
@@ -524,8 +526,14 @@ public class VExplorer extends JFrame implements Internationalizable {
              * Invoked when an action occurs.
              */
             public void actionPerformed(ActionEvent e) {
+
+                if (pivotCheck == false) {
+                    System.out.println("hansi");
+                    ((VGraph) visualizable).clear();
+                }
                 whatChartLabel.setI18NKey("pivottable");
                 setVisualization(new VPivotTable());
+                pivotCheck = true;
             }
         });
 
@@ -664,6 +672,10 @@ public class VExplorer extends JFrame implements Internationalizable {
                 }
                 else {
                     VGraph graph = new VGraph();
+                    if (pivotCheck == true) {
+                        ((VPivotTable) visualizable).clear();
+                        pivotCheck = false;
+                    }
                     graph.setChartType(chartType);
                     setVisualization(graph);
                 }
