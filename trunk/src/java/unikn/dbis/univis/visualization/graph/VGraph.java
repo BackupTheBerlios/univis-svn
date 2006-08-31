@@ -15,7 +15,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
-import java.awt.event.ActionEvent;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class VGraph extends JGraph implements Visualizable {
 
     // Strings for different topics.
     private ChartType chartType = ChartType.BAR_CHART_HORIZONTAL;
-    private String rootHeadLine = "";
+    private String rootHeadLine;
     private String xAxis = "Studenten";
 
     // Int values for different topics.
@@ -338,7 +337,7 @@ public class VGraph extends JGraph implements Visualizable {
         try {
             result = statement.executeQuery(sql);
             testResult = statement2.executeQuery(testSql);
-            rootHeadLine = MessageResolver.getMessage(dimension.getI18nKey());
+            rootHeadLine = MessageResolver.getMessage("data_reference." + dimension.getI18nKey());
             fillChartData(result, testResult);
         }
         catch (SQLException sqle) {
