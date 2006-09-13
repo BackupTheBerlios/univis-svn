@@ -528,8 +528,7 @@ public class VExplorer extends JFrame implements Internationalizable {
             public void actionPerformed(ActionEvent e) {
 
                 if (pivotCheck == false) {
-                    System.out.println("hansi");
-                    ((VGraph) visualizable).clear();
+                    visualizable.clear();
                 }
                 whatChartLabel.setI18NKey("pivottable");
                 setVisualization(new VPivotTable());
