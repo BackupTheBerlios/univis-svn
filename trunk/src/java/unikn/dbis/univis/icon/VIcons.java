@@ -17,6 +17,7 @@ import javax.swing.*;
  * @since UniVis Explorer 0.1
  */
 public class VIcons {
+    public static final Icon ABOUT = new ImageIcon(VIcons.class.getResource("../images/about.gif"));
     public static final Icon ADD = new ImageIcon(VIcons.class.getResource("../images/add.png"));
     public static final Icon APPLICATION_FORM_EDIT = new ImageIcon(VIcons.class.getResource("../images/application_form_edit.png"));
     public static final Icon ARROW_INOUT = new ImageIcon(VIcons.class.getResource("../images/arrow_inout.png"));
