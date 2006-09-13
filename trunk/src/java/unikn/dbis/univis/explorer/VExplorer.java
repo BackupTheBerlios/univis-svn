@@ -288,13 +288,14 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         VMenu help = new VMenu(Constants.HELP);
 
-        VMenuItem about = new VMenuItem(Constants.ABOUT);
+        final VMenuItem about = new VMenuItem(Constants.ABOUT);
         about.addActionListener(new ActionListener() {
             /**
              * Invoked when an action occurs.
              */
             public void actionPerformed(ActionEvent e) {
-                System.out.println("ABOUT DIALOG");
+                String univis = "Univis Explorer" + System.getProperty("line.separator") + "    Version 0.2";
+                JOptionPane.showConfirmDialog(VExplorer.this, univis, about.getText(), JOptionPane.CLOSED_OPTION, 0, VIcons.ABOUT);
             }
         });
         help.add(about);
