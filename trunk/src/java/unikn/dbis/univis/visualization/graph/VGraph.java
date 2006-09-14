@@ -581,6 +581,12 @@ public class VGraph extends JGraph implements Visualizable {
                         }
 
                         try {
+                            if (cube.toString().equals("Studenten")) {
+                                xAxis = "Studenten";
+                            }
+                            else {
+                                xAxis = "Euro";
+                            }
                             queryHistory.setCube(cube);
                         }
                         catch (CubeChangeException e) {
