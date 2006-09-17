@@ -155,7 +155,6 @@ public class VExplorer extends JFrame implements Internationalizable {
     private boolean pivotCheck = false;
 
     private VLabel measureLabel;
-    private VLabel whatMeasureLabel;
     private VLabel chartLabel;
     private VLabel whatChartLabel;
     private VLabel languageLabel;
@@ -194,8 +193,8 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         initMenuBar();
         initToolbar();
-        initStatePanel();
         initNavigation();
+        initStatePanel();
         initVisualization();
         initDragAndDrop();
 
@@ -343,10 +342,9 @@ public class VExplorer extends JFrame implements Internationalizable {
         statePanel.add(complete, gbc);
 
         measureLabel = new VLabel(Constants.MEASURE);
-        whatMeasureLabel = new VLabel(Constants.HEADS);
         complete = new JPanel();
         complete.add(measureLabel);
-        complete.add(whatMeasureLabel);
+        complete.add(tree.getWhatMeasureLabel());
         ++gbc.gridy;
         statePanel.add(complete, gbc);
 
@@ -673,7 +671,7 @@ public class VExplorer extends JFrame implements Internationalizable {
                 else {
                     VGraph graph = new VGraph();
                     if (pivotCheck == true) {
-                        ((VPivotTable) visualizable).clear();
+                        visualizable.clear();
                         pivotCheck = false;
                     }
                     graph.setChartType(chartType);
