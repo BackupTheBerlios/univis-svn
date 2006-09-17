@@ -8,6 +8,8 @@ import unikn.dbis.univis.explorer.VExplorer;
 import unikn.dbis.univis.sql.dialect.UniVisDialect;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.message.MessageResolver;
+import unikn.dbis.univis.message.swing.VLabel;
+import unikn.dbis.univis.system.Constants;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -50,6 +52,8 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
     public static final transient Log LOG = LogFactory.getLog(VTree.class);
 
     private JPopupMenu popupMenu = new JPopupMenu();
+
+    private VLabel whatMeasureLabel = new VLabel("");
 
     /**
      * Returns a <code>JTree</code> with a sample model.
@@ -313,12 +317,26 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
 
     public void setMeasure(VMeasure measure) {
         System.out.println(measure);
+
+        if (measure.toString().equals("Köpfe") || measure.toString().equals("Heads")) {
+            whatMeasureLabel.setText(MessageResolver.getMessage(Constants.HEADS));
+        }
+        else if (measure.toString().equals("Fälle") || measure.toString().equals("Cases")) {
+            whatMeasureLabel.setText(MessageResolver.getMessage(Constants.CASES));
+        }
+        else if (measure.toString().equals("Betrag") || measure.toString().equals("Amount")) {
+            whatMeasureLabel.setText(MessageResolver.getMessage(Constants.AMOUNT));
+        }
         this.measure = measure;
     }
 
     public void setFunction(VFunction function) {
         System.out.println(function);
         this.function = function;
+    }
+
+    public VLabel getWhatMeasureLabel() {
+        return whatMeasureLabel;
     }
 
     /**
@@ -391,7 +409,8 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                             if (VDataReferenceFlavor.COMBINATION_FLAVOR.match(flavor)) {
 
                                 VCube cube = null;
-                                for (VDataReference dataReference = dimension; dataReference != null; dataReference = dataReference.getParent()) {
+                                for (VDataReference dataReference = dimension; dataReference != null; dataReference = dataReference.getParent())
+                                {
                                     if (dataReference instanceof VCube) {
 //                                        cube = (VCube) dataReference;
                                         break;
