@@ -581,7 +581,8 @@ public class VGraph extends JGraph implements Visualizable {
                         }
 
                         try {
-                            if (cube.toString().equals("Studenten")) {
+
+                            if (cube.toString().equals("Studenten") || cube.toString().equals("Students")) {
                                 xAxis = "Studenten";
                             }
                             else {
