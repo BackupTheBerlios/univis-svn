@@ -53,7 +53,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
 
     private JPopupMenu popupMenu = new JPopupMenu();
 
-    private VLabel whatMeasureLabel = new VLabel("");
+    private VLabel whatMeasureLabel = new VLabel();
 
     /**
      * Returns a <code>JTree</code> with a sample model.
@@ -316,22 +316,13 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
     private VFunction function;
 
     public void setMeasure(VMeasure measure) {
-        System.out.println(measure);
+        whatMeasureLabel.setI18NKey(measure.getI18nKey());
+        whatMeasureLabel.repaint();
 
-        if (measure.toString().equals("Köpfe") || measure.toString().equals("Heads")) {
-            whatMeasureLabel.setText(MessageResolver.getMessage(Constants.HEADS));
-        }
-        else if (measure.toString().equals("Fälle") || measure.toString().equals("Cases")) {
-            whatMeasureLabel.setText(MessageResolver.getMessage(Constants.CASES));
-        }
-        else if (measure.toString().equals("Betrag") || measure.toString().equals("Amount")) {
-            whatMeasureLabel.setText(MessageResolver.getMessage(Constants.AMOUNT));
-        }
         this.measure = measure;
     }
 
     public void setFunction(VFunction function) {
-        System.out.println(function);
         this.function = function;
     }
 

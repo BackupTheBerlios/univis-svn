@@ -1,7 +1,7 @@
 package unikn.dbis.univis.visualization.pivottable;
 
 import java.sql.*;
-import java.util.*;
+import unikn.dbis.univis.explorer.VExplorer;
 
 /**
  * PostgreSQL Connection Manager
@@ -9,25 +9,11 @@ import java.util.*;
  * @author Christian Gruen
  * @author Marion Herb
  */
-public class PSQL {
-    final static String PATH = "jdbc:postgresql://phobos22.inf.uni-konstanz.de/superx";
-
-    final static String DRIVER = "org.postgresql.Driver";
-
-    final static String LOGIN = "univis";
-
-    final static String PASSWD = "UniVis";
-
-    final static String SCHEMA = "public";
-
+public class PSQL{
     Connection conn = null;
-
     Statement state;
-
     ResultSet result;
-
     String measure;
-
     boolean connected = false;
 
     /**
@@ -39,18 +25,12 @@ public class PSQL {
         try {
             if (!this.connected) {
                 System.out.println("PSQL: Connecting...");
-                Class.forName(DRIVER);
-                Properties props = new Properties();
-                props.put("user", LOGIN);
-                props.put("password", PASSWD);
-                conn = DriverManager.getConnection(PATH, props);
+                conn = VExplorer.getConnection();
+                state = conn.createStatement();
                 state = conn.createStatement();
                 this.connected = true;
                 System.out.println("PSQL: Connected");
             }
-        }
-        catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
         catch (SQLException e) {
             e.printStackTrace();

@@ -268,8 +268,8 @@ public class VQuery {
                 order.append(", ");
             }
 
-            group.append(tableName).append(".name");
-            order.append(tableName).append(".name");
+            group.append(tableName).append(".id").append(", ").append(tableName).append(".name");
+            order.append(tableName).append(".id").append(", ").append(tableName).append(".name");
 
             if (concatenation.length() > 0) {
                 concatenation.append(" || '_' || ");

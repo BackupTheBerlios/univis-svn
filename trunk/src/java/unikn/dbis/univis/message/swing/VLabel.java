@@ -80,6 +80,18 @@ public class VLabel extends JLabel implements Internationalizable {
     }
 
     /**
+     * Creates a <code>VLabel</code> instance with
+     * no image and with an empty string for the title.
+     * The label is centered vertically
+     * in its display area.
+     * The label's contents, once set, will be displayed on the leading edge
+     * of the label's display area.
+     */
+    public VLabel() {
+        super();
+    }
+
+    /**
      * Sets the i18n key to resolve the internationalized
      * message.
      *
@@ -91,6 +103,8 @@ public class VLabel extends JLabel implements Internationalizable {
     }
 
     public void internationalize() {
-        setText(MessageResolver.getMessage(i18nKey));
+        if (i18nKey != null && !"".equals(i18nKey)) {
+            setText(MessageResolver.getMessage(i18nKey));
+        }
     }
 }
