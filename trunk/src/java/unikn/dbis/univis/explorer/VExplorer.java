@@ -35,6 +35,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
 /**
  * TODO: document me!!!
@@ -56,6 +57,13 @@ public class VExplorer extends JFrame implements Internationalizable {
      * Starting the univis explorer.
      */
     public static void main(String args[]) {
+
+        try {
+            UIManager.setLookAndFeel(new WindowsLookAndFeel());
+        }
+        catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
         InputStream imageStream = null;
         try {
@@ -276,6 +284,12 @@ public class VExplorer extends JFrame implements Internationalizable {
         ButtonGroup lafGroup = new ButtonGroup();
         for (final UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
             JRadioButtonMenuItem lafMenuItem = new JRadioButtonMenuItem(laf.getName());
+
+            // Set the current Look And Feel as selected.
+            if (UIManager.getLookAndFeel().getName().equals(laf.getName())) {
+                lafMenuItem.setSelected(true);
+            }
+
             lafMenuItem.addActionListener(new ActionListener() {
                 /**
                  * Invoked when an action occurs.
@@ -286,11 +300,6 @@ public class VExplorer extends JFrame implements Internationalizable {
             });
 
             lafGroup.add(lafMenuItem);
-
-            if (lafGroup.getButtonCount() == 1) {
-                lafMenuItem.setSelected(true);
-            }
-
             lafMenu.add(lafMenuItem);
         }
 
