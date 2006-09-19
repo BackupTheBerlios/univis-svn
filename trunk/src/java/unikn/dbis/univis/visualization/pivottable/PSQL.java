@@ -23,19 +23,18 @@ public class PSQL{
      */
     boolean connect() {
         try {
-            if (!this.connected) {
+            if (!connected) {
                 System.out.println("PSQL: Connecting...");
                 conn = VExplorer.getConnection();
                 state = conn.createStatement();
-                state = conn.createStatement();
-                this.connected = true;
+                connected = true;
                 System.out.println("PSQL: Connected");
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        return this.connected;
+        return connected;
     }
 
     /**
