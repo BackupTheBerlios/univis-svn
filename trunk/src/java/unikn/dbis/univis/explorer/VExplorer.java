@@ -58,13 +58,6 @@ public class VExplorer extends JFrame implements Internationalizable {
      */
     public static void main(String args[]) {
 
-        try {
-            UIManager.setLookAndFeel(new WindowsLookAndFeel());
-        }
-        catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-
         InputStream imageStream = null;
         try {
             imageStream = VImageDummy.class.getResource("splash_screen.png").openStream();
