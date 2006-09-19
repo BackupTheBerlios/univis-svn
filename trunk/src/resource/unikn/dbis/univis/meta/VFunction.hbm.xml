@@ -12,7 +12,7 @@
 
 <hibernate-mapping>
 
-    <joined-subclass name="unikn.dbis.univis.meta.impl.VFunctionImpl" table="META_FUNCTIONS"
+    <joined-subclass name="unikn.dbis.univis.meta.impl.VFunctionImpl" table="META_FUNCTION"
                      extends="unikn.dbis.univis.meta.impl.VDataReferenceImpl">
 
         <key column="DATA_REFERENCE_ID"/>
