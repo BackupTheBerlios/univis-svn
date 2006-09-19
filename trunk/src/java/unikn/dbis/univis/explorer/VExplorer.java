@@ -284,7 +284,13 @@ public class VExplorer extends JFrame implements Internationalizable {
                     updateLookAndFeel(laf.getClassName());
                 }
             });
+
             lafGroup.add(lafMenuItem);
+
+            if (lafGroup.getButtonCount() == 1) {
+                lafMenuItem.setSelected(true);
+            }
+
             lafMenu.add(lafMenuItem);
         }
 
@@ -455,7 +461,6 @@ public class VExplorer extends JFrame implements Internationalizable {
             public void actionPerformed(ActionEvent e) {
                 visualizable.clear();
                 tree.updateUI();
-                ;
             }
         });
 
