@@ -21,6 +21,7 @@ import unikn.dbis.univis.visualization.pivottable.VPivotTable;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.imageio.ImageIO;
 import java.awt.event.*;
 import java.awt.*;
 import java.awt.dnd.DragSource;
@@ -35,7 +36,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
 /**
  * TODO: document me!!!
@@ -181,6 +181,13 @@ public class VExplorer extends JFrame implements Internationalizable {
      */
     public VExplorer() throws HeadlessException {
         super("UniVis Explorer 0.2 - (c) 2005-2006 a.d. - DBIS, University of Konstanz");
+
+        try {
+            setIconImage(ImageIO.read(VImageDummy.class.getResourceAsStream("UniVis_Icon.png")));
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
