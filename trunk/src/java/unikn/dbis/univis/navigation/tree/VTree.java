@@ -114,10 +114,11 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
 
                     if (!container.isEmpty()) {
 
-                        JLabel header = new JLabel(MessageResolver.getMessage(dimension.getI18nKey()));
-                        header.setBorder(BorderFactory.createRaisedBevelBorder());
-
+                        JLabel header = new JLabel(MessageResolver.getMessage("data_reference." + dimension.getI18nKey()));
+                        Font font = header.getFont();
+                        header.setFont(new Font(font.getFontName(), Font.BOLD, font.getSize() + 2));
                         popupMenu.add(header);
+                        popupMenu.add(new JPopupMenu.Separator());
 
                         final JCheckBox button = new JCheckBox("Check/Uncheck all");
 
@@ -139,6 +140,8 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
 
                         popupMenu.add(button);
 
+                        popupMenu.add(new JPopupMenu.Separator());
+
                         popupMenu.add(container);
 
                         JButton view = new JButton(MessageResolver.getMessage("filtering"), VIcons.FILTER);
@@ -151,6 +154,8 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                                 popupMenu.setVisible(false);
                             }
                         });
+
+                        popupMenu.add(new JPopupMenu.Separator());
 
                         popupMenu.add(view);
 

@@ -51,7 +51,6 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     // The cubes that supports this dimension.
     private Set<VCube> supportedCubes;
 
-
     /**
      * Whether the dimension is a summable dimension which
      * could be used for dragging into the visualization
