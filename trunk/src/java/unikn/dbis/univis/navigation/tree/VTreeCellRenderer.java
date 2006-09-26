@@ -11,8 +11,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -105,8 +103,8 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
             else if (o instanceof VCube) {
                 ((JLabel) rendererComponent).setIcon(new VCubeIcon(((VCube) o).getColor()));
             }
-            else if (o instanceof VClass) {
-                VClass clazz = (VClass) o;
+            else if (o instanceof VClassification) {
+                VClassification clazz = (VClassification) o;
 
                 String type = clazz.getType();
 

@@ -12,13 +12,13 @@
 
 <hibernate-mapping>
 
-    <joined-subclass name="unikn.dbis.univis.meta.impl.VClassImpl" table="META_CLASS"
+    <joined-subclass name="unikn.dbis.univis.meta.impl.VClassificationImpl" table="META_CLASSIFICATION"
                      extends="unikn.dbis.univis.meta.impl.VDataReferenceImpl">
 
         <key column="DATA_REFERENCE_ID"/>
 
         <property name="type" type="string">
-            <column name="CLASS_TYPE" length="50" not-null="true"/>
+            <column name="CLASSIFICATION_TYPE" length="50" not-null="true"/>
         </property>
 
     </joined-subclass>

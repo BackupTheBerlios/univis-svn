@@ -3,7 +3,7 @@ package unikn.dbis.univis.meta;
 /**
  * TODO: document me!!!
  * <p/>
- * VClass.
+ * VClassification.
  * <p/>
  * User: raedler, weiler
  * Date: 27.08.2006
@@ -14,7 +14,7 @@ package unikn.dbis.univis.meta;
  * @version $Revision$
  * @since UniVis Explorer 0.2
  */
-public interface VClass extends VDataReference {
+public interface VClassification extends VDataReference {
 
     /**
      * Returns the type of the class.

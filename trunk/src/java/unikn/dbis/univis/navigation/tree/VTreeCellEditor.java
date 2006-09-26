@@ -16,7 +16,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.EventObject;
-import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -179,8 +178,8 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
             else if (o instanceof VCube) {
                 label.setIcon(new VCubeIcon(((VCube) o).getColor()));
             }
-            else if (o instanceof VClass) {
-                VClass clazz = (VClass) o;
+            else if (o instanceof VClassification) {
+                VClassification clazz = (VClassification) o;
 
                 String type = clazz.getType();
 

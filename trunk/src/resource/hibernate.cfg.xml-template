@@ -40,7 +40,7 @@
         <mapping resource="unikn/dbis/univis/meta/VDataReference.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/VDiceBox.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/VCube.hbm.xml"/>
-        <mapping resource="unikn/dbis/univis/meta/VClass.hbm.xml"/>
+        <mapping resource="unikn/dbis/univis/meta/VClassification.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/VDimension.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/VMeasure.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/VFunction.hbm.xml"/>
