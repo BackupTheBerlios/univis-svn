@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!--
+   @author Roman R&auml;dle
+   @author Andreas Weiler
+   @version $Revision$
+   @since UniVis Explorer 0.1
+-->
+
+<hibernate-mapping>
+
+    <class name="unikn.dbis.univis.meta.impl.VHierarchyImpl" table="META_HIERARCHY">
+
+        <id name="id" type="long" unsaved-value="-1">
+            <column name="ID" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="dataReference" column="DATA_REFERENCE_ID" class="unikn.dbis.univis.meta.impl.VDataReferenceImpl" lazy="false"/>
+
+        <many-to-one name="parent" column="PARENT_ID" class="unikn.dbis.univis.meta.impl.VHierarchyImpl" insert="false" update="false"/>
+
+        <list name="children" table="META_HIERARCHY_RELATION">
+            <key column="PARENT_ID" not-null="true"/>
+            <index column="CHILD_ORDER"/>
+            <one-to-many class="unikn.dbis.univis.meta.impl.VHierarchyImpl"/>
+        </list>
+
+    </class>
+
+</hibernate-mapping>
