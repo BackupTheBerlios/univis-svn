@@ -191,7 +191,7 @@ public class VGraph extends JGraph implements Visualizable {
      * @param result The given resultset from the sql action.
      * @throws SQLException
      */
-    public void fillChartData(ResultSet result, ResultSet testResult) throws SQLException {
+    public void fillChartData(VDimension dimension, ResultSet result, ResultSet testResult) throws SQLException {
 
         layout.setAlignment(SwingConstants.CENTER);
 
@@ -254,7 +254,7 @@ public class VGraph extends JGraph implements Visualizable {
                         }
 
                         dataset = new DefaultCategoryDataset();
-                        VGraphCell nextCell = createVertex(result.getString(bufferPos), result.getString(idPos));
+                        VGraphCell nextCell = createVertex(MessageResolver.getMessage("data_reference." + dimension.getI18nKey()) + " (" + result.getString(bufferPos) + ")", result.getString(idPos));
                         createEdges(nextCell, result.getString(idPos));
                         cache.insert(nextCell);
                         cellHistory.add(nextCell);
@@ -291,7 +291,7 @@ public class VGraph extends JGraph implements Visualizable {
 
                         dataset = new DefaultPieDataset();
 
-                        VGraphCell nextCell = createVertex(result.getString(bufferPos), result.getString(idPos));
+                        VGraphCell nextCell = createVertex(MessageResolver.getMessage("data_reference." + dimension.getI18nKey()) + " (" + result.getString(bufferPos) + ")", result.getString(idPos));
                         createEdges(nextCell, result.getString(idPos));
                         cache.insert(nextCell);
                         cellHistory.add(nextCell);
@@ -338,7 +338,7 @@ public class VGraph extends JGraph implements Visualizable {
             result = statement.executeQuery(sql);
             testResult = statement2.executeQuery(testSql);
             rootHeadLine = MessageResolver.getMessage("data_reference." + dimension.getI18nKey());
-            fillChartData(result, testResult);
+            fillChartData(dimension, result, testResult);
         }
         catch (SQLException sqle) {
             queryHistory.historyBack();

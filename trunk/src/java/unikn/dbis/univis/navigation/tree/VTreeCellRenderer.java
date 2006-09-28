@@ -72,10 +72,6 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
                     rendererComponent.setBackground(UIManager.getColor("Tree.background"));
                 }
 
-                SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-                Session session = sessionFactory.openSession();
-                session.refresh(dimension);
-
                 int size = dimension.getSupportedCubes().size();
                 if (size % 2 == 1) {
                     size = (size / 2) + 1;
@@ -93,7 +89,6 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
 
                     flags.add(flag);
                 }
-                session.close();
 
                 panel.add(flags, BorderLayout.WEST);
             }

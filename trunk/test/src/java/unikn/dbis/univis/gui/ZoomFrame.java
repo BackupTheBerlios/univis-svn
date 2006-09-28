@@ -71,7 +71,7 @@ public class ZoomFrame extends JFrame {
 	/**
 	 * Hier wird das Bild von der Festpallte geladen.
 	 * Durch den MediaTracker stellen wir sicher, dass das Bild
-	 * nach verlassen dieser Methode vollständig geladen ist.
+	 * nach verlassen dieser Methode vollstÃ¤ndig geladen ist.
 	 *
 	 */
 	private void loadImage() {
@@ -96,7 +96,7 @@ public class ZoomFrame extends JFrame {
 	}
 
 	/**
-	 * Ich überschriebe hier die paintComponent Methode von JPanel um das
+	 * Ich Ã¼berschriebe hier die paintComponent Methode von JPanel um das
 	 * Bild anzeigen zu lassen ...
 	 */
 	private void initComponents() {
@@ -134,13 +134,13 @@ public class ZoomFrame extends JFrame {
 		//Hat sich die Maus nach links oder rechts bewegt?
 		int dx = xPos - evt.getX();
 
-		//Nur wenn die Maus über 30 Pixel gewandert ist soll neu gezeichnet werden ...
+		//Nur wenn die Maus Ã¼ber 30 Pixel gewandert ist soll neu gezeichnet werden ...
 		if (Math.abs(dx) > 30) {
 			//System.out.println(width + " : " + dx);
 			xPos = evt.getX();
 			AffineTransform transform = null;
 
-			//Bilden des Transform Objektes für das Skalieren ...
+			//Bilden des Transform Objektes fÃ¼r das Skalieren ...
 
 			if (dx > 0 && (width * SCALE_UP <= 500)) {
 				transform =
@@ -160,15 +160,15 @@ public class ZoomFrame extends JFrame {
 			shape = transformOp.filter(shape, null);
 			draw();
 
-			//Um den Garbage Collector etwas zu unterstützen ;-)
+			//Um den Garbage Collector etwas zu unterstÃ¼tzen ;-)
 			transform = null;
 			transformOp = null;
 		}
 	}
 
 	/**
-	 * Zeichnet das Bild in den In-Memory-Buffer und lässt diesen durch den Aufruf
-	 * von updateUI() am JPanel durch dessen überschriebene paintComponentMethode
+	 * Zeichnet das Bild in den In-Memory-Buffer und lasst diesen durch den Aufruf
+	 * von updateUI() am JPanel durch dessen Ã¼berschriebene paintComponentMethode
 	 * aufs Panel malen.
 	 */
 	private void draw() {

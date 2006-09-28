@@ -146,10 +146,6 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
                     label.setBackground(Color.RED);
                 }
 
-                SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-                Session session = sessionFactory.openSession();
-                session.refresh(dimension);
-
                 int size = dimension.getSupportedCubes().size();
                 if (size % 2 == 1) {
                     size = (size / 2) + 1;
@@ -167,7 +163,6 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
 
                     flags.add(flag);
                 }
-                session.close();
 
                 panel.add(flags, BorderLayout.WEST);
             }

@@ -5,7 +5,7 @@ import org.dom4j.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.CacheMode;
+import org.hibernate.Hibernate;
 
 import java.io.File;
 import java.util.List;
@@ -15,6 +15,7 @@ import java.awt.*;
 import unikn.dbis.univis.meta.*;
 import unikn.dbis.univis.meta.impl.*;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
+import unikn.dbis.univis.hibernate.TransactionCallback;
 
 /**
  * TODO: document me!!!
@@ -60,13 +61,11 @@ public class SchemaImport {
 
         String prefix = "/DiceBox/Dimensions/Dimension";
 
-        Session session = sf.openSession();
-
         //noinspection unchecked
         List<Element> list = document.selectNodes(prefix);
 
         for (int i = 1; i <= list.size(); i++) {
-            VDimension dimension = new VDimensionImpl();
+            final VDimension dimension = new VDimensionImpl();
 
             dimension.setKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@key"));
             dimension.setI18nKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@i18n"));
@@ -76,60 +75,56 @@ public class SchemaImport {
             dimension.setVisible(ImportUtil.getValue(document, Boolean.class, prefix + "[" + i + "]/@visible", Boolean.TRUE));
             dimension.setParentable(ImportUtil.getValue(document, Boolean.class, prefix + "[" + i + "]/@parentable", Boolean.FALSE));
 
-            Transaction trx = session.beginTransaction();
-            session.saveOrUpdate(dimension);
-            trx.commit();
+            HibernateUtil.execute(new TransactionCallback() {
+                public void execute(Session session, Transaction trx) throws RuntimeException {
+                    session.saveOrUpdate(dimension);
+                }
+            });
         }
-
-        session.close();
     }
 
     private void importMeasures() {
 
         String prefix = "/DiceBox/Measures/Measure";
 
-        Session session = sf.openSession();
-
         //noinspection unchecked
         List<Element> list = document.selectNodes(prefix);
 
         for (int i = 1; i <= list.size(); i++) {
-            VMeasure measure = new VMeasureImpl();
+            final VMeasure measure = new VMeasureImpl();
 
             measure.setKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@key"));
             measure.setI18nKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@i18n"));
             measure.setMeasure(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@column"));
 
-            Transaction trx = session.beginTransaction();
-            session.saveOrUpdate(measure);
-            trx.commit();
+            HibernateUtil.execute(new TransactionCallback() {
+                public void execute(Session session, Transaction trx) throws RuntimeException {
+                    session.saveOrUpdate(measure);
+                }
+            });
         }
-
-        session.close();
     }
 
     private void importFunctions() {
 
         String prefix = "/DiceBox/Functions/Function";
 
-        Session session = sf.openSession();
-
         //noinspection unchecked
         List<Element> list = document.selectNodes(prefix);
 
         for (int i = 1; i <= list.size(); i++) {
-            VFunction function = new VFunctionImpl();
+            final VFunction function = new VFunctionImpl();
 
             function.setKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@key"));
             function.setI18nKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@i18n"));
             function.setFunction(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@function"));
 
-            Transaction trx = session.beginTransaction();
-            session.saveOrUpdate(function);
-            trx.commit();
+            HibernateUtil.execute(new TransactionCallback() {
+                public void execute(Session session, Transaction trx) throws RuntimeException {
+                    session.saveOrUpdate(function);
+                }
+            });
         }
-
-        session.close();
     }
 
     private Session session;
@@ -279,17 +274,12 @@ public class SchemaImport {
                 hierarchy.setParent(parent);
                 parent.getChildren().add(hierarchy);
 
-                Transaction trx = session.beginTransaction();
-                session.saveOrUpdate(hierarchy);
-                session.saveOrUpdate(parent);
-                trx.commit();
-
                 print(ref, hierarchy, cube);
             }
         }
     }
 
     public static void main(String[] args) {
-        new SchemaImport(new File("d:/SOS_CUBE.xml"));
+        new SchemaImport(new File("d:/Projects/UniVis Explorer/db-schema/sample.vs.xml"));
     }
 }

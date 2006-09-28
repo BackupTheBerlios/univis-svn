@@ -2,10 +2,13 @@ package unikn.dbis.univis.hibernate.util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.cfg.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import unikn.dbis.univis.hibernate.TransactionCallback;
 
 /**
  * TODO: document me!!!
@@ -52,5 +55,16 @@ public class HibernateUtil {
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    public static void execute(TransactionCallback callback) throws RuntimeException {
+        Session session = sessionFactory.openSession();
+        Transaction trx = session.beginTransaction();
+
+        // Call the exucute method of the callback.
+        callback.execute(session, trx);
+
+        trx.commit();
+        session.close();
     }
 }
