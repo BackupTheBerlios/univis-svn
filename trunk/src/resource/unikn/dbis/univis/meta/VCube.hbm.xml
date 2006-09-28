@@ -21,7 +21,7 @@
             <column name="COLOR_RGB" not-null="true"/>
         </property>
 
-        <many-to-one name="hierarchy" column="HIERARCHY_ID" class="unikn.dbis.univis.meta.impl.VHierarchyImpl"/>
+        <many-to-one name="hierarchy" column="HIERARCHY_ID" class="unikn.dbis.univis.meta.impl.VHierarchyImpl" cascade="all"/>
 
     </joined-subclass>
 

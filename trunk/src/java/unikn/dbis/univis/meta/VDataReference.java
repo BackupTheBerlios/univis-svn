@@ -18,6 +18,22 @@ import java.util.Set;
 public interface VDataReference {
 
     /**
+     * Returns the key of the data reference. This
+     * key should be a unique key.
+     *
+     * @return The key of the data reference.
+     */
+    public String getKey();
+
+    /**
+     * Sets the key of the data reference. This key
+     * should be a unique key.
+     *
+     * @param key The key of the data reference.
+     */
+    public void setKey(String key);
+
+    /**
      * Returns the internationalization key to allow
      * international application support.
      *

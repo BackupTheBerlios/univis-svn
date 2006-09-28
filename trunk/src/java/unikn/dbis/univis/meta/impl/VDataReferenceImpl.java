@@ -34,6 +34,9 @@ public abstract class VDataReferenceImpl implements VDataReference {
     // The identifier of the data reference object.
     private Long id;
 
+    // The key of the data reference. This should be a unique key.
+    private String key;
+
     // The i18n key to allow international application support.
     private String i18nKey;
 
@@ -71,6 +74,26 @@ public abstract class VDataReferenceImpl implements VDataReference {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * Returns the key of the data reference. This
+     * key should be a unique key.
+     *
+     * @return The key of the data reference.
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * Sets the key of the data reference. This key
+     * should be a unique key.
+     *
+     * @param key The key of the data reference.
+     */
+    public void setKey(String key) {
+        this.key = key;
     }
 
     /**

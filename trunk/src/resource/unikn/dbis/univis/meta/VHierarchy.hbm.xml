@@ -19,13 +19,13 @@
             <generator class="native"/>
         </id>
 
-        <many-to-one name="dataReference" column="DATA_REFERENCE_ID" class="unikn.dbis.univis.meta.impl.VDataReferenceImpl" lazy="false"/>
+        <many-to-one name="dataReference" column="DATA_REFERENCE_ID" class="unikn.dbis.univis.meta.impl.VDataReferenceImpl" lazy="false" cascade="save-update"/>
 
-        <many-to-one name="parent" column="PARENT_ID" class="unikn.dbis.univis.meta.impl.VHierarchyImpl" insert="false" update="false"/>
+        <many-to-one name="parent" column="PARENT_ID" class="unikn.dbis.univis.meta.impl.VHierarchyImpl" cascade="all"/>
 
-        <list name="children" table="META_HIERARCHY_RELATION">
-            <key column="PARENT_ID" not-null="true"/>
-            <index column="CHILD_ORDER"/>
+        <list name="children" table="META_HIERARCHY_RELATION" cascade="all-delete-orphan">
+            <key column="PARENT_ID"/>
+            <list-index column="CHILD_ORDER"/>
             <one-to-many class="unikn.dbis.univis.meta.impl.VHierarchyImpl"/>
         </list>
 

@@ -4,9 +4,7 @@ import unikn.dbis.univis.meta.VDataReference;
 import unikn.dbis.univis.meta.VHierarchy;
 
 import javax.swing.tree.TreeNode;
-import java.util.List;
-import java.util.Enumeration;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * TODO: document me!!!
@@ -26,6 +24,10 @@ import java.util.Collections;
  * @since UniVis Explorer 0.1
  */
 public class VHierarchyImpl implements VHierarchy, Cloneable {
+
+    public VHierarchyImpl() {
+        children = new LinkedList<VHierarchy>();
+    }
 
     // The (unique) identifier of the tree fresh item.
     private Long id;
@@ -62,7 +64,7 @@ public class VHierarchyImpl implements VHierarchy, Cloneable {
     private VHierarchy parent;
 
     // The children of the tree fresh item.
-    private List<? extends VHierarchy> children;
+    private List<VHierarchy> children;
 
     /**
      * Returns the information of the hierarchy data using
@@ -108,7 +110,7 @@ public class VHierarchyImpl implements VHierarchy, Cloneable {
      *
      * @return The children of the tree fresh item.
      */
-    public List<? extends VHierarchy> getChildren() {
+    public List<VHierarchy> getChildren() {
         return children;
     }
 
@@ -118,7 +120,7 @@ public class VHierarchyImpl implements VHierarchy, Cloneable {
      * @param children The children of the tree fresh
      *                 item.
      */
-    public void setChildren(List<? extends VHierarchy> children) {
+    public void setChildren(List<VHierarchy> children) {
         this.children = children;
     }
 

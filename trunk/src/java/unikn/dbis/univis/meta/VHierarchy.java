@@ -2,6 +2,7 @@ package unikn.dbis.univis.meta;
 
 import javax.swing.tree.TreeNode;
 import java.util.List;
+import java.util.LinkedList;
 
 /**
  * The <code>VHierarchy</code> represents the hierarchical structure
@@ -56,7 +57,7 @@ public interface VHierarchy /*extends TreeNode*/ {
      *
      * @return The children of this hierarchy element.
      */
-    public List<? extends VHierarchy> getChildren();
+    public List<VHierarchy> getChildren();
 
     /**
      * Sets the children that belongs to this hierarchy
@@ -64,7 +65,7 @@ public interface VHierarchy /*extends TreeNode*/ {
      *
      * @param children The children of this hierarchy element.
      */
-    public void setChildren(List<? extends VHierarchy> children);
+    public void setChildren(List<VHierarchy> children);
 
     /**
      * Returns a clone of this hierarchy element.

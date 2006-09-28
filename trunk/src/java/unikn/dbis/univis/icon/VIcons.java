@@ -26,6 +26,8 @@ public class VIcons {
     public static final Icon ARROW_REDO = new ImageIcon(VIcons.class.getResource("../images/arrow_redo.png"));
     public static final Icon BRICK = new ImageIcon(VIcons.class.getResource("../images/brick.png"));
     public static final Icon BRICKS = new ImageIcon(VIcons.class.getResource("../images/bricks.png"));
+    public static final Icon BULLET_TOGGLE_MINUS = new ImageIcon(VIcons.class.getResource("../images/bullet_toggle_minus.png"));
+    public static final Icon BULLET_TOGGLE_PLUS = new ImageIcon(VIcons.class.getResource("../images/bullet_toggle_plus.png"));
     public static final Icon CHART_BAR_HORIZONTAL = new ImageIcon(VIcons.class.getResource("../images/chart_bar_horizontal.png"));
     public static final Icon CHART_BAR_VERTICAL = new ImageIcon(VIcons.class.getResource("../images/chart_bar_vertical.png"));
     public static final Icon CHART_ORGANISATION = new ImageIcon(VIcons.class.getResource("../images/chart_organisation.png"));
@@ -36,8 +38,10 @@ public class VIcons {
     public static final Icon DELETE = new ImageIcon(VIcons.class.getResource("../images/delete.png"));
     public static final Icon FILTER = new ImageIcon(VIcons.class.getResource("../images/filter.png"));
     public static final Icon FLAG_DE = new ImageIcon(VIcons.class.getResource("../images/flag_de.png"));
-    public static final Icon FLAG_EN = new ImageIcon(VIcons.class.getResource("../images/flag_gb.png"));
+    public static final Icon FLAG_GB = new ImageIcon(VIcons.class.getResource("../images/flag_gb.png"));
+    public static final Icon INFORMATION = new ImageIcon(VIcons.class.getResource("../images/information.png"));
     public static final Icon LIGHTNING = new ImageIcon(VIcons.class.getResource("../images/lightning.png"));
+    public static final Icon SCHEMA_IMPORT = new ImageIcon(VIcons.class.getResource("../images/schema_import.png"));
     public static final Icon SHAPE_ROTATE_CLOCKWISE = new ImageIcon(VIcons.class.getResource("../images/shape_rotate_clockwise.png"));
     public static final Icon SHAPE_ROTATE_ANTICLOCKWISE = new ImageIcon(VIcons.class.getResource("../images/shape_rotate_anticlockwise.png"));
     public static final Icon TABLE = new ImageIcon(VIcons.class.getResource("../images/table.png"));

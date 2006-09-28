@@ -31,6 +31,18 @@ public class VMenuItem extends JMenuItem implements Internationalizable {
         this.i18nKey = i18nKey;
     }
 
+    /**
+     * Creates a <code>VMenuItem</code> with the text beyond the i18n key
+     * and the icon.
+     *
+     * @param i18nKey The i18n key for detecting the text of the <code>JMenuItem</code>
+     * @param icon The icon of the <code>JMenuItem</code>
+     */
+    public VMenuItem(String i18nKey, Icon icon) {
+        super(MessageResolver.getMessage(i18nKey), icon);
+        this.i18nKey = i18nKey;
+    }
+
     public void internationalize() {
         setText(MessageResolver.getMessage(i18nKey));
     }

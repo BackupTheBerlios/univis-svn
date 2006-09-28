@@ -10,6 +10,7 @@ import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.swing.VLabel;
 import unikn.dbis.univis.system.Constants;
+import unikn.dbis.univis.navigation.filter.FilterPopupMenu;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -54,6 +55,35 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
     private JPopupMenu popupMenu = new JPopupMenu();
 
     private VLabel whatMeasureLabel = new VLabel();
+
+    /**
+     * Returns a <code>JTree</code> with a sample model.
+     * The default model used by the tree defines a leaf node as any node
+     * without children.
+     *
+     * @see javax.swing.tree.DefaultTreeModel#asksAllowsChildren
+     */
+    public VTree() {
+        super(new Object[]{});
+
+        VTreeCellRenderer renderer = new VTreeCellRenderer();
+        setCellRenderer(renderer);
+        setCellEditor(new VTreeCellEditor(renderer));
+        setEditable(true);
+
+        addMouseListener(new MouseAdapter() {
+
+            /**
+             * Invoked when a mouse button has been pressed on a component.
+             */
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    setSelectionPath(getPathForLocation(e.getX(), e.getY()));
+                }
+            }
+        });
+    }
 
     /**
      * Returns a <code>JTree</code> with a sample model.
@@ -113,12 +143,15 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                     final FilterItemContainer container = createFilterContainer(dimension, p2);
 
                     if (!container.isEmpty()) {
-
+                        /*
                         JLabel header = new JLabel(MessageResolver.getMessage("data_reference." + dimension.getI18nKey()));
                         Font font = header.getFont();
                         header.setFont(new Font(font.getFontName(), Font.BOLD, font.getSize() + 2));
                         popupMenu.add(header);
                         popupMenu.add(new JPopupMenu.Separator());
+                        */
+
+                        popupMenu = new FilterPopupMenu(MessageResolver.getMessage("data_reference." + dimension.getI18nKey()));
 
                         final JCheckBox button = new JCheckBox("Check/Uncheck all");
 
@@ -314,6 +347,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
     }
 
     public void refresh(VDiceBox diceBox) {
+        setRootVisible(true);
         setModel(new DefaultTreeModel(VTreeHelper.createDefaultTree(diceBox)));
     }
 

@@ -19,6 +19,10 @@
             <generator class="native"/>
         </id>
 
+        <property name="key" type="string">
+            <column name="DATA_REFERENCE_KEY" not-null="true" unique="true"/>
+        </property>
+
         <property name="i18nKey" type="string">
             <column name="I18N_KEY" not-null="false"/>
         </property>
@@ -28,7 +32,7 @@
         </property>
 
         <property name="tableName" type="string">
-            <column name="TABLE_NAME" not-null="true"/>
+            <column name="TABLE_NAME" not-null="false"/>
         </property>
 
     </class>

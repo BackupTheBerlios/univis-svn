@@ -28,6 +28,7 @@ public interface Constants {
     public final static String RING_CHART = "ringChart";
     public final static String PIVOT_TABLE = "pivottable";
     public static final String PROGRAM = "program";
+    public static final String SCHEMA_IMPORT = "schema_import";
     public static final String EXIT = "exit";
     public static final String ABOUT = "about";
     public static final String CREDITS = "credits";

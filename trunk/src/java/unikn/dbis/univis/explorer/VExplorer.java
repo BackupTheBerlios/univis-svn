@@ -18,9 +18,11 @@ import unikn.dbis.univis.message.swing.VMenuItem;
 import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.images.VImageDummy;
 import unikn.dbis.univis.visualization.pivottable.VPivotTable;
+import unikn.dbis.univis.swingx.StackedBox;
+import unikn.dbis.univis.dataexchange.schemaimport.SchemaImport;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
 import javax.imageio.ImageIO;
 import java.awt.event.*;
 import java.awt.*;
@@ -31,6 +33,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.File;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -82,6 +85,7 @@ public class VExplorer extends JFrame implements Internationalizable {
                 }
                 catch (Exception e) {
                     e.printStackTrace();
+                    System.exit(100);
                 }
             }
         });
@@ -126,7 +130,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private JCheckBoxMenuItem resize = new JCheckBoxMenuItem(VIcons.ARROW_INOUT);
     private JRadioButtonMenuItem german = new JRadioButtonMenuItem(VIcons.FLAG_DE);
-    private JRadioButtonMenuItem english = new JRadioButtonMenuItem(VIcons.FLAG_EN);
+    private JRadioButtonMenuItem english = new JRadioButtonMenuItem(VIcons.FLAG_GB);
     private JRadioButtonMenuItem barChartHorizontal = new JRadioButtonMenuItem(VIcons.CHART_BAR_HORIZONTAL);
     private JRadioButtonMenuItem barChartVertical = new JRadioButtonMenuItem(VIcons.CHART_BAR_VERTICAL);
     private JRadioButtonMenuItem pieChart = new JRadioButtonMenuItem(VIcons.CHART_PIE);
@@ -166,6 +170,8 @@ public class VExplorer extends JFrame implements Internationalizable {
     private VClock whatTimeLabel;
     private JPanel complete;
 
+    private Session session;
+
     /**
      * Constructs a new frame that is initially invisible.
      * <p/>
@@ -202,6 +208,8 @@ public class VExplorer extends JFrame implements Internationalizable {
         split.setDividerLocation(300);
         split.setOneTouchExpandable(true);
 
+        session = HibernateUtil.getSessionFactory().openSession();
+
         initMenuBar();
         initToolbar();
         initNavigation();
@@ -225,6 +233,8 @@ public class VExplorer extends JFrame implements Internationalizable {
                     try {
                         connection.commit();
                         connection.close();
+
+                        session.close();
                     }
                     catch (SQLException sqle) {
                         sqle.printStackTrace();
@@ -268,7 +278,49 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         VMenu program = new VMenu(Constants.PROGRAM);
 
-        VMenuItem exit = new VMenuItem(Constants.EXIT);
+        VMenuItem schemaImport = new VMenuItem(Constants.SCHEMA_IMPORT, VIcons.SCHEMA_IMPORT);
+        schemaImport.setAccelerator(KeyStroke.getKeyStroke('I', Event.CTRL_MASK));
+        schemaImport.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+
+                fileChooser.addChoosableFileFilter(new FileFilter() {
+
+                    /**
+                     * Whether the given file is accepted by this filter.
+                     */
+                    public boolean accept(File f) {
+                        return f.getName().endsWith(".vs.xml") || f.isDirectory();
+                    }
+
+                    /**
+                     * The description of this filter. For example: "JPG and GIF Images"
+                     *
+                     * @see javax.swing.filechooser.FileView#getName
+                     */
+                    public String getDescription() {
+                        return "UniVis Schema (*.vs.xml)";
+                    }
+                });
+
+                int option = fileChooser.showOpenDialog(VExplorer.this);
+
+                if (option == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    new SchemaImport(file);
+                    refreshTree();
+                    JOptionPane.showMessageDialog(VExplorer.this, "Schema Import erfolgreich beendet.", "Schema Import", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+        program.add(schemaImport);
+        program.addSeparator();
+
+        VMenuItem exit = new VMenuItem(Constants.EXIT, VIcons.EXIT);
+        exit.setAccelerator(KeyStroke.getKeyStroke('Q', Event.ALT_MASK));
         exit.addActionListener(new ActionListener() {
             /**
              * Invoked when an action occurs.
@@ -305,7 +357,7 @@ public class VExplorer extends JFrame implements Internationalizable {
 
         VMenu help = new VMenu(Constants.HELP);
 
-        final VMenuItem about = new VMenuItem(Constants.ABOUT);
+        final VMenuItem about = new VMenuItem(Constants.ABOUT, VIcons.INFORMATION);
         about.addActionListener(new ActionListener() {
             /**
              * Invoked when an action occurs.
@@ -390,10 +442,9 @@ public class VExplorer extends JFrame implements Internationalizable {
         ++gbc.gridy;
         statePanel.add(complete, gbc);
 
-        TitledBorder border = BorderFactory.createTitledBorder("Status");
-
-        underStatePanel.setBorder(border);
-        underStatePanel.add(statePanel, BorderLayout.WEST);
+        StackedBox box = new StackedBox();
+        box.addBox("Status", statePanel, BorderLayout.WEST);
+        underStatePanel.add(box, BorderLayout.CENTER);
     }
 
     private void initToolbar() {
@@ -417,14 +468,7 @@ public class VExplorer extends JFrame implements Internationalizable {
                      * @see Thread#run()
                      */
                     public void run() {
-
-                        System.out.println("ECHO2");
-
-                        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-                        Session session = sessionFactory.openSession();
-                        VDiceBox diceBox = (VDiceBox) session.createQuery("from " + VDiceBoxImpl.class.getName() + " where name = 'UniVis Explorer'").uniqueResult();
-                        tree.refresh(diceBox);
-                        session.close();
+                        refreshTree();
                     }
                 };
 
@@ -624,13 +668,19 @@ public class VExplorer extends JFrame implements Internationalizable {
 
     private void initNavigation() {
 
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
+        //SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        //Session session = sessionFactory.openSession();
 
         VDiceBox diceBox = (VDiceBox) session.createQuery("from " + VDiceBoxImpl.class.getName() + " where name = 'UniVis Explorer'").uniqueResult();
-        tree = new VTree(diceBox);
 
-        session.close();
+        if (diceBox == null) {
+            tree = new VTree();
+        }
+        else {
+            tree = new VTree(diceBox);
+        }
+
+        //session.close();
 
         navigation.add(new JScrollPane(tree), BorderLayout.CENTER);
         navigation.add(underStatePanel, BorderLayout.SOUTH);
@@ -698,6 +748,20 @@ public class VExplorer extends JFrame implements Internationalizable {
                 whatChartLabel.setI18NKey(i18NKey);
             }
         });
+    }
+
+    private void refreshTree() {
+        System.out.println("ECHO2");
+
+        //SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        //Session session = sessionFactory.openSession();
+        VDiceBox diceBox = (VDiceBox) session.createQuery("from " + VDiceBoxImpl.class.getName() + " where name = 'UniVis Explorer'").uniqueResult();
+
+        if (diceBox != null) {
+            tree.refresh(diceBox);
+        }
+
+        //session.close();
     }
 
     public void internationalize() {
