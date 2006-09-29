@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="UniVis Explorer" default="build">
+
+    <property file="build.properties"/>
+
+    <target name="start-univis-explorer" depends="build-dist">
+        <java classname="unikn.dbis.univis.explorer.VExplorer" fork="true">
+            <classpath>
+                <fileset dir="${dist.dir}" includes="**/*.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="clean-all" depends="clean-build,clean-dist"/>
+
+    <target name="build">
+        <mkdir dir="${build.dir}"/>
+        <javac debug="off" target="1.5" source="1.5" srcdir="${src.dir}/${java.dir}" destdir="${build.dir}">
+            <compilerarg line="-Xlint:unchecked"/>
+            <classpath>
+                <fileset dir="${lib.dir}" includes="**/*.jar"/>
+            </classpath>
+        </javac>
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}/${java.dir}" excludes="**/*.java"/>
+        </copy>
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}/${resource.dir}" includes="**/*"/>
+        </copy>
+    </target>
+
+    <target name="clean-build">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="build-dist" depends="build">
+        <mkdir dir="${dist.dir}"/>
+        <jar basedir="${build.dir}" destfile="${dist.dir}/${jar.filename}" manifest="src/META-INF/Manifest.mf">
+            <fileset dir="${build.dir}"/>
+        </jar>
+        <copy todir="${dist.dir}/lib" flatten="true">
+            <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        </copy>
+    </target>
+
+    <target name="clean-dist">
+        <delete dir="${dist.dir}"/>
+    </target>
+
+</project>
