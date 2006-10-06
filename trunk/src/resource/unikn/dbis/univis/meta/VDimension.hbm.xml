@@ -30,7 +30,7 @@
         <key column="DATA_REFERENCE_ID"/>
 
         <property name="dragable" type="boolean">
-            <column name="DRAGGABLE" not-null="true"/>
+            <column name="DRAGABLE" not-null="true"/>
         </property>
 
         <property name="dependent" type="boolean">
