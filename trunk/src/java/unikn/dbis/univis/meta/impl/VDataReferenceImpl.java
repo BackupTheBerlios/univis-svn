@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.meta.impl;
 
 import unikn.dbis.univis.meta.VDataReference;
@@ -5,7 +18,6 @@ import unikn.dbis.univis.message.MessageResolver;
 
 import java.util.Set;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 /**
  * TODO: document me!!!
@@ -40,8 +52,8 @@ public abstract class VDataReferenceImpl implements VDataReference {
     // The i18n key to allow international application support.
     private String i18nKey;
 
-    // The joinable attribute.
-    private String joinable;
+    // The foreignKey attribute.
+    private String foreignKey;
 
     // The name of the table that contains the data.
     private String tableName;
@@ -119,13 +131,13 @@ public abstract class VDataReferenceImpl implements VDataReference {
     }
 
     /**
-     * Sets the joinable attribute.
+     * Sets the foreignKey attribute.
      *
-     * @param joinable The joinable key shows the join
+     * @param foreignKey The foreignKey key shows the join
      *                 attribute.
      */
-    public void setJoinable(String joinable) {
-        this.joinable = joinable;
+    public void setForeignKey(String foreignKey) {
+        this.foreignKey = foreignKey;
     }
 
     /**
@@ -133,8 +145,8 @@ public abstract class VDataReferenceImpl implements VDataReference {
      *
      * @return The join attribute to join tables.
      */
-    public String getJoinable() {
-        return joinable;
+    public String getForeignKey() {
+        return foreignKey;
     }
 
     /**

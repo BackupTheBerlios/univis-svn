@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.dataexchange.schemaimport;
 
 import org.dom4j.io.SAXReader;
@@ -5,7 +18,6 @@ import org.dom4j.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.Hibernate;
 
 import java.io.File;
 import java.util.List;
@@ -69,11 +81,11 @@ public class SchemaImport {
 
             dimension.setKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@key"));
             dimension.setI18nKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@i18n"));
-            dimension.setSummable(ImportUtil.getValue(document, Boolean.class, prefix + "[" + i + "]/@dragable", Boolean.FALSE));
+            dimension.setDragable(ImportUtil.getValue(document, Boolean.class, prefix + "[" + i + "]/@dragable", Boolean.FALSE));
             dimension.setTableName(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@table"));
-            dimension.setJoinable(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@foreignKey"));
+            dimension.setForeignKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@foreignKey"));
             dimension.setVisible(ImportUtil.getValue(document, Boolean.class, prefix + "[" + i + "]/@visible", Boolean.TRUE));
-            dimension.setParentable(ImportUtil.getValue(document, Boolean.class, prefix + "[" + i + "]/@parentable", Boolean.FALSE));
+            dimension.setDependent(ImportUtil.getValue(document, Boolean.class, prefix + "[" + i + "]/@dependent", Boolean.FALSE));
 
             HibernateUtil.execute(new TransactionCallback() {
                 public void execute(Session session, Transaction trx) throws RuntimeException {
@@ -95,7 +107,7 @@ public class SchemaImport {
 
             measure.setKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@key"));
             measure.setI18nKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@i18n"));
-            measure.setMeasure(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@column"));
+            measure.setColumn(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@column"));
 
             HibernateUtil.execute(new TransactionCallback() {
                 public void execute(Session session, Transaction trx) throws RuntimeException {
@@ -117,7 +129,7 @@ public class SchemaImport {
 
             function.setKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@key"));
             function.setI18nKey(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@i18n"));
-            function.setFunction(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@function"));
+            function.setDefinition(ImportUtil.getValue(document, String.class, prefix + "[" + i + "]/@definition"));
 
             HibernateUtil.execute(new TransactionCallback() {
                 public void execute(Session session, Transaction trx) throws RuntimeException {
@@ -156,7 +168,6 @@ public class SchemaImport {
             VHierarchy hierarchy = new VHierarchyImpl();
             hierarchy.setDataReference(cube);
             hierarchy.setParent(diceBox);
-            cube.setHierarchy(hierarchy);
             diceBox.getChildren().add(hierarchy);
 
             VHierarchy classification = new VHierarchyImpl();

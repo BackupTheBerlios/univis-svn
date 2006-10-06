@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.*;
@@ -9,7 +22,6 @@ import unikn.dbis.univis.sql.dialect.UniVisDialect;
 import unikn.dbis.univis.hibernate.util.HibernateUtil;
 import unikn.dbis.univis.message.MessageResolver;
 import unikn.dbis.univis.message.swing.VLabel;
-import unikn.dbis.univis.system.Constants;
 import unikn.dbis.univis.navigation.filter.FilterPopupMenu;
 
 import javax.swing.*;
@@ -25,7 +37,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.*;
-import java.io.IOException;
 
 import org.hibernate.sql.QuerySelect;
 import org.hibernate.sql.JoinFragment;
@@ -164,8 +175,8 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                             public void actionPerformed(ActionEvent e) {
 
                                 for (Component c : container.getComponents()) {
-                                    if (c instanceof VIdCheckBox) {
-                                        ((VIdCheckBox) c).setChecked(button.isSelected());
+                                    if (c instanceof VBidirectionalBrowsingItem) {
+                                        ((VBidirectionalBrowsingItem) c).getCheckBox().setChecked(button.isSelected());
                                     }
                                 }
                             }
@@ -234,14 +245,14 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
                 }
             }
 
-            VIdCheckBox checkBox;
-            if (dimension.isParentable()) {
-                checkBox = new VIdCheckBox(dimension, id, result.getLong(2), result.getString(3));
+            VBidirectionalBrowsingItem browsingItem;
+            if (dimension.isDependent()) {
+                browsingItem = new VBidirectionalBrowsingItem(dimension, id, result.getLong(2), result.getString(3));
             }
             else {
-                checkBox = new VIdCheckBox(dimension, id, result.getString(2));
+                browsingItem = new VBidirectionalBrowsingItem(dimension, id, result.getString(2));
             }
-            container.add(checkBox);
+            container.add(browsingItem);
         }
 
         container.setAllChecked(allChecked);
@@ -267,7 +278,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
 
         querySelect.addSelectColumn("id", "id");
 
-        if (dimension.isParentable()) {
+        if (dimension.isDependent()) {
             querySelect.addSelectColumn("parent", "parent");
         }
 
@@ -275,7 +286,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
 
         querySelect.getJoinFragment().addJoin(dimension.getTableName(), UniVisDialect.generateTableAlias(dimension.getTableName(), 1), new String[]{"parent"}, new String[]{"id"}, JoinFragment.FULL_JOIN);
 
-        String sql = "SELECT " + dimension.getTableName() + ".id, " + (dimension.isParentable() ? dimension.getTableName() + ".parent, " : "") + dimension.getTableName() + ".name " + createWhereClause(dimension);
+        String sql = "SELECT " + dimension.getTableName() + ".id, " + (dimension.isDependent() ? dimension.getTableName() + ".parent, " : "") + dimension.getTableName() + ".name " + createWhereClause(dimension);
 
         return stmt.executeQuery(sql);
     }
@@ -295,7 +306,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
         StringBuilder whereClause = new StringBuilder();
 
         // Prepares the statement with parentable statements.
-        prepareParentableWhereClause(dimension, fromClause, whereClause);
+        prepareDependentWhereClause(dimension, fromClause, whereClause);
 
         // Check for existing where clause.
         if (whereClause.length() > 0) {
@@ -312,11 +323,11 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
      *                    to identify the selection values.
      * @param whereClause The where clause that gets the statements.
      */
-    private void prepareParentableWhereClause(VDimension dimension, StringBuilder fromClause, StringBuilder whereClause) {
+    private void prepareDependentWhereClause(VDimension dimension, StringBuilder fromClause, StringBuilder whereClause) {
 
         // Check whether the parent is parentable to filter the previous selected
         // items.
-        if (dimension.isParentable() && VMetaHelper.isParentADimension(dimension)) {
+        if (dimension.isDependent() && VMetaHelper.isParentADimension(dimension)) {
 
             // The parent is a parent because the meta helper checked
             // whether the parent is a parent or not. See while above.
@@ -395,7 +406,7 @@ public class VTree extends JTree implements DragSourceListener, DragGestureListe
 
                 // Whether the selected dimension allows drag and drop
                 // or not.
-                if (dimension.isSummable() && !dimension.isDropped()) {
+                if (dimension.isDragable() && !dimension.isDropped()) {
                     dge.startDrag(DragSource.DefaultMoveDrop, new Transferable() {
 
                         /**

@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.explorer;
 
 import unikn.dbis.univis.navigation.tree.VTree;
@@ -20,6 +33,7 @@ import unikn.dbis.univis.images.VImageDummy;
 import unikn.dbis.univis.visualization.pivottable.VPivotTable;
 import unikn.dbis.univis.swingx.StackedBox;
 import unikn.dbis.univis.dataexchange.schemaimport.SchemaImport;
+import unikn.dbis.univis.Version;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -185,7 +199,7 @@ public class VExplorer extends JFrame implements Internationalizable {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public VExplorer() throws HeadlessException {
-        super("UniVis Explorer 0.2 - (c) 2005-2006 a.d. - DBIS, University of Konstanz");
+        super("UniVis Explorer " + Version.getVersion() + " - (c) 2005-2006 a.d. - DBIS, University of Konstanz (#build=" + Version.getCompileTime() + ")");
 
         try {
             setIconImage(ImageIO.read(VImageDummy.class.getResourceAsStream("UniVis_Icon.png")));

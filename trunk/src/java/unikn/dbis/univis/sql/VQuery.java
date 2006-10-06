@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.sql;
 
 import unikn.dbis.univis.meta.VDimension;
@@ -182,7 +195,7 @@ public class VQuery {
 
                 if (!dimension.equals(blueprint)) {
                     from.append(cubeName).append(", ").append(tableName).append(", ").append(bluepName);
-                    where.append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getJoinable());
+                    where.append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getForeignKey()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getForeignKey());
 
                     String filter = getFilterWhereClause(blueprint);
                     if (filter.length() > 0) {
@@ -191,14 +204,14 @@ public class VQuery {
                 }
                 else {
                     from.append(cubeName).append(", ").append(tableName);
-                    where.append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getJoinable());
+                    where.append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getForeignKey());
 
                     if (blueprint.getSelections() != null && blueprint.getSelections().size() > 0) {
                         where.append(" AND (");
 
                         int size = blueprint.getSelections().size();
                         for (Filterable filter : blueprint.getSelections()) {
-                            where.append(cubeName).append(".").append(blueprint.getJoinable()).append(" = ").append(filter.getId());
+                            where.append(cubeName).append(".").append(blueprint.getForeignKey()).append(" = ").append(filter.getId());
 
                             if (size > 1) {
                                 where.append(" OR ");
@@ -235,7 +248,7 @@ public class VQuery {
                         from.append(", ").append(tableName);
                     }
 
-                    where.append(" AND ").append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getJoinable()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getJoinable());
+                    where.append(" AND ").append(tableName).append(".id = ").append(bluepName).append(".").append(dimension.getForeignKey()).append(" AND ").append(bluepName).append(".id = ").append(cubeName).append(".").append(blueprint.getForeignKey());
 
                     String filter = getFilterWhereClause(blueprint);
                     if (filter.length() > 0) {
@@ -247,14 +260,14 @@ public class VQuery {
                         from.append(", ").append(tableName);
                     }
 
-                    where.append(" AND ").append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getJoinable());
+                    where.append(" AND ").append(tableName).append(".id = ").append(cubeName).append(".").append(dimension.getForeignKey());
 
                     if (blueprint.getSelections() != null && blueprint.getSelections().size() > 0) {
                         where.append(" AND (");
 
                         int size = blueprint.getSelections().size();
                         for (Filterable filter : blueprint.getSelections()) {
-                            where.append(cubeName).append(".").append(blueprint.getJoinable()).append(" = ").append(filter.getId());
+                            where.append(cubeName).append(".").append(blueprint.getForeignKey()).append(" = ").append(filter.getId());
 
                             if (size > 1) {
                                 where.append(" OR ");
@@ -343,7 +356,7 @@ public class VQuery {
         VDimension oldDimension = dimension;
 
         boolean filtered = true;
-        while (dimension.isParentable() && filtered) {
+        while (dimension.isDependent() && filtered) {
 
             dimension = (VDimension) dimension.getParent();
 
@@ -367,7 +380,7 @@ public class VQuery {
                     where.append(tableName).append(".parent = ").append(selection);
                 }
                 else {
-                    where.append(tableName).append(".").append(dimension.getJoinable()).append(" = ").append(selection);
+                    where.append(tableName).append(".").append(dimension.getForeignKey()).append(" = ").append(selection);
                 }
             }
 

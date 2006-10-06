@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.*;
@@ -5,7 +18,6 @@ import unikn.dbis.univis.icon.VIconComponent;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.icon.VCubeFlagIcon;
 import unikn.dbis.univis.icon.VCubeIcon;
-import unikn.dbis.univis.hibernate.util.HibernateUtil;
 
 import javax.swing.*;
 import javax.swing.tree.TreeCellEditor;
@@ -16,9 +28,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.EventObject;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.Session;
 
 /**
  * TODO: document me!!!
@@ -122,7 +131,7 @@ public class VTreeCellEditor extends AbstractCellEditor implements TreeCellEdito
             if (o instanceof VDimension) {
                 VDimension dimension = (VDimension) o;
 
-                if (dimension.isSummable()) {
+                if (dimension.isDragable()) {
                     final VIconComponent icon = new VIconComponent(VIcons.FILTER, 8);
                     panel.add(icon, BorderLayout.EAST);
                     icon.addMouseListener(new MouseAdapter() {

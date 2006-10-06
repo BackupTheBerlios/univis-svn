@@ -11,24 +11,26 @@
  *
  * Please see COPYING for the complete licence.
  */
-package unikn.dbis.univis.sql.dialect;
+package unikn.dbis.univis;
 
 /**
- * TODO: document me!!!
+ * This <code>Version</code> provides version and compile time strings.
+ * It is generated at build time.
  * <p/>
- * <code>PostgreSQLDialect</code>.
- * <p/>
- * User: raedler, weiler
- * Date: 10.04.2006
- * Time: 01:36:55
+ * User: raedler
+ * Date: 05.10.2006
+ * Time: 17:26:58
  *
  * @author Roman R&auml;dle
- * @author Andreas Weiler
- * @version $Id$
- * @since UniVis Explorer 0.1
+ * @version $Revision$
+ * @since UniVis Explorer 0.3
  */
-public class PostgreSQLDialect extends UniVisDialect {
-    public String getSelect() {
-        return null;
+public class Version {
+    public static String getVersion() {
+        return "@UNIVIS_EXPLORER_VERSION@";
+    }
+    
+    public static String getCompileTime() {
+        return "@COMPILE_TIME@";
     }
 }

@@ -62,14 +62,14 @@
         <Dimension key="dim:by_subcontinent"
                    i18n="by_sub-continent"
                    dragable="true"
-                   parentable="true"
+                   dependent="true"
                    table="dim_subkontinent"
                    foreignKey="region"/>
 
         <Dimension key="dim:by_country"
                    i18n="by_country"
                    dragable="true"
-                   parentable="true"
+                   dependent="true"
                    table="dim_land"
                    foreignKey="region"/>
 
@@ -128,9 +128,9 @@
     </Measures>
 
     <Functions>
-        <Function key="fct:sum" i18n="total" function="SUM({0})" />
-        <Function key="fct:max" i18n="maximum" function="MAX({0})" />
-        <Function key="fct:min" i18n="minimum" function="MIN({0})" />
+        <Function key="fct:sum" i18n="total" definition="SUM({0})" />
+        <Function key="fct:max" i18n="maximum" definition="MAX({0})" />
+        <Function key="fct:min" i18n="minimum" definition="MIN({0})" />
     </Functions>
 
     <Cubes>

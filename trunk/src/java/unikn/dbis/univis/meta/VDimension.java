@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.meta;
 
 import java.util.Set;
@@ -25,7 +38,7 @@ public interface VDimension extends VDataReference {
      * @return Whether the dimension is a summable dimension
      *         or not.
      */
-    public Boolean isSummable();
+    public Boolean isDragable();
 
     /**
      * Sets whether the dimension is a summable dimension
@@ -35,7 +48,7 @@ public interface VDimension extends VDataReference {
      * @param summable Whether the dimension is a summable
      *                 dimension or not.
      */
-    public void setSummable(Boolean summable);
+    public void setDragable(Boolean summable);
 
     /**
      * Flag when the dimension is dropped into the graph.
@@ -58,7 +71,7 @@ public interface VDimension extends VDataReference {
      * @return Whether the dimension contains parentable data or
      *         not.
      */
-    public Boolean isParentable();
+    public Boolean isDependent();
 
 
     /**
@@ -68,7 +81,7 @@ public interface VDimension extends VDataReference {
      * @param parentable Whether the dimension contains parentable
      *                   data or not.
      */
-    public void setParentable(Boolean parentable);
+    public void setDependent(Boolean parentable);
 
     /**
      * Returns whether the dimension is visible or unvisible.

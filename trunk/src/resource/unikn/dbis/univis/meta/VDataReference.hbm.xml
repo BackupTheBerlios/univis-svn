@@ -4,6 +4,18 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <!--
+   Copyright 2005-2006 UniVis Explorer development team.
+
+   This file is part of UniVis Explorer
+   (http://phobos22.inf.uni-konstanz.de/univis).
+
+   UniVis Explorer is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   as published by the Free Software Foundation; either version 2.1
+   of the License, or (at your option) any later version.
+
+   Please see COPYING for the complete licence.
+
    @author Roman R&auml;dle
    @author Andreas Weiler
    @version $Revision$
@@ -27,8 +39,8 @@
             <column name="I18N_KEY" not-null="false"/>
         </property>
 
-        <property name="joinable" type="string">
-            <column name="JOINABLE" not-null="false"/>
+        <property name="foreignKey" type="string">
+            <column name="FOREIGN_KEY" not-null="false"/>
         </property>
 
         <property name="tableName" type="string">

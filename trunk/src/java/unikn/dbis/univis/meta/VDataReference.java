@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.meta;
 
 import java.util.Set;
@@ -56,7 +69,7 @@ public interface VDataReference {
      *
      * @return The join attribute to join tables.
      */
-    public String getJoinable();
+    public String getForeignKey();
 
     /**
      * Sets the joinable attribute.
@@ -64,7 +77,7 @@ public interface VDataReference {
      * @param joinable The joinable key shows the join
      *                 attribute.
      */
-    public void setJoinable(String joinable);
+    public void setForeignKey(String joinable);
 
     /**
      * Returns the name of the table that contains the

@@ -7,7 +7,27 @@
     <taskdef name="izpack" classpath="${lib.dir}/IzPack/lib/compiler.jar"
              classname="com.izforge.izpack.ant.IzPackTask"/>
 
-    <target name="start-univis-explorer" depends="build-dist">
+    <target name="splash" unless="nosplash">
+        <splash imageurl="file:${basedir}/src/resource/unikn/dbis/univis/images/splash_screen.png"/>
+    </target>
+
+    <target name="prepare" depends="splash">
+        <copy file="src/resource/hibernate.cfg.xml-template" tofile="src/resource/hibernate.cfg.xml"/>
+        <tstamp>
+            <format property="univis_explorer.buildtime" pattern="yyyy-MM-dd HH:mm"/>
+        </tstamp>
+    </target>
+
+    <target name="version-java" depends="prepare">
+        <filter token="UNIVIS_EXPLORER_VERSION" value="${univis_explorer.version}"/>
+        <filter token="COMPILE_TIME" value="${univis_explorer.buildtime}"/>
+        <copy file="src/resource/unikn/dbis/univis/Version.java.in"
+              tofile="src/java/unikn/dbis/univis/Version.java"
+              filtering="yes"
+              overwrite="true"/>
+    </target>
+
+    <target name="run" depends="build-dist">
         <java classname="unikn.dbis.univis.explorer.VExplorer" fork="true">
             <classpath>
                 <fileset dir="${dist.dir}" includes="**/*.jar"/>
@@ -17,7 +37,7 @@
 
     <target name="clean-all" depends="clean-build,clean-dist,clean-installer"/>
 
-    <target name="build">
+    <target name="build" depends="version-java">
         <mkdir dir="${build.dir}"/>
         <javac debug="off" target="1.5" source="1.5" srcdir="${src.dir}/${java.dir}" destdir="${build.dir}">
             <compilerarg line="-Xlint:unchecked"/>
@@ -30,7 +50,7 @@
         </copy>
     </target>
 
-    <target name="clean-build">
+    <target name="clean-build" depends="splash">
         <delete dir="${build.dir}"/>
     </target>
 

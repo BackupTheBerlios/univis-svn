@@ -59,7 +59,7 @@ public class MetaTest extends TestCase {
         VCubeImpl cube = (VCubeImpl) session.load(VCubeImpl.class, cubeId);
 
         VDimensionImpl dimension = new VDimensionImpl();
-        dimension.setSummable(true);
+        dimension.setDragable(true);
         dimension.setTableName("BLUEP_ZEIT");
 
         cube.addDimension(dimension);
@@ -86,7 +86,7 @@ public class MetaTest extends TestCase {
         VDimensionImpl dimension = (VDimensionImpl) session.load(VDimensionImpl.class, dimensionId);
 
         VDimensionImpl subDimension = new VDimensionImpl();
-        subDimension.setSummable(false);
+        subDimension.setDragable(false);
         subDimension.setTableName("DIM_HALBJAHRE");
 
         dimension.addSubDimension(subDimension);

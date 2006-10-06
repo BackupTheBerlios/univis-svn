@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.meta.impl;
 
 import unikn.dbis.univis.meta.VDimension;
@@ -30,14 +43,14 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     // Interface implementations.
     // ##############################################################################
 
-    // Whether the dimension is summable or not.
-    private Boolean summable;
+    // Whether the dimension is dragable or not.
+    private Boolean dragable;
 
     // Whether the dimension is dropped or not.
     private boolean dropped;
 
-    // Whether the dimension contains parentable data or not.
-    private Boolean parentable;
+    // Whether the dimension contains dependent data or not.
+    private Boolean dependent;
 
     // Whether the dimension is visible or unvisible.
     private Boolean visible;
@@ -52,27 +65,27 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     private Set<VCube> supportedCubes;
 
     /**
-     * Whether the dimension is a summable dimension which
+     * Whether the dimension is a dragable dimension which
      * could be used for dragging into the visualization
      * or not.
      *
-     * @return Whether the dimension is a summable dimension
+     * @return Whether the dimension is a dragable dimension
      *         or not.
      */
-    public Boolean isSummable() {
-        return summable;
+    public Boolean isDragable() {
+        return dragable;
     }
 
     /**
-     * Sets whether the dimension is a summable dimension
+     * Sets whether the dimension is a dragable dimension
      * which could be used for dragging into the visualization
      * or not.
      *
-     * @param summable Whether the dimension is a summable
+     * @param dragable Whether the dimension is a dragable
      *                 dimension or not.
      */
-    public void setSummable(Boolean summable) {
-        this.summable = summable;
+    public void setDragable(Boolean dragable) {
+        this.dragable = dragable;
     }
 
     /**
@@ -94,25 +107,25 @@ public class VDimensionImpl extends VDataReferenceImpl implements VDimension, VD
     }
 
     /**
-     * Returns whether the dimension contains data for parentable
+     * Returns whether the dimension contains data for dependent
      * usage or not.
      *
-     * @return Whether the dimension contains parentable data or
+     * @return Whether the dimension contains dependent data or
      *         not.
      */
-    public Boolean isParentable() {
-        return parentable;
+    public Boolean isDependent() {
+        return dependent;
     }
 
     /**
-     * Sets whether the dimension contains data for parentable
+     * Sets whether the dimension contains data for dependent
      * usage or not.
      *
-     * @param parentable Whether the dimension contains parentable
+     * @param dependent Whether the dimension contains dependent
      *                   data or not.
      */
-    public void setParentable(Boolean parentable) {
-        this.parentable = parentable;
+    public void setDependent(Boolean dependent) {
+        this.dependent = dependent;
     }
 
     /**

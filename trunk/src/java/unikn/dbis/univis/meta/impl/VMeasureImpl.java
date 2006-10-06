@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.meta.impl;
 
 import unikn.dbis.univis.meta.VMeasure;
@@ -20,28 +33,28 @@ import unikn.dbis.univis.meta.Selectable;
  */
 public class VMeasureImpl extends VDataReferenceImpl implements VMeasure, Selectable, VDataReference {
 
-    // The name of the measure.
-    private String measure;
+    // The name of the column.
+    private String column;
 
-    // Whether the measure is selected or not.
+    // Whether the column is selected or not.
     private boolean selected;
 
     /**
-     * Returns the name of the measure.
+     * Returns the name of the column.
      *
-     * @return The name of the measure.
+     * @return The name of the column.
      */
-    public String getMeasure() {
-        return measure;
+    public String getColumn() {
+        return column;
     }
 
     /**
-     * Sets the name of the measure.
+     * Sets the name of the column.
      *
-     * @param measure The name of the measure.
+     * @param column The name of the column.
      */
-    public void setMeasure(String measure) {
-        this.measure = measure;
+    public void setColumn(String column) {
+        this.column = column;
     }
 
     /**

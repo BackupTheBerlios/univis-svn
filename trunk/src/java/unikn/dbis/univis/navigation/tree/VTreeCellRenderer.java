@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.navigation.tree;
 
 import unikn.dbis.univis.meta.*;
@@ -5,15 +18,11 @@ import unikn.dbis.univis.icon.VIconComponent;
 import unikn.dbis.univis.icon.VIcons;
 import unikn.dbis.univis.icon.VCubeFlagIcon;
 import unikn.dbis.univis.icon.VCubeIcon;
-import unikn.dbis.univis.hibernate.util.HibernateUtil;
 
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
 import java.awt.*;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.Session;
 
 /**
  * TODO: document me!!!
@@ -63,7 +72,7 @@ public class VTreeCellRenderer extends DefaultTreeCellRenderer {
             if (o instanceof VDimension) {
                 VDimension dimension = (VDimension) o;
 
-                if (dimension.isSummable()) {
+                if (dimension.isDragable()) {
                     panel.add(new VIconComponent(VIcons.FILTER), BorderLayout.EAST);
                 }
 

@@ -59,7 +59,7 @@ public class JTreeTest extends JTree {
                     Object o = node.getUserObject();
 
                     if (o instanceof VDimension) {
-                        summable = ((VDimension) o).isSummable();
+                        summable = ((VDimension) o).isDragable();
                     }
                 }
 
@@ -132,7 +132,7 @@ public class JTreeTest extends JTree {
             System.out.println("CLASS: " + o.getClass());
 
             if (o instanceof VDimension) {
-                System.out.println("SUMM: " + ((VDimension) o).isSummable());
+                System.out.println("SUMM: " + ((VDimension) o).isDragable());
             }
         }
         session.close();
@@ -211,7 +211,7 @@ public class JTreeTest extends JTree {
 
                         VDimension dimension = (VDimension) o;
 
-                        if (dimension.isSummable()) {
+                        if (dimension.isDragable()) {
 
                             JPopupMenu menu = new JPopupMenu("Test");
 

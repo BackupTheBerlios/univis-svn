@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.visualization.pivottable;
 
 import unikn.dbis.univis.meta.*;
@@ -328,7 +341,7 @@ public class VPivotTableData {
                 }
 
                 // Merge function [e.g. SUM({0})] with measure [e.g. cases]. E.g. merge result [SUM(cases)]
-                String cubeAttribute = MessageFormat.format("SUM({0})", cube.getTableName() + "." + measure.getMeasure());
+                String cubeAttribute = MessageFormat.format("SUM({0})", cube.getTableName() + "." + measure.getColumn());
 
                 from.append(cubeAttribute);
 
@@ -360,16 +373,16 @@ public class VPivotTableData {
                         VDimension blueprint = dimension.getBlueprint();
 
                         from.append("FULL JOIN " + blueprint.getTableName() + " ON ( " + blueprint.getTableName() + ".id = ");
-                        from.append(cube.getTableName() + "." + blueprint.getJoinable());
+                        from.append(cube.getTableName() + "." + blueprint.getForeignKey());
                         from.append(" ) " + "\n");
 
                         from.append("FULL JOIN " + dimension.getTableName() + " ON ( " + dimension.getTableName() + ".id = ");
-                        from.append(dimension.getBlueprint().getTableName() + "." + dimension.getJoinable());
+                        from.append(dimension.getBlueprint().getTableName() + "." + dimension.getForeignKey());
                         from.append(" ) " + "\n");
                     }
                     else {
                         from.append("FULL JOIN " + dimension.getTableName() + " ON ( " + dimension.getTableName() + ".id = ");
-                        from.append(cube.getTableName() + "." + dimension.getJoinable());
+                        from.append(cube.getTableName() + "." + dimension.getForeignKey());
                         from.append(" ) " + "\n");
                     }
                 }

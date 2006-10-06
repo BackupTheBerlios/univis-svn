@@ -1,3 +1,16 @@
+/*
+ * Copyright 2005-2006 UniVis Explorer development team.
+ *
+ * This file is part of UniVis Explorer
+ * (http://phobos22.inf.uni-konstanz.de/univis).
+ *
+ * UniVis Explorer is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * Please see COPYING for the complete licence.
+ */
 package unikn.dbis.univis.meta.impl;
 
 import unikn.dbis.univis.meta.VCube;
@@ -66,25 +79,5 @@ public class VCubeImpl extends VDataReferenceImpl implements VCube, VDataReferen
      */
     public void setColorRGB(int rgb) {
         color = new Color(rgb);
-    }
-
-    /**
-     * Returns the hierarchy of the cube. The hierarchy
-     * contains references to the dimensions.
-     *
-     * @return The hierarchy of the cube.
-     */
-    public VHierarchy getHierarchy() {
-        return hierarchy;
-    }
-
-    /**
-     * Sets the hierarchy of the cube. The hierarchy
-     * contains references to the dimensions.
-     *
-     * @param hierarchy The hierarchy of the cube.
-     */
-    public void setHierarchy(VHierarchy hierarchy) {
-        this.hierarchy = hierarchy;
     }
 }
