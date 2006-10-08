@@ -23,7 +23,7 @@ package unikn.dbis.univis.dataexchange.schemaimport;
  * Time: 23:03:51
  *
  * @author Roman R&auml;dle
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.3
  */
 public class SchemaImportException extends RuntimeException {

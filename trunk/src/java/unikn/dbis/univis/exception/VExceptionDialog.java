@@ -35,7 +35,7 @@ import org.jdesktop.layout.LayoutStyle;
  *
  * @author Roman R&auml;dle
  * @author Andreas Weiler
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.1
  */
 public class VExceptionDialog extends JDialog {

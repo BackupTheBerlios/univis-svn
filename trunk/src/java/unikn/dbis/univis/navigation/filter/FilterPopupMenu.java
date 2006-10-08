@@ -26,7 +26,7 @@ import java.awt.*;
  * Time: 14:35:18
  *
  * @author Roman R&auml;dle
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.3
  */
 public class FilterPopupMenu extends JPopupMenu {

@@ -27,7 +27,7 @@ import javax.swing.table.AbstractTableModel;
  * Time: 17:55:13
  *
  * @author Marion Herb
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.2
  */
 public class VPivotTableModel extends AbstractTableModel {

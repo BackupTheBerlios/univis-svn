@@ -17,7 +17,7 @@ import java.util.HashMap;
  * Time: 22:11:50
  *
  * @author Andreas Weiler
- * @version $Id: ObjectTransferable.java,v 1.1 2005/11/29 22:28:28 raedler Exp $
+ * @version $Id$
  * @since UniVis Explorer 1.0
  */
 public class ObjectTransferable implements Transferable {

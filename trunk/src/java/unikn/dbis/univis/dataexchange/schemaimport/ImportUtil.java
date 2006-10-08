@@ -39,7 +39,7 @@ import java.text.SimpleDateFormat;
  * Time: 22:53:08
  *
  * @author Roman R&auml;dle
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.3
  */
 public class ImportUtil {

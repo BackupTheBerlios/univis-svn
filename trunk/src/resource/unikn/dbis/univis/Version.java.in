@@ -22,7 +22,7 @@ package unikn.dbis.univis;
  * Time: 17:26:58
  *
  * @author Roman R&auml;dle
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.3
  */
 public class Version {

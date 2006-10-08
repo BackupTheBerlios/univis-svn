@@ -30,7 +30,7 @@ import java.awt.*;
  *
  * @author Roman R&auml;dle
  * @author Andreas Weiler
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.1
  */
 public class VDialog extends javax.swing.JDialog {

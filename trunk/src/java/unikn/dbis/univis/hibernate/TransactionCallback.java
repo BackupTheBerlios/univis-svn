@@ -26,7 +26,7 @@ import org.hibernate.Session;
  * Time: 14:01:58
  *
  * @author Roman R&auml;dle
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.3
  */
 public interface TransactionCallback {

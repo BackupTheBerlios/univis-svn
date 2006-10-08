@@ -60,7 +60,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Roman R&auml;dle
  * @author Marion Herb
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.2
  */
 public class VPivotTable extends JPanel implements Visualizable, DropTargetListener {

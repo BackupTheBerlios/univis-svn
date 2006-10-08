@@ -27,7 +27,7 @@ import unikn.dbis.univis.meta.VDataReference;
  *
  * @author Roman R&auml;dle
  * @author Andreas Weiler
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.2
  */
 public class VClassificationImpl extends VDataReferenceImpl implements VClassification, VDataReference {

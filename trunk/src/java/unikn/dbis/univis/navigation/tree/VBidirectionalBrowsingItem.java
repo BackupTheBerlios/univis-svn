@@ -30,7 +30,7 @@ import java.awt.event.MouseEvent;
  * Time: 14:30:10
  *
  * @author Roman R&auml;dle
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.3
  */
 public class VBidirectionalBrowsingItem extends JComponent {

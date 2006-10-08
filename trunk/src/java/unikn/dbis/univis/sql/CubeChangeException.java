@@ -24,7 +24,7 @@ package unikn.dbis.univis.sql;
  *
  * @author Roman R&auml;dle
  * @author Andreas Weiler
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.2
  */
 public class CubeChangeException extends Exception {

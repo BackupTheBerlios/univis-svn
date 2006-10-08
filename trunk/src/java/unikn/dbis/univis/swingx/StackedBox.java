@@ -1,5 +1,5 @@
 /*
- * $Id: StackedBox.java.txt,v 1.1 2006/03/09 20:48:47 rbair Exp $
+ * $Id$
  *
  * Copyright 2004 Sun Microsystems, Inc., 4150 Network Circle,
  * Santa Clara, California 95054, U.S.A. All rights reserved.
@@ -57,7 +57,7 @@ import unikn.dbis.univis.icon.VIcons;
  *
  * @author <a href="mailto:fred@L2FProd.com">Frederic Lavigne</a>
  * @author Roman R&auml;dle
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.3
  */
 public class StackedBox extends JPanel implements Scrollable {

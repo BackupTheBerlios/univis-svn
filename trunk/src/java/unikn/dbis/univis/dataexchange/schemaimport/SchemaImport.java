@@ -39,7 +39,7 @@ import unikn.dbis.univis.hibernate.TransactionCallback;
  * Time: 15:30:30
  *
  * @author Roman R&auml;dle
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.3
  */
 public class SchemaImport {

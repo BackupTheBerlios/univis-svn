@@ -29,7 +29,7 @@ import java.text.MessageFormat;
  *
  * @author Roman R&auml;dle
  * @author Marion Herb
- * @version $Revision$
+ * @version $Id$
  * @since UniVis Explorer 0.2
  */
 public class VPivotTableData {
