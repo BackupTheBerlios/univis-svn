@@ -157,7 +157,8 @@ public class VPivotTableData {
         Vector<String> columnNames = new Vector<String>();
 
         for (VDimension dimension : yAxisDimensions) {
-            columnNames.addElement(dimension.getTableName());
+            columnNames.addElement(dimension.toString());
+            //columnNames.addElement(dimension.getTableName());
         }
 
         try {
