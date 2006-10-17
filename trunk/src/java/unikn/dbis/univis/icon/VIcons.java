@@ -33,7 +33,6 @@ import javax.swing.*;
  */
 public class VIcons {
 
-    public static final Icon ABOUT = new ImageIcon(VImageDummy.class.getResource("about.gif"));
     public static final Icon ADD = new ImageIcon(VImageDummy.class.getResource("add.png"));
     public static final Icon APPLICATION_FORM_EDIT = new ImageIcon(VImageDummy.class.getResource("application_form_edit.png"));
     public static final Icon ARROW_INOUT = new ImageIcon(VImageDummy.class.getResource("arrow_inout.png"));

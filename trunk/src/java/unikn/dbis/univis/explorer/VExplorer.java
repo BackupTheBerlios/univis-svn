@@ -33,7 +33,9 @@ import unikn.dbis.univis.images.VImageDummy;
 import unikn.dbis.univis.visualization.pivottable.VPivotTable;
 import unikn.dbis.univis.swingx.StackedBox;
 import unikn.dbis.univis.dataexchange.schemaimport.SchemaImport;
-import unikn.dbis.univis.Version;
+import unikn.dbis.univis.ApplicationInfo;
+import unikn.dbis.univis.explorer.about.AboutPanel;
+import unikn.dbis.univis.explorer.license.LicenseDialog;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -199,7 +201,7 @@ public class VExplorer extends JFrame implements Internationalizable {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public VExplorer() throws HeadlessException {
-        super("UniVis Explorer " + Version.getVersion() + " - (c) 2005-2006 a.d. - DBIS, University of Konstanz (#build=" + Version.getCompileTime() + ")");
+        super(ApplicationInfo.getApplicationName() + " " + ApplicationInfo.getVersionText() + " - (c) 2005-2006 a.d. - DBIS, University of Konstanz");
 
         try {
             setIconImage(ImageIO.read(VImageDummy.class.getResourceAsStream("UniVis_Icon.png")));
@@ -368,23 +370,35 @@ public class VExplorer extends JFrame implements Internationalizable {
             lafMenu.add(lafMenuItem);
         }
 
-        VMenu help = new VMenu(Constants.HELP);
+        JMenu questionMark = new JMenu("?");
+
+        VMenuItem license = new VMenuItem(Constants.LICENSE);
+        license.addActionListener(new ActionListener() {
+
+            /**
+             * {@inheritDoc}
+             */
+            public void actionPerformed(ActionEvent e) {
+                new LicenseDialog(VExplorer.this);
+            }
+        });
+        questionMark.add(license);
 
         final VMenuItem about = new VMenuItem(Constants.ABOUT, VIcons.INFORMATION);
         about.addActionListener(new ActionListener() {
+
             /**
-             * Invoked when an action occurs.
+             * {@inheritDoc}
              */
             public void actionPerformed(ActionEvent e) {
-                String univis = "Univis Explorer" + System.getProperty("line.separator") + "    Version 0.2";
-                JOptionPane.showConfirmDialog(VExplorer.this, univis, about.getText(), JOptionPane.CLOSED_OPTION, 0, VIcons.ABOUT);
+                new AboutPanel(VExplorer.this);
             }
         });
-        help.add(about);
+        questionMark.add(about);
 
         menuBar.add(program);
         menuBar.add(lafMenu);
-        menuBar.add(help);
+        menuBar.add(questionMark);
 
         setJMenuBar(menuBar);
     }

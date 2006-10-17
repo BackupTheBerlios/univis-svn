@@ -52,6 +52,8 @@ public interface Constants {
     public static final String GRAPH_EDITABLE = "graph_editable";
     public static final String GRAPH_EDITABLE_TOOLTIP = "graph_editable.tooltip";
     public static final String SETTINGS_TOOLTIP = "settings.tooltip";
+    public static final String LICENSE = "license";
+    public static final String CLOSE = "close";
 
     // All Strings for the ToolTips of the Buttons.
     public final static String REFRESH_TOOLTIP = "refreshTooltip";

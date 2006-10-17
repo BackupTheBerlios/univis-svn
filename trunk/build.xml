@@ -14,15 +14,18 @@
     <target name="prepare" depends="splash">
         <copy file="src/resource/hibernate.cfg.xml-template" tofile="src/resource/hibernate.cfg.xml"/>
         <tstamp>
-            <format property="univis_explorer.buildtime" pattern="yyyy-MM-dd HH:mm"/>
+            <format property="application.buildtime" pattern="yyyy-MM-dd HH:mm"/>
         </tstamp>
     </target>
 
     <target name="version-java" depends="prepare">
-        <filter token="UNIVIS_EXPLORER_VERSION" value="${univis_explorer.version}"/>
-        <filter token="COMPILE_TIME" value="${univis_explorer.buildtime}"/>
-        <copy file="src/resource/unikn/dbis/univis/Version.java.in"
-              tofile="src/java/unikn/dbis/univis/Version.java"
+        <filter token="APPLICATION_NAME" value="${application.name}"/>
+        <filter token="APPLICATION_VERSION" value="${application.version}"/>
+        <filter token="APPLICATION_VERSION_TXT" value="${application.version_txt}"/>
+        <filter token="APPLICATION_BUILDTIME" value="${application.buildtime}"/>
+        <filter token="APPLICATION_AUTHORS" value="${application.authors}"/>
+        <copy file="src/resource/unikn/dbis/univis/ApplicationInfo.java.in"
+              tofile="src/java/unikn/dbis/univis/ApplicationInfo.java"
               filtering="yes"
               overwrite="true"/>
     </target>
