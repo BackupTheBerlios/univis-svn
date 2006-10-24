@@ -36,6 +36,7 @@
         <property name="hbm2ddl.auto">update</property>
 
         <!-- The hibernate mapping resources -->
+        <mapping resource="unikn/dbis/univis/authorization/VUser.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/VHierarchy.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/VDataReference.hbm.xml"/>
         <mapping resource="unikn/dbis/univis/meta/VDiceBox.hbm.xml"/>
